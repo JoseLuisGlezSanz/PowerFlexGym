@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -41,8 +41,9 @@ public class Visit {
     private Integer pending;
 
     //Llaves foraneas
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="id_gym")
+    @ManyToOne  
+    @JoinColumn(name="id_gym", referencedColumnName = "id_gym", nullable = false)
     @JsonBackReference
+    @JsonProperty("visita al gym")
     private Gym gym;
 }

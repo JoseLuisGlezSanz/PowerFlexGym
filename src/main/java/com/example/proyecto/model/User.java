@@ -2,6 +2,7 @@ package com.example.proyecto.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -56,11 +57,13 @@ public class User {
     //Laves foraneas
     @ManyToOne
     @JoinColumn(name = "id_role", referencedColumnName = "id_role", nullable = false)
+    @JsonBackReference
     @JsonProperty("rol del usuario")
     private Role role;
 
     @ManyToOne
     @JoinColumn(name = "id_gym", referencedColumnName = "id_gym", nullable = false)
+    @JsonBackReference
     @JsonProperty("gimnasio del usuario")
     private Gym gym;
 

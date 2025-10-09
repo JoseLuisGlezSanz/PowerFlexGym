@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -70,6 +71,7 @@ public class Customer {
     //Llaves foraneas
     @ManyToOne
     @JoinColumn(name = "id_gym", referencedColumnName = "id_gym", nullable = false)
+    @JsonBackReference
     @JsonProperty("gimnasio del cliente")
     private Gym gym;
 

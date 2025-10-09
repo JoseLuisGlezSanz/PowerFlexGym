@@ -8,7 +8,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -19,7 +21,20 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "customers_memberships")
+@IdClass(CustomerMembershipPK.class)
 public class CustomerMembership {
+    @Id
+    @ManyToOne
+    @JoinColumn(name="id_customer")
+    @JsonProperty("identificador del cliente")
+    private Integer idCustomer;
+
+    @Id
+    @ManyToOne
+    @JoinColumn(name="id_membership")
+    @JsonProperty("identificador de la membresia")
+    private Integer idMembership;
+
     @Column(name = "start_date")
     @JsonProperty("fecha de inicio de la membresia")
     private Date startDate;
@@ -37,18 +52,9 @@ public class CustomerMembership {
     private Boolean membershipStatus;
 
     //Llaves foraneas
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="id_customer")
+    @ManyToOne
+    @JoinColumn(name="id_gym", referencedColumnName = "id_gym", nullable = false)
     @JsonBackReference
-    private Customer customer;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="id_membership")
-    @JsonBackReference
-    private Membership membership;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="id_gym")
-    @JsonBackReference
+    @JsonProperty("membresia del cliente en el gym")
     private Gym gym;
 }

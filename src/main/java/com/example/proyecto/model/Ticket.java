@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -62,9 +62,10 @@ public class Ticket {
     private BigDecimal paymentWith;
 
     //Laves foraneas
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_user")
+    @ManyToOne
+    @JoinColumn(name = "id_user", referencedColumnName = "id_user", nullable = false)
     @JsonBackReference
+    @JsonProperty("ticket del usuario")
     private User user;
 
     //Relaciones

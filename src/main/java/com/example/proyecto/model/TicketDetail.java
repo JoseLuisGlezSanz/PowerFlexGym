@@ -1,11 +1,12 @@
 package com.example.proyecto.model;
 
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -39,13 +40,15 @@ public class TicketDetail {
     private Double subtotal;
 
     //Llaves foraneas
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="id_ticket")
+    @ManyToOne
+    @JoinColumn(name="id_product", referencedColumnName = "id_product", nullable = false)
     @JsonBackReference
-    private Ticket ticket;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="id_product")
-    @JsonBackReference
+    @JsonProperty("detalles del producto")
     private Product product;
+
+    @ManyToOne
+    @JoinColumn(name="id_ticket", referencedColumnName = "id_ticket", nullable = false)
+    @JsonBackReference
+    @JsonProperty("detalles del ticket")
+    private Ticket ticket;
 }
