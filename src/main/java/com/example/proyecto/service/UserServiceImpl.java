@@ -76,34 +76,34 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserResponse create(UserRequest request) {
-        Role role = roleRepository.findById(request.getIdRole())
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
-        
-        Gym gym = gymRepository.findById(request.getIdGym())
-                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado"));
+    Role role = roleRepository.findById(request.getIdRole())
+            .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID: " + request.getIdRole()));
 
-        if (userRepository.existsByUser(request.getUser())) {
-            throw new RuntimeException("El nombre de usuario ya está en uso");
-        }
+    Gym gym = gymRepository.findById(request.getIdGym())
+            .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + request.getIdGym()));
 
-        if (userRepository.existsByMail(request.getMail())) {
-            throw new RuntimeException("El email ya está registrado");
-        }
-
-        User user = User.builder()
-                .user(request.getUser())
-                .mail(request.getMail())
-                .phone(request.getPhone())
-                .name(request.getName())
-                .password(request.getPassword())
-                .status(request.getStatus())
-                .role(role)
-                .gym(gym)
-                .build();
-
-        User saved = userRepository.save(user);
-        return mapToResponse(saved);
+    if (userRepository.existsByUser(request.getUser())) {
+        throw new RuntimeException("El nombre de usuario ya está en uso");
     }
+
+    if (userRepository.existsByMail(request.getMail())) {
+        throw new RuntimeException("El email ya está registrado");
+    }
+
+    User user = User.builder()
+            .user(request.getUser())
+            .mail(request.getMail())
+            .phone(request.getPhone())
+            .name(request.getName())
+            .password(request.getPassword())
+            .status(request.getStatus())
+            .role(role)
+            .gym(gym) 
+            .build();
+
+    User saved = userRepository.save(user);
+    return mapToResponse(saved);
+}
 
     @Override
     public UserResponse update(Integer id, UserRequest request) {
