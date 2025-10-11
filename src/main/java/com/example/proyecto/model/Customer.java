@@ -36,9 +36,9 @@ public class Customer {
     @JsonProperty("nombre del cliente")
     private String name;
 
-    @Column(name = "address", nullable = false)
-    @JsonProperty("dirección del cliente")
-    private String address;
+    @Column(name = "cologne", nullable = false)
+    @JsonProperty("colonia del cliente")
+    private String cologne;
 
     @Column(name = "phone", unique = true)
     @JsonProperty("telefono del cliente")
