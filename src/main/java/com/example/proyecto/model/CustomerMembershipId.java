@@ -4,43 +4,43 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class CustomerMembershipId implements Serializable{
-    private Integer idCustomer;
-    private Integer idMembership;
+    private Integer customer;
+    private Integer membership;
 
     public CustomerMembershipId() {}
     
-    public CustomerMembershipId(Integer idCustomer, Integer idMembership) {
-        this.idCustomer = idCustomer;
-        this.idMembership = idMembership;
+    public CustomerMembershipId(Integer customer, Integer membership) {
+        this.customer = customer;
+        this.membership = membership;
     }
 
-    public void setIdCustomer(Integer idCustomer) {
-        this.idCustomer = idCustomer;
+    public Integer getCustomer() {
+        return customer;
     }
 
-    public void setIdMembership(Integer idMembership) {
-        this.idMembership = idMembership;
+    public void setCustomer(Integer customer) {
+        this.customer = customer;
     }
 
-    public Integer getIdCustomer() {
-        return idCustomer;
-    }
+    public Integer getMembership() {
+        return membership;
+    } 
 
-    public Integer getIdMembership() {
-        return idMembership;
-    }  
+    public void setMembership(Integer membership) {
+        this.membership = membership;
+    } 
     
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CustomerMembershipId that = (CustomerMembershipId) o;
-        return Objects.equals(idCustomer, that.idCustomer)
-                && Objects.equals(idMembership, that.idMembership);
+        return Objects.equals(customer, that.customer)
+                && Objects.equals(membership, that.membership);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idCustomer, idMembership);
+        return Objects.hash(customer, membership);
     }
 }

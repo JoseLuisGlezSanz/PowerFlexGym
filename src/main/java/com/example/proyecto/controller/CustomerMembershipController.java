@@ -30,8 +30,8 @@ public class CustomerMembershipController {
             @PathVariable Integer customerId,
             @PathVariable Integer membershipId) {
         CustomerMembershipId id = new CustomerMembershipId();
-        id.setIdCustomer(customerId);
-        id.setIdMembership(membershipId);
+        id.setCustomer(customerId);
+        id.setMembership(membershipId);
         
         return customerMembershipService.findById(id)
                 .map(ResponseEntity::ok)
@@ -78,8 +78,8 @@ public class CustomerMembershipController {
             @PathVariable Integer membershipId,
             @Valid @RequestBody CustomerMembershipRequest request) {
         CustomerMembershipId id = new CustomerMembershipId();
-        id.setIdCustomer(customerId);
-        id.setIdMembership(membershipId);
+        id.setCustomer(customerId);
+        id.setMembership(membershipId);
         
         CustomerMembershipResponse updated = customerMembershipService.update(id, request);
         return ResponseEntity.ok(updated);
@@ -90,8 +90,8 @@ public class CustomerMembershipController {
             @PathVariable Integer customerId,
             @PathVariable Integer membershipId) {
         CustomerMembershipId id = new CustomerMembershipId();
-        id.setIdCustomer(customerId);
-        id.setIdMembership(membershipId);
+        id.setCustomer(customerId);
+        id.setMembership(membershipId);
         
         customerMembershipService.delete(id);
         return ResponseEntity.noContent().build();
