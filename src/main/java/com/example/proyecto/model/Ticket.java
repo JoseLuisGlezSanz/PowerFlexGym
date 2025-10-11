@@ -68,6 +68,12 @@ public class Ticket {
     @JsonProperty("ticket del usuario")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "id_customer", referencedColumnName = "id_customer", nullable = false)
+    @JsonBackReference
+    @JsonProperty("ticket del cliente")
+    private Customer customer;
+
     //Relaciones
     @JsonManagedReference
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)

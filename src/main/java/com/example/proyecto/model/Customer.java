@@ -83,4 +83,8 @@ public class Customer {
     @JsonManagedReference
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MembershipSale> membershipSales;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Ticket> tickets;
 }
