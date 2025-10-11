@@ -9,16 +9,16 @@ public class MembershipSaleMapper {
         if (membershipSale == null)
             return null;
         return MembershipSaleResponse.builder()
-                .idMembershipSale(membershipSale.getIdMembershipSale())
+                .idMembershipSale(membershipSale.getIdMembershipSales())
                 .date(membershipSale.getDate())
                 .payment(membershipSale.getPayment())
                 .cancellation(membershipSale.getCancellation())
                 .startDate(membershipSale.getStartDate())
                 .endDate(membershipSale.getEndDate())
-                .idMembership(membershipSale.getMembership())
-                .idCustomer(membershipSale.getCustomer())
-                .idGym(membershipSale.getGym())
-                .idUser(membershipSale.getUser())
+                .idMembership(membershipSale.getMembership().getIdMembership())
+                .idCustomer(membershipSale.getCustomer().getIdCustomer())
+                .idGym(membershipSale.getGym().getIdGym())
+                .idUser(membershipSale.getUser().getIdUser())
                 .build();
     }
 
@@ -30,10 +30,6 @@ public class MembershipSaleMapper {
                 .payment(dto.getPayment())
                 .startDate(dto.getStartDate())
                 .endDate(dto.getEndDate())
-                .idMembership(dto.getIdMembership())
-                .idCustomer(dto.getIdCustomer())
-                .idGym(dto.getIdGym())
-                .idUser(dto.getIdUser())
                 .cancellation(dto.getCancellation())
                 .build();
     }
@@ -45,10 +41,6 @@ public class MembershipSaleMapper {
         entity.setPayment(dto.getPayment());
         entity.setStartDate(dto.getStartDate());
         entity.setEndDate(dto.getEndDate());
-        entity.setIdMembershipSales(dto.getIdMembership());
-        entity.setIdCustomere(dto.getIdCustomer());
-        entity.setIdGym(dto.getIdGym());
-        entity.setIdUser(dto.getIdUser());
         entity.setCancellation(dto.getCancellation());
     }
 }

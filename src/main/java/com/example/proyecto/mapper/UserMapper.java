@@ -30,8 +30,6 @@ public class UserMapper {
                 .name(dto.getName())
                 .password(dto.getPassword())
                 .status(dto.getStatus())
-                .idRole(dto.getIdRole())
-                .idGym(dto.getIdGym())
                 .build();
     }
 
@@ -44,7 +42,5 @@ public class UserMapper {
         entity.setName(dto.getName());
         entity.setPassword(dto.getPassword());
         entity.setStatus(dto.getStatus());
-        entity.setRole(dto.getIdRole());
-        entity.setGym(dto.getIdGym());
     }
 }

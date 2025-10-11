@@ -10,9 +10,9 @@ public class CustomerMembershipMapper {
             return null;
 
         return CustomerMembershipResponse.builder()
-                .idCustomer(cm.getIdCustomer())
-                .idMembership(cm.getIdMembership())
-                .idGym(cm.getIdGym())
+                .idCustomer(cm.getCustomer().getIdCustomer()) 
+                .idMembership(cm.getMembership().getIdMembership())
+                .idGym(cm.getGym().getIdGym())
                 .startDate(cm.getStartDate())
                 .endDate(cm.getEndDate())
                 .memberSince(cm.getMemberSince())
@@ -25,9 +25,6 @@ public class CustomerMembershipMapper {
             return null;
 
         return CustomerMembership.builder()
-                .idCustomer(dto.getIdCustomer())
-                .idMembership(dto.getIdMembership())
-                .idGym(dto.getIdGym())
                 .startDate(dto.getStartDate())
                 .endDate(dto.getEndDate())
                 .membershipStatus(dto.getMembershipStatus())
@@ -37,10 +34,6 @@ public class CustomerMembershipMapper {
     public static void copyToEntity(CustomerMembershipRequest dto, CustomerMembership entity) {
         if (dto == null || entity == null)
             return;
-
-        entity.setIdCustomer(dto.getIdCustomer());
-        entity.setIdMembership(dto.getIdMembership());
-        entity.setIdGym(dto.getIdGym());
         entity.setStartDate(dto.getStartDate());
         entity.setEndDate(dto.getEndDate());
         entity.setMembershipStatus(dto.getMembershipStatus());

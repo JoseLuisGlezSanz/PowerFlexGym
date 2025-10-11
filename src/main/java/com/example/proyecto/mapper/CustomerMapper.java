@@ -2,12 +2,19 @@ package com.example.proyecto.mapper;
 
 import com.example.proyecto.dto.CustomerRequest;
 import com.example.proyecto.dto.CustomerResponse;
+import com.example.proyecto.dto.GymResponse;
 import com.example.proyecto.model.Customer;
 
 public class CustomerMapper {
     public static CustomerResponse toResponse(Customer customer) {
         if (customer == null)
             return null;
+
+        GymResponse gymResponse = GymResponse.builder()
+                .idGym(customer.getGym().getIdGym())
+                .gym(customer.getGym().getGym())
+                .build();
+
         return CustomerResponse.builder()
                 .idCustomer(customer.getIdCustomer())
                 .name(customer.getName())
@@ -19,7 +26,7 @@ public class CustomerMapper {
                 .photo(customer.getPhoto())
                 .photoCredential(customer.getPhotoCredential())
                 .verifiedNumber(customer.getVerifiedNumber())
-                .gym(customer.getGym())
+                .gym(gymResponse)
                 .build();
     }
 
@@ -32,7 +39,6 @@ public class CustomerMapper {
                 .phone(dto.getPhone())
                 .birthDate(dto.getBirthDate())
                 .medicalCondition(dto.getMedicalCondition())
-                .idGym(dto.getIdGym())
                 .build();
     }
 
@@ -44,6 +50,5 @@ public class CustomerMapper {
         entity.setPhone(dto.getPhone());
         entity.setBirthDate(dto.getBirthDate());
         entity.setMedicalCondition(dto.getMedicalCondition());
-        entity.setIdGym(dto.getIdGym());
     }
 }

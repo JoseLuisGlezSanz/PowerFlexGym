@@ -12,7 +12,7 @@ public class EmergencyContactMapper {
                 .idContact(emergencyContact.getIdContact())
                 .contactName(emergencyContact.getContactName())
                 .contactPhone(emergencyContact.getContactPhone())
-                .idCustomer(emergencyContact.getIdCustomer())
+                .idCustomer(emergencyContact.getCustomer().getIdCustomer())
                 .build();
     }
 
@@ -22,7 +22,6 @@ public class EmergencyContactMapper {
         return EmergencyContact.builder()
                 .contactName(dto.getContactName())
                 .contactPhone(dto.getContactPhone())
-                .idCustomer(dto.getIdCustomer())
                 .build();
     }
 
@@ -31,6 +30,5 @@ public class EmergencyContactMapper {
             return;
         entity.setContactName(dto.getContactName());
         entity.setContactPhone(dto.getContactPhone());
-        entity.setIdCustomer(dto.getIdCustomer());
     }
 }

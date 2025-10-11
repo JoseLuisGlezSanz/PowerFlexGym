@@ -4,15 +4,30 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class CustomerMembershipId implements Serializable{
-    private Integer customer;
-    private Integer membership;
+    private Integer idCustomer;
+    private Integer idMembership;
+
+    public CustomerMembershipId() {}
+    
+    public CustomerMembershipId(Integer idCustomer, Integer idMembership) {
+        this.idCustomer = idCustomer;
+        this.idMembership = idMembership;
+    }
+
+    public void setIdCustomer(Integer idCustomer) {
+        this.idCustomer = idCustomer;
+    }
+
+    public void setIdMembership(Integer idMembership) {
+        this.idMembership = idMembership;
+    }
 
     public Integer getIdCustomer() {
-        return customer;
+        return idCustomer;
     }
 
     public Integer getIdMembership() {
-        return membership;
+        return idMembership;
     }  
     
     @Override
@@ -20,12 +35,12 @@ public class CustomerMembershipId implements Serializable{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CustomerMembershipId that = (CustomerMembershipId) o;
-        return Objects.equals(customer, that.customer)
-                && Objects.equals(membership, that.membership);
+        return Objects.equals(idCustomer, that.idCustomer)
+                && Objects.equals(idMembership, that.idMembership);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(customer, membership);
+        return Objects.hash(idCustomer, idMembership);
     }
 }

@@ -14,7 +14,7 @@ public class MembershipMapper {
                 .duration(membership.getDuration())
                 .price(membership.getPrice())
                 .status(membership.getStatus())
-                .idGym(membership.getGym())
+                .idGym(membership.getGym().getIdGym())
                 .build();
     }
 
@@ -26,7 +26,6 @@ public class MembershipMapper {
                 .duration(dto.getDuration())
                 .price(dto.getPrice())
                 .status(dto.getStatus())
-                .idGym(dto.getIdGym())
                 .build();
     }
 
@@ -37,6 +36,5 @@ public class MembershipMapper {
         entity.setDuration(dto.getDuration());
         entity.setPrice(dto.getPrice());
         entity.setStatus(dto.getStatus());
-        entity.setIdGym(dto.getIdGym());
     }
 }

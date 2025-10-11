@@ -21,7 +21,10 @@ public class TicketMapper {
                 .paymentWith(ticket.getPaymentWith())
                 .customer(CustomerMapper.toResponse(ticket.getCustomer()))
                 .user(UserMapper.toResponse(ticket.getUser()))
-                .details(ticket.getDetails())
+                .details(ticket.getTicketDetails() != null ? 
+                         ticket.getTicketDetails().stream()
+                             .map(TicketsDetailMapper::toResponse)
+                             .collect(Collectors.toList()) : null)
                 .build();
     }
 
@@ -36,8 +39,6 @@ public class TicketMapper {
                 .saleDate(dto.getSaleDate())
                 .methodPayment(dto.getMethodPayment())
                 .paymentWith(dto.getPaymentWith())
-                .idCustomer(dto.getIdCustomer())
-                .idUser(dto.getIdUser())
                 .build();
     }
 
@@ -51,7 +52,5 @@ public class TicketMapper {
         entity.setSaleDate(dto.getSaleDate());
         entity.setMethodPayment(dto.getMethodPayment());
         entity.setPaymentWith(dto.getPaymentWith());
-        entity.setIdCustomer(dto.getIdCustomer());
-        entity.setIdUser(dto.getIdUser());
     }
 }

@@ -72,12 +72,13 @@ public class MembershipServiceImpl implements MembershipService{
             throw new RuntimeException("Ya existe una membresía con ese nombre en este gimnasio");
         }
 
-        Membership membership = new Membership();
-        membership.setMembership(request.getMembership());
-        membership.setDuration(request.getDuration());
-        membership.setPrice(request.getPrice());
-        membership.setStatus(request.getStatus());
-        membership.setGym(gym);
+        Membership membership = Membership.builder()
+            .membership(request.getMembership())
+            .duration(request.getDuration())
+            .price(request.getPrice())
+            .status(request.getStatus())
+            .gym(gym)
+            .build();
 
         Membership saved = membershipRepository.save(membership);
         return mapToResponse(saved);

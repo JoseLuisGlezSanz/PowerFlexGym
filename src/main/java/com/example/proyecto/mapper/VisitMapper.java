@@ -1,5 +1,7 @@
 package com.example.proyecto.mapper;
 
+import com.example.proyecto.dto.CustomerResponse;
+import com.example.proyecto.dto.GymResponse;
 import com.example.proyecto.dto.VisitRequest;
 import com.example.proyecto.dto.VisitResponse;
 import com.example.proyecto.model.Visit;
@@ -8,12 +10,21 @@ public class VisitMapper {
     public static VisitResponse toResponse(Visit visit) {
         if (visit == null)
             return null;
+
+        GymResponse gymResponse = GymResponse.builder()
+                .idGym(visit.getGym().getIdGym())
+                .gym(visit.getGym().getGym())
+                .build();
+
+        CustomerResponse customerResponse = CustomerMapper.toResponse(visit.getCustomer());
+
         return VisitResponse.builder()
                 .idVisit(visit.getIdVisit())
-                .idCustomer(visit.getIdCustomer())
+                .idCustomer(visit.getCustomer().getIdCustomer())
                 .date(visit.getDate())
                 .pending(visit.getPending())
-                .idGym(visit.getIdGym())
+                .gym(gymResponse)
+                .customer(customerResponse)
                 .build();
     }
 
@@ -21,19 +32,15 @@ public class VisitMapper {
         if (dto == null)
             return null;
         return Visit.builder()
-                .idCustomer(dto.getIdCustomer())
                 .date(dto.getDate())
                 .pending(dto.getPending())
-                .idGym(dto.getIdGym())
                 .build();
     }
 
     public static void copyToEntity(VisitRequest dto, Visit entity) {
         if (dto == null || entity == null)
             return;
-        entity.setIdCustomer(dto.getIdCustomer());
         entity.setDate(dto.getDate());
         entity.setPending(dto.getPending());
-        entity.setIdGym(dto.getIdGym());
     }
 }

@@ -1,41 +1,88 @@
 package com.example.proyecto.controller;
 
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import java.util.List;
 import com.example.proyecto.dto.ProductRequest;
 import com.example.proyecto.dto.ProductResponse;
 import com.example.proyecto.service.ProductService;
 
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/api/products")
+@RequiredArgsConstructor
 public class ProductController {
-
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
     @GetMapping
-    public List<ProductResponse> getAll() {
-        return productService.findAll();
+    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+        List<ProductResponse> products = productService.findAll();
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/{id}")
-    public ProductResponse getById(@PathVariable Integer id) {
-        return productService.findById(id);
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable Integer id) {
+        return productService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductResponse>> searchProductsByName(@RequestParam String name) {
+        List<ProductResponse> products = productService.findByNameContaining(name);
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<ProductResponse>> getProductsByStatus(@PathVariable Integer status) {
+        List<ProductResponse> products = productService.findByStatus(status);
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/low-stock")
+    public ResponseEntity<List<ProductResponse>> getLowStockProducts(
+            @RequestParam(defaultValue = "10") Integer threshold) {
+        List<ProductResponse> products = productService.findLowStock(threshold);
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/price-range")
+    public ResponseEntity<List<ProductResponse>> getProductsByPriceRange(
+            @RequestParam Double minPrice,
+            @RequestParam Double maxPrice) {
+        List<ProductResponse> products = productService.findByPriceRange(minPrice, maxPrice);
+        return ResponseEntity.ok(products);
     }
 
     @PostMapping
-    public ProductResponse create(@RequestBody ProductRequest request) {
-        return productService.create(request);
+    public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest request) {
+        ProductResponse created = productService.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
-    public ProductResponse update(@PathVariable Integer id, @RequestBody ProductRequest request) {
-        return productService.update(id, request);
+    public ResponseEntity<ProductResponse> updateProduct(
+            @PathVariable Integer id,
+            @Valid @RequestBody ProductRequest request) {
+        ProductResponse updated = productService.update(id, request);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) {
         productService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/stock")
+    public ResponseEntity<ProductResponse> updateProductStock(
+            @PathVariable Integer id,
+            @RequestParam Integer stock) {
+        ProductResponse updated = productService.updateStock(id, stock);
+        return ResponseEntity.ok(updated);
     }
 }

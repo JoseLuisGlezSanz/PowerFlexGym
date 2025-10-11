@@ -15,6 +15,7 @@ public class TicketsDetailMapper {
                 .unitPrice(detail.getUnitPrice())
                 .subtotal(detail.getSubtotal())
                 .product(ProductMapper.toResponse(detail.getProduct()))
+                .idTicket(detail.getTicket().getIdTicket())
                 .build();
     }
 
@@ -26,8 +27,6 @@ public class TicketsDetailMapper {
                 .amount(dto.getAmount())
                 .unitPrice(dto.getUnitPrice())
                 .subtotal(dto.getSubtotal())
-                .idProduct(dto.getIdProduct())
-                .idTicket(dto.getIdTicket())
                 .build();
     }
 
@@ -37,7 +36,5 @@ public class TicketsDetailMapper {
         entity.setAmount(dto.getAmount());
         entity.setUnitPrice(dto.getUnitPrice());
         entity.setSubtotal(dto.getSubtotal());
-        entity.setIdProduct(dto.getIdProduct());
-        entity.setIdTicket(dto.getIdTicket());
     }
 }
