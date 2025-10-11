@@ -3,7 +3,7 @@ package com.example.proyecto.model;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class CustomerMembershipPK implements Serializable{
+public class CustomerMembershipId implements Serializable{
     private Integer idCustomer;
     private Integer idMembership;
 
@@ -19,7 +19,7 @@ public class CustomerMembershipPK implements Serializable{
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CustomerMembershipPK that = (CustomerMembershipPK) o;
+        CustomerMembershipId that = (CustomerMembershipId) o;
         return Objects.equals(idCustomer, that.idCustomer)
                 && Objects.equals(idMembership, that.idMembership);
     }

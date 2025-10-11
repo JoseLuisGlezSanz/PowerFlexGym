@@ -21,7 +21,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "customers_memberships")
-@IdClass(CustomerMembershipPK.class)
+@IdClass(CustomerMembershipId.class)
 public class CustomerMembership {
     @Id
     @ManyToOne
