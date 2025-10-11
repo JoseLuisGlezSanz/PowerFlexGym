@@ -19,11 +19,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "tickets")
 public class Ticket {
@@ -36,10 +42,6 @@ public class Ticket {
     @Column(name = "date", nullable = false)
     @JsonProperty("fecha de creación")
     private LocalDateTime date;
-
-    @Column(name = "id_customer")
-    @JsonProperty("identificador del cliente")
-    private Integer idCustomer;
 
     @Column(name = "total", nullable = false, precision = 10, scale = 2)
     @JsonProperty("total del ticket")
@@ -67,6 +69,12 @@ public class Ticket {
     @JsonBackReference
     @JsonProperty("ticket del usuario")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "id_customer", referencedColumnName = "id_customer", nullable = false)
+    @JsonBackReference
+    @JsonProperty("ticket del cliente")
+    private Customer customer;
 
     //Relaciones
     @JsonManagedReference

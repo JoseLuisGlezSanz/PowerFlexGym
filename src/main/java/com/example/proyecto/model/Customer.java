@@ -1,6 +1,6 @@
 package com.example.proyecto.model;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,11 +18,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "customers")
 public class Customer {
@@ -46,7 +52,7 @@ public class Customer {
 
     @Column(name = "birth_date", nullable = false)
     @JsonProperty("fecha de nacimiento del cliente")
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @Column(name = "medical_condition", nullable = false)
     @JsonProperty("condiciones medicas del cliente")
@@ -83,4 +89,12 @@ public class Customer {
     @JsonManagedReference
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MembershipSale> membershipSales;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Ticket> tickets;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Visit> visits;
 }

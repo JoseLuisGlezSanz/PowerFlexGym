@@ -55,8 +55,8 @@ CREATE TABLE users (
     name VARCHAR(150) NOT NULL,
     password VARCHAR(255) NOT NULL,
     status INT NOT NULL,
-    id_Rol INT NOT NULL,
-    id_Gimnasio INT NOT NULL,
+    id_role INT NOT NULL,
+    id_gym INT NOT NULL,
     CONSTRAINT fk_user_role FOREIGN KEY (id_role) REFERENCES roles (id_role),
     CONSTRAINT fk_user_gym FOREIGN KEY (id_gym) REFERENCES gyms (id_gym)
 );
@@ -87,6 +87,7 @@ CREATE TABLE tickets (
     payment_with NUMERIC(10,2),
     id_user INT NOT NULL,
     CONSTRAINT fk_ticket_user FOREIGN KEY (id_user) REFERENCES users (id_user)
+    CONSTRAINT fk_ticket_customer FOREIGN KEY (id_customer) REFERENCES customers (id_customer)
 );
 
 -- ============================================
@@ -163,4 +164,5 @@ CREATE TABLE visits (
     pending INT,
     id_gym INT NOT NULL,
     CONSTRAINT fk_visit_gym FOREIGN KEY (id_gym) REFERENCES gyms (id_gym)
+    CONSTRAINT fk_visit_customer FOREIGN KEY (id_customer) REFERENCES customers (id_customer)
 );

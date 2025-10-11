@@ -19,4 +19,9 @@ public class MembershipSaleResponse {
     private Integer idCustomer;
     private Integer idGym;
     private Integer idUser;
+    
+    private MembershipResponse membership;
+    private CustomerResponse customer;
+    private UserResponse user;
+    private GymResponse gym;
 }

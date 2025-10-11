@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Value;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Value
 @Builder
@@ -19,4 +20,6 @@ public class CustomerResponse {
     private String photoCredential;
     private Boolean verifiedNumber;
     private GymResponse gym;
+    private EmergencyContactResponse emergencyContact;
+    private List<CustomerMembershipResponse> memberships;
 }

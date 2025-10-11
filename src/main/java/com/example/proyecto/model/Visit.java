@@ -14,11 +14,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "visits")
 public class Visit {
@@ -27,10 +33,6 @@ public class Visit {
     @Column(name = "id_visit")
     @JsonProperty("identificador de la visita")
     private Integer idVisit;
-
-    @Column(name ="id_customer")
-    @JsonProperty("identificador del cliente")
-    private Integer idCustomer;
 
     @Column(name = "date", nullable = false)
     @JsonProperty("fecha de la visita")
@@ -46,4 +48,10 @@ public class Visit {
     @JsonBackReference
     @JsonProperty("visita al gym")
     private Gym gym;
+
+    @ManyToOne
+    @JoinColumn(name="id_customer", referencedColumnName = "id_customer", nullable = false)
+    @JsonBackReference
+    @JsonProperty("cliente de la visita")
+    private Customer customer;
 }
