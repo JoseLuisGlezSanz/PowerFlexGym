@@ -3,10 +3,9 @@ package com.example.proyecto.mapper;
 import com.example.proyecto.dto.CustomerRequest;
 import com.example.proyecto.dto.CustomerResponse;
 import com.example.proyecto.model.Customer;
-import com.example.proyecto.model.Gym;
 
 public class CustomerMapper {
-        public static CustomerResponse toResponse(Customer customer) {
+    public static CustomerResponse toResponse(Customer customer) {
         if (customer == null)
             return null;
         return CustomerResponse.builder()

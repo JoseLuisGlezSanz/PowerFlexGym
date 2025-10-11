@@ -2,7 +2,6 @@ package com.example.proyecto.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.FutureOrPresent;
 import lombok.Data;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

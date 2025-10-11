@@ -5,7 +5,7 @@ import com.example.proyecto.dto.GymResponse;
 import com.example.proyecto.model.Gym;
 
 public class GymMapper {
-        public static GymResponse toResponse(Gym gym) {
+    public static GymResponse toResponse(Gym gym) {
         if (gym == null)
             return null;
         return GymResponse.builder()
