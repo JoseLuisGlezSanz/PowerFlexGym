@@ -44,7 +44,7 @@ public class VisitServiceImpl implements VisitService{
 
     @Override
     public List<VisitResponse> findByCustomerId(Integer customerId) {
-        return visitRepository.findByIdCustomer(customerId).stream()
+        return visitRepository.findByCustomerIdCustomer(customerId).stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }

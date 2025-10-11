@@ -12,7 +12,7 @@ import com.example.proyecto.model.Visit;
 public interface VisitRepository extends JpaRepository<Visit, Integer> {
 
     // Buscar visitas por cliente
-    List<Visit> findByIdCustomer(Integer idCustomer);
+    List<Visit> findByCustomerIdCustomer(Integer customerId);
     
     // Buscar visitas por gimnasio
     List<Visit> findByGymIdGym(Integer idGym);
@@ -24,8 +24,8 @@ public interface VisitRepository extends JpaRepository<Visit, Integer> {
     List<Visit> findByDateBetween(LocalDateTime startDate, LocalDateTime endDate);
     
     // Contar visitas por cliente en un período
-    @Query("SELECT COUNT(v) FROM Visit v WHERE v.idCustomer = :idCustomer AND v.date BETWEEN :startDate AND :endDate")
-    Long countVisitsByCustomerAndDateRange(@Param("idCustomer") Integer idCustomer,
+    @Query("SELECT COUNT(v) FROM Visit v WHERE v.customer.idCustomer = :customerId AND v.date BETWEEN :startDate AND :endDate")
+    Long countVisitsByCustomerAndDateRange(@Param("customerId") Integer customerId,
                                           @Param("startDate") LocalDateTime startDate,
                                           @Param("endDate") LocalDateTime endDate);
     
