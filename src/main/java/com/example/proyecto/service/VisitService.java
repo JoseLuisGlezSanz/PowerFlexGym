@@ -6,8 +6,12 @@ import com.example.proyecto.dto.VisitResponse;
 
 public interface VisitService {
     List<VisitResponse> findAll();
+
     VisitResponse findById(Integer id);
+
     VisitResponse create(VisitRequest request);
+
     VisitResponse update(Integer id, VisitRequest request);
+    
     void delete(Integer id);
 }

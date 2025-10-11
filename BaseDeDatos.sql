@@ -164,4 +164,5 @@ CREATE TABLE visits (
     pending INT,
     id_gym INT NOT NULL,
     CONSTRAINT fk_visit_gym FOREIGN KEY (id_gym) REFERENCES gyms (id_gym)
+    CONSTRAINT fk_visit_customer FOREIGN KEY (id_customer) REFERENCES customers (id_customer)
 );

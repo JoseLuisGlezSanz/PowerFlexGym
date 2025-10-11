@@ -5,7 +5,7 @@ import com.example.proyecto.dto.CustomerMembershipResponse;
 import com.example.proyecto.model.CustomerMembership;
 
 public class CustomerMembershipMapper {
-    public static CustomerMembershipResponse toResponse(CustomerMembership cm) {
+        public static CustomerMembershipResponse toResponse(CustomerMembership cm) {
         if (cm == null)
             return null;
 
