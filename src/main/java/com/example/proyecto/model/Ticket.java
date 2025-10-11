@@ -39,10 +39,6 @@ public class Ticket {
     @JsonProperty("fecha de creación")
     private LocalDateTime date;
 
-    @Column(name = "id_customer")
-    @JsonProperty("identificador del cliente")
-    private Integer idCustomer;
-
     @Column(name = "total", nullable = false, precision = 10, scale = 2)
     @JsonProperty("total del ticket")
     private BigDecimal total;

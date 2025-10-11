@@ -7,12 +7,8 @@ import com.example.proyecto.dto.TicketDetailResponse;
 
 public interface TicketDetailService {
     List<TicketDetailResponse> findAll();
-
     TicketDetailResponse findById(Integer id);
-
     TicketDetailResponse create(TicketDetailRequest request);
-
     TicketDetailResponse update(Integer id, TicketDetailRequest request);
-    
     void delete(Integer id);
 }

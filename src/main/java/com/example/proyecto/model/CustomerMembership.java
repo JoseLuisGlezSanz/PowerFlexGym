@@ -28,14 +28,14 @@ public class CustomerMembership {
     @Id
     @ManyToOne
     @JoinColumn(name="id_customer")
-    @JsonProperty("identificador del cliente")
-    private Integer idCustomer;
+    @JsonBackReference
+    private Customer customer;
 
     @Id
     @ManyToOne
     @JoinColumn(name="id_membership")
-    @JsonProperty("identificador de la membresia")
-    private Integer idMembership;
+    @JsonBackReference
+    private Membership membership;
 
     @Column(name = "start_date")
     @JsonProperty("fecha de inicio de la membresia")

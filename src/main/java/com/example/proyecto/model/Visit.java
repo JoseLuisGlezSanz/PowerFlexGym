@@ -30,10 +30,6 @@ public class Visit {
     @JsonProperty("identificador de la visita")
     private Integer idVisit;
 
-    @Column(name ="id_customer")
-    @JsonProperty("identificador del cliente")
-    private Integer idCustomer;
-
     @Column(name = "date", nullable = false)
     @JsonProperty("fecha de la visita")
     private LocalDateTime date;

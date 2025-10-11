@@ -6,12 +6,8 @@ import com.example.proyecto.dto.GymResponse;
 
 public interface GymService {
     List<GymResponse> findAll();
-
     GymResponse findById(Integer id);
-
     GymResponse create(GymRequest request);
-
     GymResponse update(Integer id, GymRequest request);
-    
     void delete(Integer id);
 }

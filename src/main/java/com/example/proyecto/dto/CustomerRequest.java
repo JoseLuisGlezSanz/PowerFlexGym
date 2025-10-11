@@ -6,10 +6,13 @@ import java.time.LocalDate;
 
 @Data
 public class CustomerRequest {
-    @NotBlank private String name;
-    @NotBlank private String cologne;
+    private String name;
+    private String cologne;
     @Pattern(regexp = "\\d{10}") private String phone;
-    @NotNull private LocalDate birthDate;
-    @NotNull private Boolean medicalCondition;
-    @NotNull private Integer idGym;
+    private LocalDate birthDate;
+    private Boolean medicalCondition;
+    private Integer idGym;
+    private String photo;
+    private String photoCredential;
+    private Boolean verifiedNumber = false;
 }
