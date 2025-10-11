@@ -1,6 +1,6 @@
 package com.example.proyecto.model;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -39,11 +39,11 @@ public class CustomerMembership {
 
     @Column(name = "start_date")
     @JsonProperty("fecha de inicio de la membresia")
-    private Date startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date")
     @JsonProperty("fecha de finalización de la membresia")
-    private Date endDate;
+    private LocalDate endDate;
 
     @Column(name = "member_since", nullable = false)
     @JsonProperty("fecha de registro de la membresía")

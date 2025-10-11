@@ -44,4 +44,10 @@ public class Visit {
     @JsonBackReference
     @JsonProperty("visita al gym")
     private Gym gym;
+
+    @ManyToOne
+    @JoinColumn(name="id_customer", referencedColumnName = "id_customer", nullable = false)
+    @JsonBackReference
+    @JsonProperty("cliente de la visita")
+    private Customer customer;
 }

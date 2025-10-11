@@ -1,6 +1,6 @@
 package com.example.proyecto.model;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class Customer {
 
     @Column(name = "birth_date", nullable = false)
     @JsonProperty("fecha de nacimiento del cliente")
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @Column(name = "medical_condition", nullable = false)
     @JsonProperty("condiciones medicas del cliente")
@@ -89,4 +89,8 @@ public class Customer {
     @JsonManagedReference
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ticket> tickets;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Visit> visits;
 }
