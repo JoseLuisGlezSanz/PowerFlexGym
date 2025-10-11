@@ -12,7 +12,7 @@ CREATE TABLE gyms (
 CREATE TABLE customers (
     id_customer SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    address VARCHAR(150) NOT NULL,
+    cologne VARCHAR(150) NOT NULL,
     phone VARCHAR(10) UNIQUE,
     birth_date DATE NOT NULL,
     medical_condition BOOLEAN NOT NULL,
