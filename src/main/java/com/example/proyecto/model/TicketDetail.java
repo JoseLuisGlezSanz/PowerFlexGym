@@ -1,7 +1,5 @@
 package com.example.proyecto.model;
 
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
@@ -10,8 +8,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,17 +40,4 @@ public class TicketDetail {
     @Column(name = "subtotal")
     @JsonProperty("Subtotal del ticket")
     private Double subtotal;
-
-    //Llaves foraneas
-    @ManyToOne
-    @JoinColumn(name="id_product", referencedColumnName = "id_product", nullable = false)
-    @JsonBackReference
-    @JsonProperty("detalles del producto")
-    private Product product;
-
-    @ManyToOne
-    @JoinColumn(name="id_ticket", referencedColumnName = "id_ticket", nullable = false)
-    @JsonBackReference
-    @JsonProperty("detalles del ticket")
-    private Ticket ticket;
 }

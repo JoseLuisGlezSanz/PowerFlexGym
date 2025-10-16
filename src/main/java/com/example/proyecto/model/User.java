@@ -2,8 +2,6 @@ package com.example.proyecto.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -13,7 +11,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -60,25 +57,12 @@ public class User {
     @JsonProperty("estado del usuario")
     private Integer status;
 
-    //Laves foraneas
-    @ManyToOne
-    @JoinColumn(name = "id_role", referencedColumnName = "id_role", nullable = false)
-    @JsonBackReference
-    @JsonProperty("rol del usuario")
-    private Role role;
-
-    @ManyToOne
-    @JoinColumn(name = "id_gym", referencedColumnName = "id_gym", nullable = false)
-    @JsonBackReference
-    @JsonProperty("gimnasio del usuario")
-    private Gym gym;
-
     //Relaciones
-    @JsonManagedReference
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MembershipSale> membershipSales;
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_user", referencedColumnName = "idUser")
     private List<Ticket> tickets;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_user", referencedColumnName = "idUser")
+    private List<MembershipSale> membershipsSales;
 }

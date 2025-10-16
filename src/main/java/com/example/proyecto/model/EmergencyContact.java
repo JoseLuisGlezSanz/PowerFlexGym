@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -38,9 +39,10 @@ public class EmergencyContact {
     @JsonProperty("telefono del contacto de emergencia")
     private String contactPhone;
 
-    //Llaves foraneas
+    //Relaciones
     @OneToOne
-    @JoinColumn(name = "id_customer", referencedColumnName = "id_customer", nullable = false, unique = true)
+    @MapsId
+    @JoinColumn(name = "id_contact", nullable = false, unique = true)
     @JsonProperty("cliente asociado")
     private Customer customer;
 }

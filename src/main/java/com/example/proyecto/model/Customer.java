@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.ManyToAny;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -15,8 +15,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -74,27 +76,28 @@ public class Customer {
     @JsonProperty("numero verificado del cliente")
     private Boolean verifiedNumber;
 
-    //Llaves foraneas
-    @ManyToOne
-    @JoinColumn(name = "id_gym", referencedColumnName = "id_gym", nullable = false)
-    @JsonBackReference
-    @JsonProperty("gimnasio del cliente")
-    private Gym gym;
-
     //Relaciones
-    @JsonManagedReference
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CustomerMembership> customerMemberships;
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private EmergencyContact emergencyContact;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MembershipSale> membershipSales;
+    @ManyToAny
+    @JoinTable(
+        name = "customers_memberships", 
+        joinColumns = @JoinColumn(name = "id_customer"), // Columna para la clave foránea de Customer
+        inverseJoinColumns = @JoinColumn(name = "id_membership") //Columna para la clave foránea de Membership
+    )
+    private List<Membership> memberships;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_customer", referencedColumnName = "idCustomer")
     private List<Ticket> tickets;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_customer", referencedColumnName = "idCustomer")
+    private List<MembershipSale> membershipsSales;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_customer", referencedColumnName = "idCustomer")
     private List<Visit> visits;
 }

@@ -3,7 +3,6 @@ package com.example.proyecto.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
@@ -12,8 +11,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,29 +51,4 @@ public class MembershipSale {
     @Column(name = "end_date", nullable = false)
     @JsonProperty("fecha de finalización de la membresia")
     private LocalDate endDate;
-
-    //Llaves foraneas
-    @ManyToOne
-    @JoinColumn(name="id_customer", referencedColumnName = "id_customer", nullable = false)
-    @JsonBackReference
-    @JsonProperty("cliente")
-    private Customer customer;
-
-    @ManyToOne
-    @JoinColumn(name="id_membership", referencedColumnName = "id_membership", nullable = false)
-    @JsonBackReference
-    @JsonProperty("membresia")
-    private Membership membership;
-
-    @ManyToOne
-    @JoinColumn(name="id_gym", referencedColumnName = "id_gym", nullable = false)
-    @JsonBackReference
-    @JsonProperty("gym")
-    private Gym gym;
-
-    @ManyToOne
-    @JoinColumn(name="id_user", referencedColumnName = "id_user", nullable = false)
-    @JsonBackReference
-    @JsonProperty("usuario")
-    private User user;
 }

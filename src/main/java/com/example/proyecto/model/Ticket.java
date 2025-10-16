@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -16,7 +14,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -63,21 +60,8 @@ public class Ticket {
     @JsonProperty("monto con el que se pagó")
     private BigDecimal paymentWith;
 
-    //Laves foraneas
-    @ManyToOne
-    @JoinColumn(name = "id_user", referencedColumnName = "id_user", nullable = false)
-    @JsonBackReference
-    @JsonProperty("ticket del usuario")
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "id_customer", referencedColumnName = "id_customer", nullable = false)
-    @JsonBackReference
-    @JsonProperty("ticket del cliente")
-    private Customer customer;
-
     //Relaciones
-    @JsonManagedReference
-    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TicketDetail> ticketDetails;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_ticket", referencedColumnName = "idTicket")
+    private List<TicketDetail> ticketsDetails;
 }
