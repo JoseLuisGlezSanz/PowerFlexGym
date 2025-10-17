@@ -19,19 +19,19 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class EmergencyContactServiceImpl implements EmergencyContactService{
-    private final EmergencyContactRepository repository;
+    private final EmergencyContactRepository emergencyContactRepository;
     private final CustomerRepository customerRepository;
 
     @Override
     public List<EmergencyContactResponse> findAll() {
-        return repository.findAll().stream()
+        return emergencyContactRepository.findAll().stream()
                 .map(EmergencyContactMapper::toResponse)
                 .toList();
     }
 
     @Override
     public EmergencyContactResponse findById(Integer id) {
-        EmergencyContact contact = repository.findById(id)
+        EmergencyContact contact = emergencyContactRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Contacto de emergencia no encontrado con ID: " + id));
         return EmergencyContactMapper.toResponse(contact);
     }
@@ -43,38 +43,28 @@ public class EmergencyContactServiceImpl implements EmergencyContactService{
         
         EmergencyContact contact = EmergencyContactMapper.toEntity(req);
         contact.setCustomer(customer);
-        
-        EmergencyContact savedContact = repository.save(contact);
+        EmergencyContact savedContact = emergencyContactRepository.save(contact);
         return EmergencyContactMapper.toResponse(savedContact);
     }
 
     @Override
     public EmergencyContactResponse update(Integer id, EmergencyContactRequest req) {
-        EmergencyContact existingContact = repository.findById(id)
+        EmergencyContact existingContact = emergencyContactRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Contacto de emergencia no encontrado con ID: " + id));
         
-        if (!existingContact.getCustomer().getIdCustomer().equals(req.getIdCustomer())) {
-            Customer customer = customerRepository.findById(req.getIdCustomer())
-                    .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + req.getIdCustomer()));
-            existingContact.setCustomer(customer);
-        }
-        
         EmergencyContactMapper.copyToEntity(req, existingContact);
-        EmergencyContact updatedContact = repository.save(existingContact);
+        EmergencyContact updatedContact = emergencyContactRepository.save(existingContact);
         return EmergencyContactMapper.toResponse(updatedContact);
     }
 
     @Override
     public void delete(Integer id) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException("Contacto de emergencia no encontrado con ID: " + id);
-        }
-        repository.deleteById(id);
+        emergencyContactRepository.deleteById(id);
     }
 
     @Override
     public EmergencyContactResponse findByIdCustomer(Integer idCustomer) {
-        return repository.findByCustomerIdCustomer(idCustomer)
+        return emergencyContactRepository.findByCustomerIdCustomer(idCustomer)
                 .map(EmergencyContactMapper::toResponse)
                 .orElseThrow(() -> new RuntimeException("Contacto de emergencia no encontrado para el cliente con ID: " + idCustomer));
     }

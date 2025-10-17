@@ -17,65 +17,60 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class ProductServiceImpl implements ProductService{
-    private final ProductRepository repository;
+    private final ProductRepository productRepository;
 
     @Override
     public List<ProductResponse> findAll() {
-        return repository.findAll().stream()
+        return productRepository.findAll().stream()
                 .map(ProductMapper::toResponse)
                 .toList();
     }
 
     @Override
     public ProductResponse findById(Integer id) {
-        Product product = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
+        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
         return ProductMapper.toResponse(product);
     }
 
     @Override
     public ProductResponse save(ProductRequest req) {
         Product product = ProductMapper.toEntity(req);
-        Product savedProduct = repository.save(product);
+        Product savedProduct = productRepository.save(product);
         return ProductMapper.toResponse(savedProduct);
     }
 
     @Override
     public ProductResponse update(Integer id, ProductRequest req) {
-        Product existingProduct = repository.findById(id)
+        Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
         
         ProductMapper.copyToEntity(req, existingProduct);
-        Product updatedProduct = repository.save(existingProduct);
+        Product updatedProduct = productRepository.save(existingProduct);
         return ProductMapper.toResponse(updatedProduct);
     }
 
     @Override
     public void delete(Integer id) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException("Producto no encontrado con ID: " + id);
-        }
-        repository.deleteById(id);
+        productRepository.deleteById(id);
     }
 
     @Override
     public List<ProductResponse> findByName(String name) {
-        return repository.findByName(name).stream()
+        return productRepository.findByName(name).stream()
                 .map(ProductMapper::toResponse)
                 .toList();
     }
 
     @Override
     public List<ProductResponse> findByStatus(Integer status) {
-        return repository.findByStatus(status).stream()
+        return productRepository.findByStatus(status).stream()
                 .map(ProductMapper::toResponse)
                 .toList();
     }
 
     @Override
     public List<ProductResponse> findByStockLessThan(Integer stock) {
-        // Implementar cuando agregues el método al repository
-        return repository.findAll().stream()
+        return productRepository.findAll().stream()
                 .filter(p -> p.getStock() < stock)
                 .map(ProductMapper::toResponse)
                 .toList();

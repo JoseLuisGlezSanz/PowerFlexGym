@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
 public class ProductController {
-
     private final ProductService productService;
 
     @GetMapping
@@ -37,9 +36,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> update(
-            @PathVariable Integer id, 
-            @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<ProductResponse> update(@PathVariable Integer id, @RequestBody ProductRequest productRequest) {
         ProductResponse updatedProduct = productService.update(id, productRequest);
         return ResponseEntity.ok(updatedProduct);
     }

@@ -37,9 +37,7 @@ public class VisitController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VisitResponse> update(
-            @PathVariable Integer id, 
-            @RequestBody VisitRequest visitRequest) {
+    public ResponseEntity<VisitResponse> update(@PathVariable Integer id, @RequestBody VisitRequest visitRequest) {
         VisitResponse updatedVisit = visitService.update(id, visitRequest);
         return ResponseEntity.ok(updatedVisit);
     }

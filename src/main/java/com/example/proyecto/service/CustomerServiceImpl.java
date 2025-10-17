@@ -17,20 +17,19 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService{
-    private final CustomerRepository repository;
+    private final CustomerRepository customerRepository;
     private final GymRepository gymRepository;
 
     @Override
     public List<CustomerResponse> findAll() {
-        return repository.findAll().stream()
+        return customerRepository.findAll().stream()
                 .map(CustomerMapper::toResponse)
                 .toList();
     }
 
     @Override
     public CustomerResponse findById(Integer id) {
-        Customer customer = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + id));
+        Customer customer = customerRepository.findById(id).orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + id));
         return CustomerMapper.toResponse(customer);
     }
 
@@ -41,38 +40,35 @@ public class CustomerServiceImpl implements CustomerService{
 
         Customer customer = CustomerMapper.toEntity(req);
         customer.setGym(gym);
-        Customer savedCustomer = repository.save(customer);
+        Customer savedCustomer = customerRepository.save(customer);
         return CustomerMapper.toResponse(savedCustomer);
     }
 
     @Override
     public CustomerResponse update(Integer id, CustomerRequest req) {
-        Customer existingCustomer = repository.findById(id)
+        Customer existingCustomer = customerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + id));
         
         CustomerMapper.copyToEntity(req, existingCustomer);
-        Customer updatedCustomer = repository.save(existingCustomer);
+        Customer updatedCustomer = customerRepository.save(existingCustomer);
         return CustomerMapper.toResponse(updatedCustomer);
     }
 
     @Override
     public void delete(Integer id) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException("Cliente no encontrado con ID: " + id);
-        }
-        repository.deleteById(id);
+        customerRepository.deleteById(id);
     }
 
     @Override
     public List<CustomerResponse> findByName(String name) {
-        return repository.findByName(name).stream()
+        return customerRepository.findByName(name).stream()
                 .map(CustomerMapper::toResponse)
                 .toList();
     }
 
     @Override
     public List<CustomerResponse> findByVerifiedNumberTrue() {
-        return repository.findByVerifiedNumberTrue().stream()
+        return customerRepository.findByVerifiedNumberTrue().stream()
                 .map(CustomerMapper::toResponse)
                 .toList();
     }

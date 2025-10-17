@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/roles")
 @RequiredArgsConstructor
 public class RoleController {
-
     private final RoleService roleService;
 
     @GetMapping
@@ -37,9 +36,7 @@ public class RoleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RoleResponse> update(
-            @PathVariable Integer id, 
-            @RequestBody RoleRequest roleRequest) {
+    public ResponseEntity<RoleResponse> update(@PathVariable Integer id, @RequestBody RoleRequest roleRequest) {
         RoleResponse updatedRole = roleService.update(id, roleRequest);
         return ResponseEntity.ok(updatedRole);
     }

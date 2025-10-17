@@ -21,21 +21,20 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class VisitServiceImpl implements VisitService{
-    private final VisitRepository repository;
+    private final VisitRepository visitRepository;
     private final CustomerRepository customerRepository;
     private final GymRepository gymRepository;
 
     @Override
     public List<VisitResponse> findAll() {
-        return repository.findAll().stream()
+        return visitRepository.findAll().stream()
                 .map(VisitMapper::toResponse)
                 .toList();
     }
 
     @Override
     public VisitResponse findById(Integer id) {
-        Visit visit = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Visita no encontrada con ID: " + id));
+        Visit visit = visitRepository.findById(id).orElseThrow(() -> new RuntimeException("Visita no encontrada con ID: " + id));
         return VisitMapper.toResponse(visit);
     }
 
@@ -50,58 +49,42 @@ public class VisitServiceImpl implements VisitService{
         visit.setCustomer(customer);
         visit.setGym(gym);
         
-        Visit savedVisit = repository.save(visit);
+        Visit savedVisit = visitRepository.save(visit);
         return VisitMapper.toResponse(savedVisit);
     }
 
     @Override
     public VisitResponse update(Integer id, VisitRequest req) {
-        Visit existingVisit = repository.findById(id)
+        Visit existingVisit = visitRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Visita no encontrada con ID: " + id));
         
-        if (!existingVisit.getCustomer().getIdCustomer().equals(req.getIdCustomer())) {
-            Customer customer = customerRepository.findById(req.getIdCustomer())
-                    .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + req.getIdCustomer()));
-            existingVisit.setCustomer(customer);
-        }
-        
-        if (!existingVisit.getGym().getIdGym().equals(req.getIdGym())) {
-            Gym gym = gymRepository.findById(req.getIdGym())
-                    .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + req.getIdGym()));
-            existingVisit.setGym(gym);
-        }
-        
         VisitMapper.copyToEntity(req, existingVisit);
-        Visit updatedVisit = repository.save(existingVisit);
+        Visit updatedVisit = visitRepository.save(existingVisit);
         return VisitMapper.toResponse(updatedVisit);
     }
 
     @Override
     public void delete(Integer id) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException("Visita no encontrada con ID: " + id);
-        }
-        repository.deleteById(id);
+        visitRepository.deleteById(id);
     }
 
     @Override
     public List<VisitResponse> findByCustomerId(Integer idCustomer) {
-        return repository.findByCustomerIdCustomer(idCustomer).stream()
+        return visitRepository.findByCustomerIdCustomer(idCustomer).stream()
                 .map(VisitMapper::toResponse)
                 .toList();
     }
 
     @Override
     public List<VisitResponse> findByGymId(Integer idGym) {
-        return repository.findByGymIdGym(idGym).stream()
+        return visitRepository.findByGymIdGym(idGym).stream()
                 .map(VisitMapper::toResponse)
                 .toList();
     }
 
     @Override
     public List<VisitResponse> findByPending(Integer pending) {
-        // Implementar cuando agregues el método al repository
-        return repository.findAll().stream()
+        return visitRepository.findAll().stream()
                 .filter(v -> v.getPending().equals(pending))
                 .map(VisitMapper::toResponse)
                 .toList();

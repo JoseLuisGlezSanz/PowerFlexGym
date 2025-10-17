@@ -24,14 +24,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class CustomerMembershipServiceImpl implements CustomerMembershipService{
-    private final CustomerMembershipRepository repository;
+    private final CustomerMembershipRepository customerMembershipRepository;
     private final CustomerRepository customerRepository;
     private final MembershipRepository membershipRepository;
     private final GymRepository gymRepository;
 
     @Override
     public List<CustomerMembershipResponse> findAll() {
-        return repository.findAll().stream()
+        return customerMembershipRepository.findAll().stream()
                 .map(CustomerMembershipMapper::toResponse)
                 .toList();
     }
@@ -39,8 +39,7 @@ public class CustomerMembershipServiceImpl implements CustomerMembershipService{
     @Override
     public CustomerMembershipResponse findById(Integer idCustomer, Integer idMembership) {
         CustomerMembershipPk id = new CustomerMembershipPk(idCustomer, idMembership);
-        CustomerMembership customerMembership = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Membresía de cliente no encontrada con ID: " + id));
+        CustomerMembership customerMembership = customerMembershipRepository.findById(id).orElseThrow(() -> new RuntimeException("Membresía de cliente no encontrada con ID: " + id));
         return CustomerMembershipMapper.toResponse(customerMembership);
     }
 
@@ -58,74 +57,51 @@ public class CustomerMembershipServiceImpl implements CustomerMembershipService{
         customerMembership.setMembership(membership);
         customerMembership.setGym(gym);
         
-        CustomerMembership savedCustomerMembership = repository.save(customerMembership);
+        CustomerMembership savedCustomerMembership = customerMembershipRepository.save(customerMembership);
         return CustomerMembershipMapper.toResponse(savedCustomerMembership);
     }
 
     @Override
     public CustomerMembershipResponse update(Integer idCustomer, Integer idMembership, CustomerMembershipRequest req) {
         CustomerMembershipPk id = new CustomerMembershipPk(idCustomer, idMembership);
-        CustomerMembership existingCustomerMembership = repository.findById(id)
+        CustomerMembership existingCustomerMembership = customerMembershipRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Membresía de cliente no encontrada con ID: " + id));
         
-        if (!existingCustomerMembership.getCustomer().getIdCustomer().equals(req.getIdCustomer())) {
-            Customer customer = customerRepository.findById(req.getIdCustomer())
-                    .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + req.getIdCustomer()));
-            existingCustomerMembership.setCustomer(customer);
-        }
-        
-        if (!existingCustomerMembership.getMembership().getIdMembership().equals(req.getIdMembership())) {
-            Membership membership = membershipRepository.findById(req.getIdMembership())
-                    .orElseThrow(() -> new RuntimeException("Membresía no encontrada con ID: " + req.getIdMembership()));
-            existingCustomerMembership.setMembership(membership);
-        }
-        
-        if (!existingCustomerMembership.getGym().getIdGym().equals(req.getIdGym())) {
-            Gym gym = gymRepository.findById(req.getIdGym())
-                    .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + req.getIdGym()));
-            existingCustomerMembership.setGym(gym);
-        }
-        
         CustomerMembershipMapper.copyToEntity(req, existingCustomerMembership);
-        CustomerMembership updatedCustomerMembership = repository.save(existingCustomerMembership);
+        CustomerMembership updatedCustomerMembership = customerMembershipRepository.save(existingCustomerMembership);
         return CustomerMembershipMapper.toResponse(updatedCustomerMembership);
     }
 
     @Override
     public void delete(Integer idCustomer, Integer idMembership) {
         CustomerMembershipPk id = new CustomerMembershipPk(idCustomer, idMembership);
-        
-        if (!repository.existsById(id)) {
-            throw new RuntimeException("Membresía de cliente no encontrada");
-        }
-        repository.deleteById(id);
+        customerMembershipRepository.deleteById(id);
     }
 
     @Override
     public List<CustomerMembershipResponse> findByCustomerId(Integer idCustomer) {
-        return repository.findByCustomerIdCustomer(idCustomer).stream()
+        return customerMembershipRepository.findByCustomerIdCustomer(idCustomer).stream()
                 .map(CustomerMembershipMapper::toResponse)
                 .toList();
     }
 
     @Override
     public List<CustomerMembershipResponse> findByMembershipStatus(Boolean status) {
-        return repository.findByMembershipStatus(status).stream()
+        return customerMembershipRepository.findByMembershipStatus(status).stream()
                 .map(CustomerMembershipMapper::toResponse)
                 .toList();
     }
 
     @Override
     public List<CustomerMembershipResponse> findByCustomerIdAndStatus(Integer idCustomer, Boolean status) {
-        return repository.findByCustomerIdCustomerAndMembershipStatus(idCustomer, status).stream()
+        return customerMembershipRepository.findByCustomerIdCustomerAndMembershipStatus(idCustomer, status).stream()
                 .map(CustomerMembershipMapper::toResponse)
                 .toList();
     }
 
     @Override
     public List<CustomerMembershipResponse> findActiveMembershipsExpiringSoon() {
-        // Implementar lógica para membresías activas que expiran pronto
-        return repository.findByMembershipStatus(true).stream()
+        return customerMembershipRepository.findByMembershipStatus(true).stream()
                 .filter(cm -> cm.getEndDate() != null && cm.getEndDate().isBefore(java.time.LocalDate.now().plusDays(7)))
                 .map(CustomerMembershipMapper::toResponse)
                 .toList();

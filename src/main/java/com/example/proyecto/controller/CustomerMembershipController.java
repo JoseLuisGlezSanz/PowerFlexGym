@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/customer-memberships")
 @RequiredArgsConstructor
 public class CustomerMembershipController {
-
     private final CustomerMembershipService customerMembershipService;
 
     @GetMapping
@@ -37,10 +36,7 @@ public class CustomerMembershipController {
     }
 
     @PutMapping("/{idCustomer}/{idMembership}")
-    public ResponseEntity<CustomerMembershipResponse> update(
-            @PathVariable Integer idCustomer,
-            @PathVariable Integer idMembership, 
-            @RequestBody CustomerMembershipRequest customerMembershipRequest) {
+    public ResponseEntity<CustomerMembershipResponse> update(@PathVariable Integer idCustomer, @PathVariable Integer idMembership, @RequestBody CustomerMembershipRequest customerMembershipRequest) {
         CustomerMembershipResponse updatedCustomerMembership = customerMembershipService.update(idCustomer, idMembership, customerMembershipRequest);
         return ResponseEntity.ok(updatedCustomerMembership);
     }
@@ -64,9 +60,7 @@ public class CustomerMembershipController {
     }
 
     @GetMapping("/customer/{customerId}/status/{status}")
-    public ResponseEntity<List<CustomerMembershipResponse>> findByCustomerIdAndStatus(
-            @PathVariable Integer customerId, 
-            @PathVariable Boolean status) {
+    public ResponseEntity<List<CustomerMembershipResponse>> findByCustomerIdAndStatus(@PathVariable Integer customerId, @PathVariable Boolean status) {
         List<CustomerMembershipResponse> customerMemberships = customerMembershipService.findByCustomerIdAndStatus(customerId, status);
         return ResponseEntity.ok(customerMemberships);
     }

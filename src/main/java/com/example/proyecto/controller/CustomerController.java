@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/customers")
 @RequiredArgsConstructor
 public class CustomerController {
-
     private final CustomerService customerService;
 
     @GetMapping
@@ -37,9 +36,7 @@ public class CustomerController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerResponse> update(
-            @PathVariable Integer id, 
-            @RequestBody CustomerRequest customerRequest) {
+    public ResponseEntity<CustomerResponse> update(@PathVariable Integer id, @RequestBody CustomerRequest customerRequest) {
         CustomerResponse updatedCustomer = customerService.update(id, customerRequest);
         return ResponseEntity.ok(updatedCustomer);
     }

@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/gyms")
 @RequiredArgsConstructor
 public class GymController {
-
     private final GymService gymService;
 
     @GetMapping
@@ -37,9 +36,7 @@ public class GymController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GymResponse> update(
-            @PathVariable Integer id, 
-            @RequestBody GymRequest gymRequest) {
+    public ResponseEntity<GymResponse> update(@PathVariable Integer id, @RequestBody GymRequest gymRequest) {
         GymResponse updatedGym = gymService.update(id, gymRequest);
         return ResponseEntity.ok(updatedGym);
     }

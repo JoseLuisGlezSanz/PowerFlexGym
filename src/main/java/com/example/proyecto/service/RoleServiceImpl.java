@@ -17,18 +17,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class RoleServiceImpl implements RoleService{
-    private final RoleRepository repository;
+    private final RoleRepository roleRepository;
 
     @Override
     public List<RoleResponse> findAll() {
-        return repository.findAll().stream()
+        return roleRepository.findAll().stream()
                 .map(RoleMapper::toResponse)
                 .toList();
     }
 
     @Override
     public RoleResponse findById(Integer id) {
-        Role role = repository.findById(id)
+        Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID: " + id));
         return RoleMapper.toResponse(role);
     }
@@ -36,32 +36,28 @@ public class RoleServiceImpl implements RoleService{
     @Override
     public RoleResponse save(RoleRequest req) {
         Role role = RoleMapper.toEntity(req);
-        Role savedRole = repository.save(role);
+        Role savedRole = roleRepository.save(role);
         return RoleMapper.toResponse(savedRole);
     }
 
     @Override
     public RoleResponse update(Integer id, RoleRequest req) {
-        Role existingRole = repository.findById(id)
+        Role existingRole = roleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID: " + id));
         
         RoleMapper.copyToEntity(req, existingRole);
-        Role updatedRole = repository.save(existingRole);
+        Role updatedRole = roleRepository.save(existingRole);
         return RoleMapper.toResponse(updatedRole);
     }
 
     @Override
     public void delete(Integer id) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException("Rol no encontrado con ID: " + id);
-        }
-        repository.deleteById(id);
+        roleRepository.deleteById(id);
     }
 
     @Override
     public List<RoleResponse> findByStatus(Integer status) {
-        // Implementar cuando agregues el método al repository
-        return repository.findAll().stream()
+        return roleRepository.findAll().stream()
                 .filter(r -> r.getStatus().equals(status))
                 .map(RoleMapper::toResponse)
                 .toList();

@@ -17,50 +17,45 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class GymServiceImpl implements GymService{
-    private final GymRepository repository;
+    private final GymRepository gymRepository;
 
     @Override
     public List<GymResponse> findAll() {
-        return repository.findAll().stream()
+        return gymRepository.findAll().stream()
                 .map(GymMapper::toResponse)
                 .toList();
     }
 
     @Override
     public GymResponse findById(Integer id) {
-        Gym gym = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + id));
+        Gym gym = gymRepository.findById(id).orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + id));
         return GymMapper.toResponse(gym);
     }
 
     @Override
     public GymResponse save(GymRequest req) {
         Gym gym = GymMapper.toEntity(req);
-        Gym savedGym = repository.save(gym);
+        Gym savedGym = gymRepository.save(gym);
         return GymMapper.toResponse(savedGym);
     }
 
     @Override
     public GymResponse update(Integer id, GymRequest req) {
-        Gym existingGym = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + id));
+        Gym existingGym = gymRepository.findById(id).orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + id));
         
         GymMapper.copyToEntity(req, existingGym);
-        Gym updatedGym = repository.save(existingGym);
+        Gym updatedGym = gymRepository.save(existingGym);
         return GymMapper.toResponse(updatedGym);
     }
 
     @Override
     public void delete(Integer id) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException("Gimnasio no encontrado con ID: " + id);
-        }
-        repository.deleteById(id);
+        gymRepository.deleteById(id);
     }
 
     @Override
     public List<GymResponse> findByGymName(String gymName) {
-        return repository.findByGym(gymName).stream()
+        return gymRepository.findByGym(gymName).stream()
                 .map(GymMapper::toResponse)
                 .toList();
     }

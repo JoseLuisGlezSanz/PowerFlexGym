@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/membership-sales")
 @RequiredArgsConstructor
 public class MembershipSaleController {
-
     private final MembershipSaleService membershipSaleService;
 
     @GetMapping
@@ -37,9 +36,7 @@ public class MembershipSaleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MembershipSaleResponse> update(
-            @PathVariable Integer id, 
-            @RequestBody MembershipSaleRequest saleRequest) {
+    public ResponseEntity<MembershipSaleResponse> update(@PathVariable Integer id, @RequestBody MembershipSaleRequest saleRequest) {
         MembershipSaleResponse updatedSale = membershipSaleService.update(id, saleRequest);
         return ResponseEntity.ok(updatedSale);
     }

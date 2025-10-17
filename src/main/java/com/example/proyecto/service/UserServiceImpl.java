@@ -19,72 +19,57 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
-    private final UserRepository repository;
+    private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final GymRepository gymRepository;
 
     @Override
     public List<UserResponse> findAll() {
-        return repository.findAll().stream()
+        return userRepository.findAll().stream()
                 .map(UserMapper::toResponse)
                 .toList();
     }
 
     @Override
     public UserResponse findById(Integer id) {
-        User user = repository.findById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
         return UserMapper.toResponse(user);
     }
 
     @Override
     public UserResponse save(UserRequest req) {
-    Role role = roleRepository.findById(req.getIdRole())
-            .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID: " + req.getIdRole()));
-    Gym gym = gymRepository.findById(req.getIdGym())
-            .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + req.getIdGym()));
-    
-    User user = UserMapper.toEntity(req);
-    user.setRole(role);
-    user.setGym(gym);    
-    
-    User savedUser = repository.save(user);
-    return UserMapper.toResponse(savedUser);
+        Role role = roleRepository.findById(req.getIdRole())
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID: " + req.getIdRole()));
+        Gym gym = gymRepository.findById(req.getIdGym())
+                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + req.getIdGym()));
+        
+        User user = UserMapper.toEntity(req);
+        user.setRole(role);
+        user.setGym(gym);    
+        
+        User savedUser = userRepository.save(user);
+        return UserMapper.toResponse(savedUser);
     }
 
     @Override
     public UserResponse update(Integer id, UserRequest req) {
-        User existingUser = repository.findById(id)
+        User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
         
-        if (!existingUser.getRole().getIdRole().equals(req.getIdRole())) {
-            Role role = roleRepository.findById(req.getIdRole())
-                    .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID: " + req.getIdRole()));
-            existingUser.setRole(role);
-        }
-        
-        if (!existingUser.getGym().getIdGym().equals(req.getIdGym())) {
-            Gym gym = gymRepository.findById(req.getIdGym())
-                    .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + req.getIdGym()));
-            existingUser.setGym(gym);
-        }
-        
         UserMapper.copyToEntity(req, existingUser);
-        User updatedUser = repository.save(existingUser);
+        User updatedUser = userRepository.save(existingUser);
         return UserMapper.toResponse(updatedUser);
     }
 
     @Override
     public void delete(Integer id) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException("Usuario no encontrado con ID: " + id);
-        }
-        repository.deleteById(id);
+        userRepository.deleteById(id);
     }
 
     @Override
     public UserResponse findByMail(String mail) {
-        return repository.findByMail(mail).stream()
+        return userRepository.findByMail(mail).stream()
                 .findFirst()
                 .map(UserMapper::toResponse)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con email: " + mail));
@@ -92,7 +77,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserResponse findByUsername(String username) {
-        return repository.findByUser(username).stream()
+        return userRepository.findByUser(username).stream()
                 .findFirst()
                 .map(UserMapper::toResponse)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con username: " + username));
@@ -100,8 +85,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<UserResponse> findByRoleId(Integer idRole) {
-        // Implementar cuando agregues el método al repository
-        return repository.findAll().stream()
+        return userRepository.findAll().stream()
                 .filter(u -> u.getRole().getIdRole().equals(idRole))
                 .map(UserMapper::toResponse)
                 .toList();

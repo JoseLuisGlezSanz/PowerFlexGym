@@ -19,19 +19,19 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class MembershipServiceImpl implements MembershipService{
-    private final MembershipRepository repository;
+    private final MembershipRepository membershipRepository;
     private final GymRepository gymRepository;
 
     @Override
     public List<MembershipResponse> findAll() {
-        return repository.findAll().stream()
+        return membershipRepository.findAll().stream()
                 .map(MembershipMapper::toResponse)
                 .toList();
     }
 
     @Override
     public MembershipResponse findById(Integer id) {
-        Membership membership = repository.findById(id)
+        Membership membership = membershipRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Membresía no encontrada con ID: " + id));
         return MembershipMapper.toResponse(membership);
     }
@@ -44,45 +44,35 @@ public class MembershipServiceImpl implements MembershipService{
         Membership membership = MembershipMapper.toEntity(req);
         membership.setGym(gym);
         
-        Membership savedMembership = repository.save(membership);
+        Membership savedMembership = membershipRepository.save(membership);
         return MembershipMapper.toResponse(savedMembership);
     }
 
     @Override
     public MembershipResponse update(Integer id, MembershipRequest req) {
-        Membership existingMembership = repository.findById(id)
+        Membership existingMembership = membershipRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Membresía no encontrada con ID: " + id));
         
-        if (!existingMembership.getGym().getIdGym().equals(req.getIdGym())) {
-            Gym gym = gymRepository.findById(req.getIdGym())
-                    .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + req.getIdGym()));
-            existingMembership.setGym(gym);
-        }
-        
         MembershipMapper.copyToEntity(req, existingMembership);
-        Membership updatedMembership = repository.save(existingMembership);
+        Membership updatedMembership = membershipRepository.save(existingMembership);
         return MembershipMapper.toResponse(updatedMembership);
     }
 
     @Override
     public void delete(Integer id) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException("Membresía no encontrada con ID: " + id);
-        }
-        repository.deleteById(id);
+        membershipRepository.deleteById(id);
     }
 
     @Override
     public List<MembershipResponse> findByMembershipName(String membershipName) {
-        return repository.findByMembership(membershipName).stream()
+        return membershipRepository.findByMembership(membershipName).stream()
                 .map(MembershipMapper::toResponse)
                 .toList();
     }
 
     @Override
     public List<MembershipResponse> findByStatus(Integer status) {
-        // Implementar cuando agregues el método al repository
-        return repository.findAll().stream()
+        return membershipRepository.findAll().stream()
                 .filter(m -> m.getStatus().equals(status))
                 .map(MembershipMapper::toResponse)
                 .toList();
@@ -90,8 +80,7 @@ public class MembershipServiceImpl implements MembershipService{
 
     @Override
     public List<MembershipResponse> findByGymId(Integer idGym) {
-        // Implementar cuando agregues el método al repository
-        return repository.findAll().stream()
+        return membershipRepository.findAll().stream()
                 .filter(m -> m.getGym().getIdGym().equals(idGym))
                 .map(MembershipMapper::toResponse)
                 .toList();

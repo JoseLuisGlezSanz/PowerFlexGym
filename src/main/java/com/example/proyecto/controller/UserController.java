@@ -32,21 +32,12 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserResponse> create(@RequestBody UserRequest userRequest) {
-        try {
-            System.out.println("JSON recibido: " + userRequest);
-            UserResponse createdUser = userService.save(userRequest);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
-        } catch (Exception e) {
-            System.err.println("Error en Controller: " + e.getMessage());
-            e.printStackTrace();
-            throw e;
-        }
+        UserResponse createdUser = userService.save(userRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> update(
-            @PathVariable Integer id, 
-            @RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserResponse> update(@PathVariable Integer id, @RequestBody UserRequest userRequest) {
         UserResponse updatedUser = userService.update(id, userRequest);
         return ResponseEntity.ok(updatedUser);
     }

@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/tickets")
 @RequiredArgsConstructor
 public class TicketController {
-
     private final TicketService ticketService;
 
     @GetMapping
@@ -37,9 +36,7 @@ public class TicketController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TicketResponse> update(
-            @PathVariable Integer id, 
-            @RequestBody TicketRequest ticketRequest) {
+    public ResponseEntity<TicketResponse> update(@PathVariable Integer id, @RequestBody TicketRequest ticketRequest) {
         TicketResponse updatedTicket = ticketService.update(id, ticketRequest);
         return ResponseEntity.ok(updatedTicket);
     }

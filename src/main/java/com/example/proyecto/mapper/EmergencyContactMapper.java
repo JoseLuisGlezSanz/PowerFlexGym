@@ -2,6 +2,7 @@ package com.example.proyecto.mapper;
 
 import com.example.proyecto.dto.EmergencyContactRequest;
 import com.example.proyecto.dto.EmergencyContactResponse;
+import com.example.proyecto.model.Customer;
 import com.example.proyecto.model.EmergencyContact;
 
 public class EmergencyContactMapper {
@@ -19,6 +20,9 @@ public class EmergencyContactMapper {
 
     public static EmergencyContact toEntity(EmergencyContactRequest dto) {
         if (dto == null) return null;
+        
+        Customer customer = new Customer();
+        customer.setIdCustomer(dto.getIdCustomer());
         
         return EmergencyContact.builder()
                 .contactName(dto.getContactName())

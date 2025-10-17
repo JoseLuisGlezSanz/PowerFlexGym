@@ -36,9 +36,7 @@ public class EmergencyContactController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EmergencyContactResponse> update(
-            @PathVariable Integer id, 
-            @RequestBody EmergencyContactRequest contactRequest) {
+    public ResponseEntity<EmergencyContactResponse> update(@PathVariable Integer id, @RequestBody EmergencyContactRequest contactRequest) {
         EmergencyContactResponse updatedContact = emergencyContactService.update(id, contactRequest);
         return ResponseEntity.ok(updatedContact);
     }

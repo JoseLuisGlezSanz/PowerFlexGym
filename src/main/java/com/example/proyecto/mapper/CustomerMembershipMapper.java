@@ -1,7 +1,5 @@
 package com.example.proyecto.mapper;
 
-import java.time.LocalDateTime;
-
 import com.example.proyecto.dto.CustomerMembershipRequest;
 import com.example.proyecto.dto.CustomerMembershipResponse;
 import com.example.proyecto.model.Customer;
@@ -44,10 +42,8 @@ public class CustomerMembershipMapper {
                 .membership(membership)
                 .startDate(dto.getStartDate())
                 .endDate(dto.getEndDate())
-                .memberSince(dto.getMemberSince() != null ? 
-                    dto.getMemberSince() : LocalDateTime.now())
-                .membershipStatus(dto.getMembershipStatus() != null ? 
-                    dto.getMembershipStatus() : true)
+                .memberSince(dto.getMemberSince())
+                .membershipStatus(dto.getMembershipStatus())
                 .gym(gym)
                 .build();
     }
