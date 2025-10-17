@@ -9,6 +9,7 @@ import com.example.proyecto.dto.CustomerMembershipResponse;
 import com.example.proyecto.mapper.CustomerMembershipMapper;
 import com.example.proyecto.model.Customer;
 import com.example.proyecto.model.CustomerMembership;
+import com.example.proyecto.model.CustomerMembershipPk;
 import com.example.proyecto.model.Gym;
 import com.example.proyecto.model.Membership;
 import com.example.proyecto.repository.CustomerMembershipRepository;
@@ -36,7 +37,8 @@ public class CustomerMembershipServiceImpl implements CustomerMembershipService{
     }
 
     @Override
-    public CustomerMembershipResponse findById(Integer id) {
+    public CustomerMembershipResponse findById(Integer idCustomer, Integer idMembership) {
+        CustomerMembershipPk id = new CustomerMembershipPk(idCustomer, idMembership);
         CustomerMembership customerMembership = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Membresía de cliente no encontrada con ID: " + id));
         return CustomerMembershipMapper.toResponse(customerMembership);
@@ -61,7 +63,8 @@ public class CustomerMembershipServiceImpl implements CustomerMembershipService{
     }
 
     @Override
-    public CustomerMembershipResponse update(Integer id, CustomerMembershipRequest req) {
+    public CustomerMembershipResponse update(Integer idCustomer, Integer idMembership, CustomerMembershipRequest req) {
+        CustomerMembershipPk id = new CustomerMembershipPk(idCustomer, idMembership);
         CustomerMembership existingCustomerMembership = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Membresía de cliente no encontrada con ID: " + id));
         
@@ -89,9 +92,11 @@ public class CustomerMembershipServiceImpl implements CustomerMembershipService{
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(Integer idCustomer, Integer idMembership) {
+        CustomerMembershipPk id = new CustomerMembershipPk(idCustomer, idMembership);
+        
         if (!repository.existsById(id)) {
-            throw new RuntimeException("Membresía de cliente no encontrada con ID: " + id);
+            throw new RuntimeException("Membresía de cliente no encontrada");
         }
         repository.deleteById(id);
     }

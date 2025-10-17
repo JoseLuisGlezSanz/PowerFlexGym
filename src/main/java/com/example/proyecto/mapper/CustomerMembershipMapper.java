@@ -1,15 +1,19 @@
 package com.example.proyecto.mapper;
 
+import java.time.LocalDateTime;
+
 import com.example.proyecto.dto.CustomerMembershipRequest;
 import com.example.proyecto.dto.CustomerMembershipResponse;
+import com.example.proyecto.model.Customer;
 import com.example.proyecto.model.CustomerMembership;
+import com.example.proyecto.model.Gym;
+import com.example.proyecto.model.Membership;
 
 public class CustomerMembershipMapper {
     public static CustomerMembershipResponse toResponse(CustomerMembership customerMembership) {
         if (customerMembership == null) return null;
         
         return CustomerMembershipResponse.builder()
-                .idCustomerMembership(customerMembership.getIdCustomerMembership())
                 .idCustomer(customerMembership.getCustomer().getIdCustomer())
                 .customerName(customerMembership.getCustomer().getName())
                 .idMembership(customerMembership.getMembership().getIdMembership())
@@ -26,11 +30,25 @@ public class CustomerMembershipMapper {
     public static CustomerMembership toEntity(CustomerMembershipRequest dto) {
         if (dto == null) return null;
         
+        Customer customer = new Customer();
+        customer.setIdCustomer(dto.getIdCustomer());
+        
+        Membership membership = new Membership();
+        membership.setIdMembership(dto.getIdMembership());
+
+        Gym gym = new Gym();
+        gym.setIdGym(dto.getIdGym());
+
         return CustomerMembership.builder()
+                .customer(customer)
+                .membership(membership)
                 .startDate(dto.getStartDate())
                 .endDate(dto.getEndDate())
-                .memberSince(dto.getMemberSince())
-                .membershipStatus(dto.getMembershipStatus())
+                .memberSince(dto.getMemberSince() != null ? 
+                    dto.getMemberSince() : LocalDateTime.now())
+                .membershipStatus(dto.getMembershipStatus() != null ? 
+                    dto.getMembershipStatus() : true)
+                .gym(gym)
                 .build();
     }
 

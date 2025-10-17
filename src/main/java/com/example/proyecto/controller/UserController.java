@@ -32,8 +32,15 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserResponse> create(@RequestBody UserRequest userRequest) {
-        UserResponse createdUser = userService.save(userRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+        try {
+            System.out.println("JSON recibido: " + userRequest);
+            UserResponse createdUser = userService.save(userRequest);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+        } catch (Exception e) {
+            System.err.println("Error en Controller: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @PutMapping("/{id}")

@@ -8,7 +8,9 @@ import com.example.proyecto.dto.CustomerRequest;
 import com.example.proyecto.dto.CustomerResponse;
 import com.example.proyecto.mapper.CustomerMapper;
 import com.example.proyecto.model.Customer;
+import com.example.proyecto.model.Gym;
 import com.example.proyecto.repository.CustomerRepository;
+import com.example.proyecto.repository.GymRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService{
     private final CustomerRepository repository;
+    private final GymRepository gymRepository;
 
     @Override
     public List<CustomerResponse> findAll() {
@@ -33,7 +36,11 @@ public class CustomerServiceImpl implements CustomerService{
 
     @Override
     public CustomerResponse save(CustomerRequest req) {
+        Gym gym = gymRepository.findById(req.getIdGym())
+            .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + req.getIdGym()));
+
         Customer customer = CustomerMapper.toEntity(req);
+        customer.setGym(gym);
         Customer savedCustomer = repository.save(customer);
         return CustomerMapper.toResponse(savedCustomer);
     }

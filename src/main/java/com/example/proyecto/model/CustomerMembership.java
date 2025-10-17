@@ -7,9 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -26,17 +25,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "customers_memberships")
+@IdClass(CustomerMembershipPk.class)
 public class CustomerMembership {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_customer_membership")
-    @JsonProperty("identificador de la membresia del cliente")
-    private Integer idCustomerMembership;
-
     @ManyToOne
     @JoinColumn(name="id_customer")
     private Customer customer;
 
+    @Id
     @ManyToOne
     @JoinColumn(name="id_membership")
     private Membership membership;

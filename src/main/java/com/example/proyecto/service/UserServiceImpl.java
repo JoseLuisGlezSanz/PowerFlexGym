@@ -39,17 +39,17 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserResponse save(UserRequest req) {
-        Role role = roleRepository.findById(req.getIdRole())
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID: " + req.getIdRole()));
-        Gym gym = gymRepository.findById(req.getIdGym())
-                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + req.getIdGym()));
-        
-        User user = UserMapper.toEntity(req);
-        user.setRole(role);
-        user.setGym(gym);
-        
-        User savedUser = repository.save(user);
-        return UserMapper.toResponse(savedUser);
+    Role role = roleRepository.findById(req.getIdRole())
+            .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID: " + req.getIdRole()));
+    Gym gym = gymRepository.findById(req.getIdGym())
+            .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + req.getIdGym()));
+    
+    User user = UserMapper.toEntity(req);
+    user.setRole(role);
+    user.setGym(gym);    
+    
+    User savedUser = repository.save(user);
+    return UserMapper.toResponse(savedUser);
     }
 
     @Override

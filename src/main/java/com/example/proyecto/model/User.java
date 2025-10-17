@@ -34,7 +34,7 @@ public class User {
     @JsonProperty("identificador del usuario")
     private Integer idUser;
 
-    @Column(name = "user", nullable = false, length = 50)
+    @Column(name = "user_name", nullable = false, length = 50)
     @JsonProperty("nombre de usuario")
     private String user;
 
@@ -59,12 +59,10 @@ public class User {
     private Integer status;
 
     //Relaciones
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id_user", referencedColumnName = "idUser")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ticket> tickets;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id_user", referencedColumnName = "idUser")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MembershipSale> membershipsSales;
 
     @ManyToOne

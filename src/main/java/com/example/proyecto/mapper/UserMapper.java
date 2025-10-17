@@ -24,7 +24,7 @@ public class UserMapper {
 
     public static User toEntity(UserRequest dto) {
         if (dto == null) return null;
-        
+
         return User.builder()
                 .user(dto.getUser())
                 .mail(dto.getMail())

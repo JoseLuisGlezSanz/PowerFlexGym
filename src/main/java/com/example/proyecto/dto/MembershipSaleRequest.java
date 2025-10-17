@@ -14,5 +14,5 @@ public class MembershipSaleRequest {
     private Integer idCustomer;
     private Integer idGym;
     private Integer idUser;
-    private Boolean cancellation = false;
+    private Boolean cancellation;
 }

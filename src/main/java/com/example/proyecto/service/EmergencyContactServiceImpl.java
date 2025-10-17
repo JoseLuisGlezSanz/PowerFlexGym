@@ -74,7 +74,7 @@ public class EmergencyContactServiceImpl implements EmergencyContactService{
 
     @Override
     public EmergencyContactResponse findByIdCustomer(Integer idCustomer) {
-        return repository.findByIdCustomer(idCustomer)
+        return repository.findByCustomerIdCustomer(idCustomer)
                 .map(EmergencyContactMapper::toResponse)
                 .orElseThrow(() -> new RuntimeException("Contacto de emergencia no encontrado para el cliente con ID: " + idCustomer));
     }

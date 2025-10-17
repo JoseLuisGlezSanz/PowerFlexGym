@@ -24,9 +24,9 @@ public class CustomerMembershipController {
         return ResponseEntity.ok(customerMemberships);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CustomerMembershipResponse> findById(@PathVariable Integer id) {
-        CustomerMembershipResponse customerMembership = customerMembershipService.findById(id);
+    @GetMapping("/{idCustomer}/{idMembership}")
+    public ResponseEntity<CustomerMembershipResponse> findById(@PathVariable Integer idCustomer, @PathVariable Integer idMembership) {
+        CustomerMembershipResponse customerMembership = customerMembershipService.findById(idCustomer, idMembership);
         return ResponseEntity.ok(customerMembership);
     }
 
@@ -36,17 +36,18 @@ public class CustomerMembershipController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCustomerMembership);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{idCustomer}/{idMembership}")
     public ResponseEntity<CustomerMembershipResponse> update(
-            @PathVariable Integer id, 
+            @PathVariable Integer idCustomer,
+            @PathVariable Integer idMembership, 
             @RequestBody CustomerMembershipRequest customerMembershipRequest) {
-        CustomerMembershipResponse updatedCustomerMembership = customerMembershipService.update(id, customerMembershipRequest);
+        CustomerMembershipResponse updatedCustomerMembership = customerMembershipService.update(idCustomer, idMembership, customerMembershipRequest);
         return ResponseEntity.ok(updatedCustomerMembership);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        customerMembershipService.delete(id);
+    @DeleteMapping("/{idCustomer}/{idMembership}")
+    public ResponseEntity<Void> delete(@PathVariable Integer idCustomer, @PathVariable Integer idMembership) {
+        customerMembershipService.delete(idCustomer, idMembership);
         return ResponseEntity.noContent().build();
     }
 

@@ -7,5 +7,5 @@ import com.example.proyecto.model.EmergencyContact;
 
 public interface EmergencyContactRepository extends JpaRepository<EmergencyContact, Integer> {
     // Buscar contacto por cliente
-    Optional<EmergencyContact> findByIdCustomer(Integer idCustomer);
+    Optional<EmergencyContact> findByCustomerIdCustomer(Integer idCustomer);
 }

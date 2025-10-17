@@ -8,10 +8,10 @@ import com.example.proyecto.dto.CustomerMembershipResponse;
 
 public interface CustomerMembershipService {
     List<CustomerMembershipResponse> findAll();
-    CustomerMembershipResponse findById(Integer id);
+    CustomerMembershipResponse findById(Integer idCustomer, Integer idMembership);
     CustomerMembershipResponse save(CustomerMembershipRequest customerMembershipRequest);
-    CustomerMembershipResponse update(Integer id, CustomerMembershipRequest customerMembershipRequest);
-    void delete(Integer id);
+    CustomerMembershipResponse update(Integer idCustomer, Integer idMembership, CustomerMembershipRequest req);
+    void delete(Integer idCustomer, Integer idMembership);
     List<CustomerMembershipResponse> findByCustomerId(Integer idCustomer);
     List<CustomerMembershipResponse> findByMembershipStatus(Boolean status);
     List<CustomerMembershipResponse> findByCustomerIdAndStatus(Integer idCustomer, Boolean status);

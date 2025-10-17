@@ -9,9 +9,9 @@ import lombok.Data;
 public class CustomerMembershipRequest {
     private Integer idCustomer;
     private Integer idMembership;
-    private Integer idGym;
     private LocalDate startDate;
     private LocalDate endDate;
     private Boolean membershipStatus;
     private LocalDateTime memberSince;
+    private Integer idGym;
 }

@@ -62,8 +62,7 @@ public class Ticket {
     private BigDecimal paymentWith;
 
     //Relaciones
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id_ticket", referencedColumnName = "idTicket")
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TicketDetail> ticketsDetails;
 
     @ManyToOne
