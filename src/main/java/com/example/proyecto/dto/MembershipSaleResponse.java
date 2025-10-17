@@ -16,12 +16,11 @@ public class MembershipSaleResponse {
     private LocalDate startDate;
     private LocalDate endDate;
     private Integer idMembership;
+    private String membershipName;
     private Integer idCustomer;
+    private String customerName;
     private Integer idGym;
+    private String gymName;
     private Integer idUser;
-    
-    private MembershipResponse membership;
-    private CustomerResponse customer;
-    private UserResponse user;
-    private GymResponse gym;
+    private String userName;
 }

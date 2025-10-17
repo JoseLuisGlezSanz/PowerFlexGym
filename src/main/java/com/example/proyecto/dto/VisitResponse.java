@@ -9,8 +9,9 @@ import java.time.LocalDateTime;
 public class VisitResponse {
     private Integer idVisit;
     private Integer idCustomer;
+    private String customerName;
     private LocalDateTime date;
     private Integer pending;
-    private GymResponse gym;
-    private CustomerResponse customer;
+    private Integer idGym;
+    private String gymName;
 }

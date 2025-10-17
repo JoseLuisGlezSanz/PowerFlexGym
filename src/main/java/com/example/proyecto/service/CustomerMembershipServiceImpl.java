@@ -1,17 +1,14 @@
 package com.example.proyecto.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dto.CustomerMembershipRequest;
 import com.example.proyecto.dto.CustomerMembershipResponse;
+import com.example.proyecto.mapper.CustomerMembershipMapper;
 import com.example.proyecto.model.Customer;
 import com.example.proyecto.model.CustomerMembership;
-import com.example.proyecto.model.CustomerMembershipId;
 import com.example.proyecto.model.Gym;
 import com.example.proyecto.model.Membership;
 import com.example.proyecto.repository.CustomerMembershipRepository;
@@ -26,124 +23,106 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class CustomerMembershipServiceImpl implements CustomerMembershipService{
-    private final CustomerMembershipRepository customerMembershipRepository;
+    private final CustomerMembershipRepository repository;
     private final CustomerRepository customerRepository;
     private final MembershipRepository membershipRepository;
     private final GymRepository gymRepository;
 
     @Override
     public List<CustomerMembershipResponse> findAll() {
-        return customerMembershipRepository.findAll().stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+        return repository.findAll().stream()
+                .map(CustomerMembershipMapper::toResponse)
+                .toList();
     }
 
     @Override
-    public Optional<CustomerMembershipResponse> findById(CustomerMembershipId id) {
-        return customerMembershipRepository.findById(id)
-                .map(this::mapToResponse);
+    public CustomerMembershipResponse findById(Integer id) {
+        CustomerMembership customerMembership = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Membresía de cliente no encontrada con ID: " + id));
+        return CustomerMembershipMapper.toResponse(customerMembership);
     }
 
     @Override
-    public List<CustomerMembershipResponse> findByCustomerId(Integer customerId) {
-        return customerMembershipRepository.findAll().stream()
-                .filter(cm -> cm.getCustomer().getIdCustomer().equals(customerId))
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<CustomerMembershipResponse> findByMembershipId(Integer membershipId) {
-        return customerMembershipRepository.findAll().stream()
-                .filter(cm -> cm.getMembership().getIdMembership().equals(membershipId))
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<CustomerMembershipResponse> findByGymId(Integer gymId) {
-        return customerMembershipRepository.findAll().stream()
-                .filter(cm -> cm.getGym().getIdGym().equals(gymId))
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<CustomerMembershipResponse> findActiveMemberships() {
-        return customerMembershipRepository.findAll().stream()
-                .filter(cm -> Boolean.TRUE.equals(cm.getMembershipStatus()))
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public CustomerMembershipResponse create(CustomerMembershipRequest request) {
-        Customer customer = customerRepository.findById(request.getIdCustomer())
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+    public CustomerMembershipResponse save(CustomerMembershipRequest req) {
+        Customer customer = customerRepository.findById(req.getIdCustomer())
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + req.getIdCustomer()));
+        Membership membership = membershipRepository.findById(req.getIdMembership())
+                .orElseThrow(() -> new RuntimeException("Membresía no encontrada con ID: " + req.getIdMembership()));
+        Gym gym = gymRepository.findById(req.getIdGym())
+                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + req.getIdGym()));
         
-        Membership membership = membershipRepository.findById(request.getIdMembership())
-                .orElseThrow(() -> new RuntimeException("Membresía no encontrada"));
+        CustomerMembership customerMembership = CustomerMembershipMapper.toEntity(req);
+        customerMembership.setCustomer(customer);
+        customerMembership.setMembership(membership);
+        customerMembership.setGym(gym);
         
-        Gym gym = gymRepository.findById(request.getIdGym())
-                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado"));
-
-        CustomerMembership customerMembership = CustomerMembership.builder()
-                .customer(customer)
-                .membership(membership)
-                .gym(gym)
-                .startDate(request.getStartDate())
-                .endDate(request.getEndDate())
-                .memberSince(LocalDateTime.now())
-                .membershipStatus(request.getMembershipStatus())
-                .build();
-
-        CustomerMembership saved = customerMembershipRepository.save(customerMembership);
-        return mapToResponse(saved);
+        CustomerMembership savedCustomerMembership = repository.save(customerMembership);
+        return CustomerMembershipMapper.toResponse(savedCustomerMembership);
     }
 
     @Override
-    public CustomerMembershipResponse update(CustomerMembershipId id, CustomerMembershipRequest request) {
-        CustomerMembership existing = customerMembershipRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Relación cliente-membresía no encontrada"));
-
-        existing.setStartDate(request.getStartDate());
-        existing.setEndDate(request.getEndDate());
-        existing.setMembershipStatus(request.getMembershipStatus());
-
-        CustomerMembership updated = customerMembershipRepository.save(existing);
-        return mapToResponse(updated);
-    }
-
-    @Override
-    public void delete(CustomerMembershipId id) {
-        if (!customerMembershipRepository.existsById(id)) {
-            throw new RuntimeException("Relación cliente-membresía no encontrada");
+    public CustomerMembershipResponse update(Integer id, CustomerMembershipRequest req) {
+        CustomerMembership existingCustomerMembership = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Membresía de cliente no encontrada con ID: " + id));
+        
+        if (!existingCustomerMembership.getCustomer().getIdCustomer().equals(req.getIdCustomer())) {
+            Customer customer = customerRepository.findById(req.getIdCustomer())
+                    .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + req.getIdCustomer()));
+            existingCustomerMembership.setCustomer(customer);
         }
-        customerMembershipRepository.deleteById(id);
+        
+        if (!existingCustomerMembership.getMembership().getIdMembership().equals(req.getIdMembership())) {
+            Membership membership = membershipRepository.findById(req.getIdMembership())
+                    .orElseThrow(() -> new RuntimeException("Membresía no encontrada con ID: " + req.getIdMembership()));
+            existingCustomerMembership.setMembership(membership);
+        }
+        
+        if (!existingCustomerMembership.getGym().getIdGym().equals(req.getIdGym())) {
+            Gym gym = gymRepository.findById(req.getIdGym())
+                    .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + req.getIdGym()));
+            existingCustomerMembership.setGym(gym);
+        }
+        
+        CustomerMembershipMapper.copyToEntity(req, existingCustomerMembership);
+        CustomerMembership updatedCustomerMembership = repository.save(existingCustomerMembership);
+        return CustomerMembershipMapper.toResponse(updatedCustomerMembership);
     }
 
     @Override
-    public boolean existsById(CustomerMembershipId id) {
-        return customerMembershipRepository.existsById(id);
+    public void delete(Integer id) {
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("Membresía de cliente no encontrada con ID: " + id);
+        }
+        repository.deleteById(id);
     }
 
     @Override
-    public boolean isMembershipActive(Integer customerId, Integer membershipId) {
-        return customerMembershipRepository.findAll().stream()
-                .anyMatch(cm -> cm.getCustomer().getIdCustomer().equals(customerId) &&
-                               cm.getMembership().getIdMembership().equals(membershipId) &&
-                               Boolean.TRUE.equals(cm.getMembershipStatus()));
+    public List<CustomerMembershipResponse> findByCustomerId(Integer idCustomer) {
+        return repository.findByCustomerIdCustomer(idCustomer).stream()
+                .map(CustomerMembershipMapper::toResponse)
+                .toList();
     }
 
-    private CustomerMembershipResponse mapToResponse(CustomerMembership customerMembership) {
-        return CustomerMembershipResponse.builder()
-                .idCustomer(customerMembership.getCustomer().getIdCustomer())
-                .idMembership(customerMembership.getMembership().getIdMembership())
-                .idGym(customerMembership.getGym().getIdGym())
-                .startDate(customerMembership.getStartDate())
-                .endDate(customerMembership.getEndDate())
-                .memberSince(customerMembership.getMemberSince())
-                .membershipStatus(customerMembership.getMembershipStatus())
-                .build();
+    @Override
+    public List<CustomerMembershipResponse> findByMembershipStatus(Boolean status) {
+        return repository.findByMembershipStatus(status).stream()
+                .map(CustomerMembershipMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    public List<CustomerMembershipResponse> findByCustomerIdAndStatus(Integer idCustomer, Boolean status) {
+        return repository.findByCustomerIdCustomerAndMembershipStatus(idCustomer, status).stream()
+                .map(CustomerMembershipMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    public List<CustomerMembershipResponse> findActiveMembershipsExpiringSoon() {
+        // Implementar lógica para membresías activas que expiran pronto
+        return repository.findByMembershipStatus(true).stream()
+                .filter(cm -> cm.getEndDate() != null && cm.getEndDate().isBefore(java.time.LocalDate.now().plusDays(7)))
+                .map(CustomerMembershipMapper::toResponse)
+                .toList();
     }
 }

@@ -6,8 +6,8 @@ import com.example.proyecto.model.User;
 
 public class UserMapper {
     public static UserResponse toResponse(User user) {
-        if (user == null)
-            return null;
+        if (user == null) return null;
+        
         return UserResponse.builder()
                 .idUser(user.getIdUser())
                 .user(user.getUser())
@@ -15,14 +15,16 @@ public class UserMapper {
                 .phone(user.getPhone())
                 .name(user.getName())
                 .status(user.getStatus())
-                .role(RoleMapper.toResponse(user.getRole()))
-                .gym(GymMapper.toResponse(user.getGym()))
+                .idRole(user.getRole().getIdRole())
+                .roleName(user.getRole().getRole())
+                .idGym(user.getGym().getIdGym())
+                .gymName(user.getGym().getGym())
                 .build();
     }
 
     public static User toEntity(UserRequest dto) {
-        if (dto == null)
-            return null;
+        if (dto == null) return null;
+        
         return User.builder()
                 .user(dto.getUser())
                 .mail(dto.getMail())
@@ -34,13 +36,15 @@ public class UserMapper {
     }
 
     public static void copyToEntity(UserRequest dto, User entity) {
-        if (dto == null || entity == null)
-            return;
+        if (dto == null || entity == null) return;
+        
         entity.setUser(dto.getUser());
         entity.setMail(dto.getMail());
         entity.setPhone(dto.getPhone());
         entity.setName(dto.getName());
-        entity.setPassword(dto.getPassword());
+        if (dto.getPassword() != null) {
+            entity.setPassword(dto.getPassword());
+        }
         entity.setStatus(dto.getStatus());
     }
 }

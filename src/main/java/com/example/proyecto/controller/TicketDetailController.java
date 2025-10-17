@@ -9,64 +9,56 @@ import com.example.proyecto.dto.TicketDetailRequest;
 import com.example.proyecto.dto.TicketDetailResponse;
 import com.example.proyecto.service.TicketDetailService;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/ticket-details")
+@RequestMapping("/api/v1/ticket-details")
 @RequiredArgsConstructor
 public class TicketDetailController {
+
     private final TicketDetailService ticketDetailService;
 
     @GetMapping
-    public ResponseEntity<List<TicketDetailResponse>> getAllTicketDetails() {
-        List<TicketDetailResponse> details = ticketDetailService.findAll();
-        return ResponseEntity.ok(details);
+    public ResponseEntity<List<TicketDetailResponse>> findAll() {
+        List<TicketDetailResponse> ticketDetails = ticketDetailService.findAll();
+        return ResponseEntity.ok(ticketDetails);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TicketDetailResponse> getTicketDetailById(@PathVariable Integer id) {
-        return ticketDetailService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/ticket/{ticketId}")
-    public ResponseEntity<List<TicketDetailResponse>> getTicketDetailsByTicket(@PathVariable Integer ticketId) {
-        List<TicketDetailResponse> details = ticketDetailService.findByTicketId(ticketId);
-        return ResponseEntity.ok(details);
-    }
-
-    @GetMapping("/product/{productId}")
-    public ResponseEntity<List<TicketDetailResponse>> getTicketDetailsByProduct(@PathVariable Integer productId) {
-        List<TicketDetailResponse> details = ticketDetailService.findByProductId(productId);
-        return ResponseEntity.ok(details);
+    public ResponseEntity<TicketDetailResponse> findById(@PathVariable Integer id) {
+        TicketDetailResponse ticketDetail = ticketDetailService.findById(id);
+        return ResponseEntity.ok(ticketDetail);
     }
 
     @PostMapping
-    public ResponseEntity<TicketDetailResponse> createTicketDetail(@Valid @RequestBody TicketDetailRequest request) {
-        TicketDetailResponse created = ticketDetailService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
-    }
-
-    @PostMapping("/batch")
-    public ResponseEntity<List<TicketDetailResponse>> createMultipleTicketDetails(
-            @Valid @RequestBody List<TicketDetailRequest> requests) {
-        List<TicketDetailResponse> created = ticketDetailService.createMultiple(requests);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    public ResponseEntity<TicketDetailResponse> create(@RequestBody TicketDetailRequest ticketDetailRequest) {
+        TicketDetailResponse createdTicketDetail = ticketDetailService.save(ticketDetailRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdTicketDetail);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TicketDetailResponse> updateTicketDetail(
-            @PathVariable Integer id,
-            @Valid @RequestBody TicketDetailRequest request) {
-        TicketDetailResponse updated = ticketDetailService.update(id, request);
-        return ResponseEntity.ok(updated);
+    public ResponseEntity<TicketDetailResponse> update(
+            @PathVariable Integer id, 
+            @RequestBody TicketDetailRequest ticketDetailRequest) {
+        TicketDetailResponse updatedTicketDetail = ticketDetailService.update(id, ticketDetailRequest);
+        return ResponseEntity.ok(updatedTicketDetail);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTicketDetail(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
         ticketDetailService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/ticket/{ticketId}")
+    public ResponseEntity<List<TicketDetailResponse>> findByTicketId(@PathVariable Integer ticketId) {
+        List<TicketDetailResponse> ticketDetails = ticketDetailService.findByTicketId(ticketId);
+        return ResponseEntity.ok(ticketDetails);
+    }
+
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<List<TicketDetailResponse>> findByProductId(@PathVariable Integer productId) {
+        List<TicketDetailResponse> ticketDetails = ticketDetailService.findByProductId(productId);
+        return ResponseEntity.ok(ticketDetails);
     }
 }

@@ -6,8 +6,8 @@ import com.example.proyecto.model.Product;
 
 public class ProductMapper {
     public static ProductResponse toResponse(Product product) {
-        if (product == null)
-            return null;
+        if (product == null) return null;
+        
         return ProductResponse.builder()
                 .idProduct(product.getIdProduct())
                 .name(product.getName())
@@ -19,8 +19,8 @@ public class ProductMapper {
     }
 
     public static Product toEntity(ProductRequest dto) {
-        if (dto == null)
-            return null;
+        if (dto == null) return null;
+        
         return Product.builder()
                 .name(dto.getName())
                 .price(dto.getPrice())
@@ -31,8 +31,8 @@ public class ProductMapper {
     }
 
     public static void copyToEntity(ProductRequest dto, Product entity) {
-        if (dto == null || entity == null)
-            return;
+        if (dto == null || entity == null) return;
+        
         entity.setName(dto.getName());
         entity.setPrice(dto.getPrice());
         entity.setStock(dto.getStock());

@@ -7,101 +7,72 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 import com.example.proyecto.dto.CustomerMembershipRequest;
 import com.example.proyecto.dto.CustomerMembershipResponse;
-import com.example.proyecto.model.CustomerMembershipId;
 import com.example.proyecto.service.CustomerMembershipService;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/customer-memberships")
+@RequestMapping("/api/v1/customer-memberships")
 @RequiredArgsConstructor
 public class CustomerMembershipController {
+
     private final CustomerMembershipService customerMembershipService;
 
     @GetMapping
-    public ResponseEntity<List<CustomerMembershipResponse>> getAllCustomerMemberships() {
-        List<CustomerMembershipResponse> memberships = customerMembershipService.findAll();
-        return ResponseEntity.ok(memberships);
+    public ResponseEntity<List<CustomerMembershipResponse>> findAll() {
+        List<CustomerMembershipResponse> customerMemberships = customerMembershipService.findAll();
+        return ResponseEntity.ok(customerMemberships);
     }
 
-    @GetMapping("/{customerId}/{membershipId}")
-    public ResponseEntity<CustomerMembershipResponse> getCustomerMembershipById(
-            @PathVariable Integer customerId,
-            @PathVariable Integer membershipId) {
-        CustomerMembershipId id = new CustomerMembershipId();
-        id.setCustomer(customerId);
-        id.setMembership(membershipId);
-        
-        return customerMembershipService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/customer/{customerId}")
-    public ResponseEntity<List<CustomerMembershipResponse>> getCustomerMembershipsByCustomer(
-            @PathVariable Integer customerId) {
-        List<CustomerMembershipResponse> memberships = customerMembershipService.findByCustomerId(customerId);
-        return ResponseEntity.ok(memberships);
-    }
-
-    @GetMapping("/membership/{membershipId}")
-    public ResponseEntity<List<CustomerMembershipResponse>> getCustomerMembershipsByMembership(
-            @PathVariable Integer membershipId) {
-        List<CustomerMembershipResponse> memberships = customerMembershipService.findByMembershipId(membershipId);
-        return ResponseEntity.ok(memberships);
-    }
-
-    @GetMapping("/gym/{gymId}")
-    public ResponseEntity<List<CustomerMembershipResponse>> getCustomerMembershipsByGym(
-            @PathVariable Integer gymId) {
-        List<CustomerMembershipResponse> memberships = customerMembershipService.findByGymId(gymId);
-        return ResponseEntity.ok(memberships);
-    }
-
-    @GetMapping("/active")
-    public ResponseEntity<List<CustomerMembershipResponse>> getActiveMemberships() {
-        List<CustomerMembershipResponse> memberships = customerMembershipService.findActiveMemberships();
-        return ResponseEntity.ok(memberships);
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomerMembershipResponse> findById(@PathVariable Integer id) {
+        CustomerMembershipResponse customerMembership = customerMembershipService.findById(id);
+        return ResponseEntity.ok(customerMembership);
     }
 
     @PostMapping
-    public ResponseEntity<CustomerMembershipResponse> createCustomerMembership(
-            @Valid @RequestBody CustomerMembershipRequest request) {
-        CustomerMembershipResponse created = customerMembershipService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    public ResponseEntity<CustomerMembershipResponse> create(@RequestBody CustomerMembershipRequest customerMembershipRequest) {
+        CustomerMembershipResponse createdCustomerMembership = customerMembershipService.save(customerMembershipRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCustomerMembership);
     }
 
-    @PutMapping("/{customerId}/{membershipId}")
-    public ResponseEntity<CustomerMembershipResponse> updateCustomerMembership(
-            @PathVariable Integer customerId,
-            @PathVariable Integer membershipId,
-            @Valid @RequestBody CustomerMembershipRequest request) {
-        CustomerMembershipId id = new CustomerMembershipId();
-        id.setCustomer(customerId);
-        id.setMembership(membershipId);
-        
-        CustomerMembershipResponse updated = customerMembershipService.update(id, request);
-        return ResponseEntity.ok(updated);
+    @PutMapping("/{id}")
+    public ResponseEntity<CustomerMembershipResponse> update(
+            @PathVariable Integer id, 
+            @RequestBody CustomerMembershipRequest customerMembershipRequest) {
+        CustomerMembershipResponse updatedCustomerMembership = customerMembershipService.update(id, customerMembershipRequest);
+        return ResponseEntity.ok(updatedCustomerMembership);
     }
 
-    @DeleteMapping("/{customerId}/{membershipId}")
-    public ResponseEntity<Void> deleteCustomerMembership(
-            @PathVariable Integer customerId,
-            @PathVariable Integer membershipId) {
-        CustomerMembershipId id = new CustomerMembershipId();
-        id.setCustomer(customerId);
-        id.setMembership(membershipId);
-        
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
         customerMembershipService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{customerId}/{membershipId}/active")
-    public ResponseEntity<Boolean> isMembershipActive(
-            @PathVariable Integer customerId,
-            @PathVariable Integer membershipId) {
-        boolean isActive = customerMembershipService.isMembershipActive(customerId, membershipId);
-        return ResponseEntity.ok(isActive);
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<List<CustomerMembershipResponse>> findByCustomerId(@PathVariable Integer customerId) {
+        List<CustomerMembershipResponse> customerMemberships = customerMembershipService.findByCustomerId(customerId);
+        return ResponseEntity.ok(customerMemberships);
+    }
+
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<CustomerMembershipResponse>> findByMembershipStatus(@PathVariable Boolean status) {
+        List<CustomerMembershipResponse> customerMemberships = customerMembershipService.findByMembershipStatus(status);
+        return ResponseEntity.ok(customerMemberships);
+    }
+
+    @GetMapping("/customer/{customerId}/status/{status}")
+    public ResponseEntity<List<CustomerMembershipResponse>> findByCustomerIdAndStatus(
+            @PathVariable Integer customerId, 
+            @PathVariable Boolean status) {
+        List<CustomerMembershipResponse> customerMemberships = customerMembershipService.findByCustomerIdAndStatus(customerId, status);
+        return ResponseEntity.ok(customerMemberships);
+    }
+
+    @GetMapping("/expiring-soon")
+    public ResponseEntity<List<CustomerMembershipResponse>> findActiveMembershipsExpiringSoon() {
+        List<CustomerMembershipResponse> customerMemberships = customerMembershipService.findActiveMembershipsExpiringSoon();
+        return ResponseEntity.ok(customerMemberships);
     }
 }

@@ -12,4 +12,5 @@ public class MembershipResponse {
     private Double price;
     private Integer status;
     private Integer idGym;
+    private String gymName;
 }

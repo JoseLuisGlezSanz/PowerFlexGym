@@ -1,15 +1,12 @@
 package com.example.proyecto.service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.example.proyecto.dto.GymResponse;
-import com.example.proyecto.dto.RoleResponse;
 import com.example.proyecto.dto.UserRequest;
 import com.example.proyecto.dto.UserResponse;
+import com.example.proyecto.mapper.UserMapper;
 import com.example.proyecto.model.Gym;
 import com.example.proyecto.model.Role;
 import com.example.proyecto.model.User;
@@ -17,173 +14,96 @@ import com.example.proyecto.repository.GymRepository;
 import com.example.proyecto.repository.RoleRepository;
 import com.example.proyecto.repository.UserRepository;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class UserServiceImpl implements UserService{
-    private final UserRepository userRepository;
+    private final UserRepository repository;
     private final RoleRepository roleRepository;
     private final GymRepository gymRepository;
 
     @Override
     public List<UserResponse> findAll() {
-        return userRepository.findAll().stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+        return repository.findAll().stream()
+                .map(UserMapper::toResponse)
+                .toList();
     }
 
     @Override
-    public Optional<UserResponse> findById(Integer id) {
-        return userRepository.findById(id)
-                .map(this::mapToResponse);
+    public UserResponse findById(Integer id) {
+        User user = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
+        return UserMapper.toResponse(user);
     }
 
     @Override
-    public Optional<UserResponse> findByUsername(String username) {
-        return userRepository.findByUser(username)
-                .map(this::mapToResponse);
-    }
-
-    @Override
-    public Optional<UserResponse> findByEmail(String email) {
-        return userRepository.findByMail(email)
-                .map(this::mapToResponse);
-    }
-
-    @Override
-    public List<UserResponse> findByRoleId(Integer roleId) {
-        return userRepository.findByRoleIdRole(roleId).stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<UserResponse> findByGymId(Integer gymId) {
-        return userRepository.findByGymIdGym(gymId).stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<UserResponse> findByStatus(Integer status) {
-        return userRepository.findByStatus(status).stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public UserResponse create(UserRequest request) {
-    Role role = roleRepository.findById(request.getIdRole())
-            .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID: " + request.getIdRole()));
-
-    Gym gym = gymRepository.findById(request.getIdGym())
-            .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + request.getIdGym()));
-
-    if (userRepository.existsByUser(request.getUser())) {
-        throw new RuntimeException("El nombre de usuario ya está en uso");
-    }
-
-    if (userRepository.existsByMail(request.getMail())) {
-        throw new RuntimeException("El email ya está registrado");
-    }
-
-    User user = User.builder()
-            .user(request.getUser())
-            .mail(request.getMail())
-            .phone(request.getPhone())
-            .name(request.getName())
-            .password(request.getPassword())
-            .status(request.getStatus())
-            .role(role)
-            .gym(gym) 
-            .build();
-
-    User saved = userRepository.save(user);
-    return mapToResponse(saved);
-}
-
-    @Override
-    public UserResponse update(Integer id, UserRequest request) {
-        User existing = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        Role role = roleRepository.findById(request.getIdRole())
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+    public UserResponse save(UserRequest req) {
+        Role role = roleRepository.findById(req.getIdRole())
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID: " + req.getIdRole()));
+        Gym gym = gymRepository.findById(req.getIdGym())
+                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + req.getIdGym()));
         
-        Gym gym = gymRepository.findById(request.getIdGym())
-                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado"));
-
-        if (!existing.getUser().equals(request.getUser()) && 
-            userRepository.existsByUser(request.getUser())) {
-            throw new RuntimeException("El nombre de usuario ya está en uso");
-        }
-
-        if (!existing.getMail().equals(request.getMail()) && 
-            userRepository.existsByMail(request.getMail())) {
-            throw new RuntimeException("El email ya está registrado");
-        }
-
-        existing.setUser(request.getUser());
-        existing.setMail(request.getMail());
-        existing.setPhone(request.getPhone());
-        existing.setName(request.getName());
-        existing.setPassword(request.getPassword());
-        existing.setStatus(request.getStatus());
-        existing.setRole(role);
-        existing.setGym(gym);
-
-        User updated = userRepository.save(existing);
-        return mapToResponse(updated);
+        User user = UserMapper.toEntity(req);
+        user.setRole(role);
+        user.setGym(gym);
+        
+        User savedUser = repository.save(user);
+        return UserMapper.toResponse(savedUser);
     }
 
     @Override
-    @Transactional
+    public UserResponse update(Integer id, UserRequest req) {
+        User existingUser = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
+        
+        if (!existingUser.getRole().getIdRole().equals(req.getIdRole())) {
+            Role role = roleRepository.findById(req.getIdRole())
+                    .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID: " + req.getIdRole()));
+            existingUser.setRole(role);
+        }
+        
+        if (!existingUser.getGym().getIdGym().equals(req.getIdGym())) {
+            Gym gym = gymRepository.findById(req.getIdGym())
+                    .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + req.getIdGym()));
+            existingUser.setGym(gym);
+        }
+        
+        UserMapper.copyToEntity(req, existingUser);
+        User updatedUser = repository.save(existingUser);
+        return UserMapper.toResponse(updatedUser);
+    }
+
+    @Override
     public void delete(Integer id) {
-        if (!userRepository.existsById(id)) {
-            throw new RuntimeException("Usuario no encontrado");
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("Usuario no encontrado con ID: " + id);
         }
-        userRepository.deleteById(id);
+        repository.deleteById(id);
     }
 
     @Override
-    public boolean existsById(Integer id) {
-        return userRepository.existsById(id);
+    public UserResponse findByMail(String mail) {
+        return repository.findByMail(mail).stream()
+                .findFirst()
+                .map(UserMapper::toResponse)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con email: " + mail));
     }
 
     @Override
-    public boolean existsByUsername(String username) {
-        return userRepository.existsByUser(username);
+    public UserResponse findByUsername(String username) {
+        return repository.findByUser(username).stream()
+                .findFirst()
+                .map(UserMapper::toResponse)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con username: " + username));
     }
 
     @Override
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByMail(email);
+    public List<UserResponse> findByRoleId(Integer idRole) {
+        // Implementar cuando agregues el método al repository
+        return repository.findAll().stream()
+                .filter(u -> u.getRole().getIdRole().equals(idRole))
+                .map(UserMapper::toResponse)
+                .toList();
     }
-
-    private UserResponse mapToResponse(User user) {
-        RoleResponse roleResponse = RoleResponse.builder()
-                .idRole(user.getRole().getIdRole())
-                .role(user.getRole().getRole())
-                .status(user.getRole().getStatus())
-                .build();
-
-        GymResponse gymResponse = GymResponse.builder()
-                .idGym(user.getGym().getIdGym())
-                .gym(user.getGym().getGym())
-                .build();
-
-        return UserResponse.builder()
-                .idUser(user.getIdUser())
-                .user(user.getUser())
-                .mail(user.getMail())
-                .phone(user.getPhone())
-                .name(user.getName())
-                .status(user.getStatus())
-                .role(roleResponse)
-                .gym(gymResponse)
-                .build();
-    } 
 }

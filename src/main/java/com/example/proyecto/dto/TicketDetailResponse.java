@@ -1,15 +1,18 @@
 package com.example.proyecto.dto;
 
+import java.math.BigDecimal;
+
 import lombok.Builder;
 import lombok.Value;
 
 @Value
 @Builder
 public class TicketDetailResponse {
-    private Integer idDatailTicket;
+    private Integer idDetailTicket;
     private Integer amount;
     private Double unitPrice;
-    private Double subtotal;
-    private ProductResponse product;
+    private BigDecimal subtotal;
+    private Integer idProduct;
+    private String productName;
     private Integer idTicket;
 }

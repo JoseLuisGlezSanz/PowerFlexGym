@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Value;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Value
 @Builder
@@ -16,7 +15,8 @@ public class TicketResponse {
     private LocalDateTime saleDate;
     private Integer methodPayment;
     private BigDecimal paymentWith;
-    private CustomerResponse customer;
-    private UserResponse user;
-    private List<TicketDetailResponse> details;
+    private Integer idCustomer;
+    private String customerName;
+    private Integer idUser;
+    private String userName;
 }

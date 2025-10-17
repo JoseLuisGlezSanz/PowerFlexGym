@@ -1,13 +1,12 @@
 package com.example.proyecto.service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dto.GymRequest;
 import com.example.proyecto.dto.GymResponse;
+import com.example.proyecto.mapper.GymMapper;
 import com.example.proyecto.model.Gym;
 import com.example.proyecto.repository.GymRepository;
 
@@ -18,59 +17,51 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class GymServiceImpl implements GymService{
-    private final GymRepository gymRepository;
+    private final GymRepository repository;
 
     @Override
     public List<GymResponse> findAll() {
-        return gymRepository.findAll().stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+        return repository.findAll().stream()
+                .map(GymMapper::toResponse)
+                .toList();
     }
 
     @Override
-    public Optional<GymResponse> findById(Integer id) {
-        return gymRepository.findById(id)
-                .map(this::mapToResponse);
+    public GymResponse findById(Integer id) {
+        Gym gym = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + id));
+        return GymMapper.toResponse(gym);
     }
 
     @Override
-    public GymResponse create(GymRequest request) {
-        Gym gym = Gym.builder()
-                .gym(request.getGym())
-                .build();
-
-        Gym saved = gymRepository.save(gym);
-        return mapToResponse(saved);
+    public GymResponse save(GymRequest req) {
+        Gym gym = GymMapper.toEntity(req);
+        Gym savedGym = repository.save(gym);
+        return GymMapper.toResponse(savedGym);
     }
 
     @Override
-    public GymResponse update(Integer id, GymRequest request) {
-        Gym existing = gymRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado"));
-
-        existing.setGym(request.getGym());
-
-        Gym updated = gymRepository.save(existing);
-        return mapToResponse(updated);
+    public GymResponse update(Integer id, GymRequest req) {
+        Gym existingGym = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + id));
+        
+        GymMapper.copyToEntity(req, existingGym);
+        Gym updatedGym = repository.save(existingGym);
+        return GymMapper.toResponse(updatedGym);
     }
 
     @Override
     public void delete(Integer id) {
-        if (!gymRepository.existsById(id)) {
-            throw new RuntimeException("Gimnasio no encontrado");
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("Gimnasio no encontrado con ID: " + id);
         }
-        gymRepository.deleteById(id);
+        repository.deleteById(id);
     }
 
     @Override
-    public boolean existsById(Integer id) {
-        return gymRepository.existsById(id);
-    }
-
-    private GymResponse mapToResponse(Gym gym) {
-        return GymResponse.builder()
-                .idGym(gym.getIdGym())
-                .gym(gym.getGym())
-                .build();
+    public List<GymResponse> findByGymName(String gymName) {
+        return repository.findByGym(gymName).stream()
+                .map(GymMapper::toResponse)
+                .toList();
     }
 }

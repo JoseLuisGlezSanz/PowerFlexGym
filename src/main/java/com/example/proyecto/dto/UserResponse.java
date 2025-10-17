@@ -12,6 +12,8 @@ public class UserResponse {
     private String phone;
     private String name;
     private Integer status;
-    private RoleResponse role;
-    private GymResponse gym;
+    private Integer idRole;
+    private String roleName;
+    private Integer idGym;
+    private String gymName;
 }

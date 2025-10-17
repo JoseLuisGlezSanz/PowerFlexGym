@@ -73,7 +73,8 @@ public class Customer {
     private Boolean verifiedNumber;
 
     //Relaciones
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_contact")
     private EmergencyContact emergencyContact;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)

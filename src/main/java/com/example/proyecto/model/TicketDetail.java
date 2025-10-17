@@ -1,5 +1,7 @@
 package com.example.proyecto.model;
 
+import java.math.BigDecimal;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
@@ -27,9 +29,9 @@ import lombok.Setter;
 public class TicketDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_datail_ticket")
+    @Column(name = "id_detail_ticket")
     @JsonProperty("identificador del detalle")
-    private Integer idDatailTicket;
+    private Integer idDetailTicket;
 
     @Column(name = "amount")
     @JsonProperty("cantidad del producto")
@@ -41,7 +43,7 @@ public class TicketDetail {
 
     @Column(name = "subtotal")
     @JsonProperty("Subtotal del ticket")
-    private Double subtotal;
+    private BigDecimal subtotal;
 
     // Relaciones
     @ManyToOne

@@ -5,37 +5,41 @@ import com.example.proyecto.dto.CustomerMembershipResponse;
 import com.example.proyecto.model.CustomerMembership;
 
 public class CustomerMembershipMapper {
-        public static CustomerMembershipResponse toResponse(CustomerMembership cm) {
-        if (cm == null)
-            return null;
-
+    public static CustomerMembershipResponse toResponse(CustomerMembership customerMembership) {
+        if (customerMembership == null) return null;
+        
         return CustomerMembershipResponse.builder()
-                .idCustomer(cm.getCustomer().getIdCustomer()) 
-                .idMembership(cm.getMembership().getIdMembership())
-                .idGym(cm.getGym().getIdGym())
-                .startDate(cm.getStartDate())
-                .endDate(cm.getEndDate())
-                .memberSince(cm.getMemberSince())
-                .membershipStatus(cm.getMembershipStatus())
+                .idCustomerMembership(customerMembership.getIdCustomerMembership())
+                .idCustomer(customerMembership.getCustomer().getIdCustomer())
+                .customerName(customerMembership.getCustomer().getName())
+                .idMembership(customerMembership.getMembership().getIdMembership())
+                .membershipName(customerMembership.getMembership().getMembership())
+                .startDate(customerMembership.getStartDate())
+                .endDate(customerMembership.getEndDate())
+                .memberSince(customerMembership.getMemberSince())
+                .membershipStatus(customerMembership.getMembershipStatus())
+                .idGym(customerMembership.getGym().getIdGym())
+                .gymName(customerMembership.getGym().getGym())
                 .build();
     }
 
     public static CustomerMembership toEntity(CustomerMembershipRequest dto) {
-        if (dto == null)
-            return null;
-
+        if (dto == null) return null;
+        
         return CustomerMembership.builder()
                 .startDate(dto.getStartDate())
                 .endDate(dto.getEndDate())
+                .memberSince(dto.getMemberSince())
                 .membershipStatus(dto.getMembershipStatus())
                 .build();
     }
 
     public static void copyToEntity(CustomerMembershipRequest dto, CustomerMembership entity) {
-        if (dto == null || entity == null)
-            return;
+        if (dto == null || entity == null) return;
+        
         entity.setStartDate(dto.getStartDate());
         entity.setEndDate(dto.getEndDate());
+        entity.setMemberSince(dto.getMemberSince());
         entity.setMembershipStatus(dto.getMembershipStatus());
     }
 }

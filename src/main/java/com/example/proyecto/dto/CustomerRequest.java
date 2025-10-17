@@ -1,17 +1,17 @@
 package com.example.proyecto.dto;
 
-import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class CustomerRequest {
     private String name;
     private String cologne;
-    @Pattern(regexp = "\\d{10}") private String phone;
+    private String phone;
     private LocalDate birthDate;
     private Boolean medicalCondition;
-    private Integer idGym;
+    private LocalDateTime registrationDate;
     private String photo;
     private String photoCredential;
     private Boolean verifiedNumber = false;

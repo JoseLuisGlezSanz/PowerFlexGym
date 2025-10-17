@@ -10,4 +10,5 @@ public class EmergencyContactResponse {
     private String contactName;
     private String contactPhone;
     private Integer idCustomer;
+    private String customerName;
 }

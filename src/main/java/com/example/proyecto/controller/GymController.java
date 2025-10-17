@@ -9,45 +9,50 @@ import com.example.proyecto.dto.GymRequest;
 import com.example.proyecto.dto.GymResponse;
 import com.example.proyecto.service.GymService;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/gyms")
+@RequestMapping("/api/v1/gyms")
 @RequiredArgsConstructor
 public class GymController {
+
     private final GymService gymService;
 
     @GetMapping
-    public ResponseEntity<List<GymResponse>> getAllGyms() {
+    public ResponseEntity<List<GymResponse>> findAll() {
         List<GymResponse> gyms = gymService.findAll();
         return ResponseEntity.ok(gyms);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GymResponse> getGymById(@PathVariable Integer id) {
-        return gymService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<GymResponse> findById(@PathVariable Integer id) {
+        GymResponse gym = gymService.findById(id);
+        return ResponseEntity.ok(gym);
     }
 
     @PostMapping
-    public ResponseEntity<GymResponse> createGym(@Valid @RequestBody GymRequest request) {
-        GymResponse created = gymService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    public ResponseEntity<GymResponse> create(@RequestBody GymRequest gymRequest) {
+        GymResponse createdGym = gymService.save(gymRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdGym);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GymResponse> updateGym(
-            @PathVariable Integer id,
-            @Valid @RequestBody GymRequest request) {
-        GymResponse updated = gymService.update(id, request);
-        return ResponseEntity.ok(updated);
+    public ResponseEntity<GymResponse> update(
+            @PathVariable Integer id, 
+            @RequestBody GymRequest gymRequest) {
+        GymResponse updatedGym = gymService.update(id, gymRequest);
+        return ResponseEntity.ok(updatedGym);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGym(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
         gymService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<GymResponse>> findByGymName(@RequestParam String name) {
+        List<GymResponse> gyms = gymService.findByGymName(name);
+        return ResponseEntity.ok(gyms);
     }
 }

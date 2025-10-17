@@ -7,6 +7,6 @@ import java.time.LocalDateTime;
 public class VisitRequest {
     private Integer idCustomer;
     private LocalDateTime date;
-    private Integer pending = 0;
+    private Integer pending;
     private Integer idGym;
 }

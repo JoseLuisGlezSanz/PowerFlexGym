@@ -6,8 +6,8 @@ import com.example.proyecto.model.Gym;
 
 public class GymMapper {
     public static GymResponse toResponse(Gym gym) {
-        if (gym == null)
-            return null;
+        if (gym == null) return null;
+        
         return GymResponse.builder()
                 .idGym(gym.getIdGym())
                 .gym(gym.getGym())
@@ -15,16 +15,16 @@ public class GymMapper {
     }
 
     public static Gym toEntity(GymRequest dto) {
-        if (dto == null)
-            return null;
+        if (dto == null) return null;
+        
         return Gym.builder()
                 .gym(dto.getGym())
                 .build();
     }
 
     public static void copyToEntity(GymRequest dto, Gym entity) {
-        if (dto == null || entity == null)
-            return;
+        if (dto == null || entity == null) return;
+        
         entity.setGym(dto.getGym());
     }
 }
