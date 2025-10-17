@@ -56,4 +56,9 @@ public class CustomerMembership {
     @Column(name = "membership_status", nullable = false)
     @JsonProperty("estado de la membresía")
     private Boolean membershipStatus;
+
+    // Relaciones
+    @ManyToOne
+    @JoinColumn(name = "id_gym")
+    private Gym gym;
 }

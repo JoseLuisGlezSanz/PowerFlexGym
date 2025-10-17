@@ -11,6 +11,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,4 +53,21 @@ public class MembershipSale {
     @Column(name = "end_date", nullable = false)
     @JsonProperty("fecha de finalización de la membresia")
     private LocalDate endDate;
+
+    // Relaciones
+    @ManyToOne
+    @JoinColumn(name = "id_customer")
+    private Customer customer;
+
+    @ManyToOne
+    @JoinColumn(name = "id_membership")
+    private Membership membership;
+
+    @ManyToOne
+    @JoinColumn(name = "id_gym")
+    private Gym gym;
+
+    @ManyToOne
+    @JoinColumn(name = "id_user")
+    private User user;
 }

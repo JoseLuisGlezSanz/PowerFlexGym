@@ -14,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -64,4 +65,12 @@ public class Ticket {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_ticket", referencedColumnName = "idTicket")
     private List<TicketDetail> ticketsDetails;
+
+    @ManyToOne
+    @JoinColumn(name = "id_customer")
+    private Customer customer;
+
+    @ManyToOne
+    @JoinColumn(name = "id_user")
+    private User user;
 }

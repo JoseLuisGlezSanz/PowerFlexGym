@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -65,4 +66,12 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_user", referencedColumnName = "idUser")
     private List<MembershipSale> membershipsSales;
+
+    @ManyToOne
+    @JoinColumn(name = "id_role")
+    private Role role;
+
+    @ManyToOne
+    @JoinColumn(name = "id_gym")
+    private Gym gym;
 }
