@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<UserResponse> findByRoleId(Integer idRole) {
-        return userRepository.findAll().stream()
+        return userRepository.findByRoleId(idRole).stream()
                 .map(UserMapper::toResponse)
                 .toList();
     }

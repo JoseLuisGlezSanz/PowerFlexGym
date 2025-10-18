@@ -14,10 +14,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findByMail(@Param("mail") String mail);
     
     // Buscar usuario por nombre de usuario
-    @Query(value = "SELECT * FROM users WHERE LOWER(user) = LOWER(:user);", nativeQuery = true)
+    @Query(value = "SELECT * FROM users WHERE LOWER(user_name) = LOWER(:user);", nativeQuery = true)
     List<User> findByUsername(@Param("user") String user);
 
     // Buscar usuario por rol de usuario
     @Query(value = "SELECT * FROM users WHERE id_role = :idRole;", nativeQuery = true)
-    List<User> findByRoleId(@Param("idRole") String idRole);
+    List<User> findByRoleId(@Param("idRole") Integer idRole);
 }

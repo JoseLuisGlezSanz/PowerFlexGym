@@ -71,16 +71,15 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/search/email")
+    @GetMapping("/search/email/{mail}")
     @Operation(summary = "Search user by email")
     @ApiResponse(responseCode = "200", description = "User found by email", 
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))})
-    public ResponseEntity<UserResponse> findByMail(@RequestParam String email) {
-        UserResponse user = userService.findByMail(email);
-        return ResponseEntity.ok(user);
+    public UserResponse findByMail(@PathVariable String mail) {
+        return userService.findByMail(mail);
     }
 
-    @GetMapping("/search/{user}")
+    @GetMapping("/search/username/{user}")
     @Operation(summary = "Search user by username")
     @ApiResponse(responseCode = "200", description = "User found by username", 
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))})

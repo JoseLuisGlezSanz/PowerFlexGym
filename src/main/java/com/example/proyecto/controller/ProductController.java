@@ -70,7 +70,7 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/search")
+    @GetMapping("/search/{name}")
     @Operation(summary = "Search products by name")
     @ApiResponse(responseCode = "200", description = "List of products matching the name", 
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Product.class)))})
@@ -86,7 +86,7 @@ public class ProductController {
         return productService.findByStatus(status);
     }
 
-    @GetMapping("/low-stock")
+    @GetMapping("/low-stock/{stock}")
     @Operation(summary = "Get products with low stock")
     @ApiResponse(responseCode = "200", description = "List of products with stock less than specified value",
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Product.class)))})
