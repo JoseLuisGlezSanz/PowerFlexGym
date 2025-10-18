@@ -9,11 +9,13 @@ import com.example.proyecto.dto.ProductRequest;
 import com.example.proyecto.dto.ProductResponse;
 import com.example.proyecto.service.ProductService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
+@Tag(name = "Products", description = "Provides methods for managing products")
 public class ProductController {
     private final ProductService productService;
 

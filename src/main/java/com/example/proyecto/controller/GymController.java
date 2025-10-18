@@ -9,11 +9,13 @@ import com.example.proyecto.dto.GymRequest;
 import com.example.proyecto.dto.GymResponse;
 import com.example.proyecto.service.GymService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/gyms")
 @RequiredArgsConstructor
+@Tag(name = "Gyms", description = "Provides methods for managing gyms")
 public class GymController {
     private final GymService gymService;
 

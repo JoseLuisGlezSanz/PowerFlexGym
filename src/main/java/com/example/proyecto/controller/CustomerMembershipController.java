@@ -9,11 +9,13 @@ import com.example.proyecto.dto.CustomerMembershipRequest;
 import com.example.proyecto.dto.CustomerMembershipResponse;
 import com.example.proyecto.service.CustomerMembershipService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/customer-memberships")
 @RequiredArgsConstructor
+@Tag(name = "CustomerMemberships", description = "Provides methods for managing customer memberships")
 public class CustomerMembershipController {
     private final CustomerMembershipService customerMembershipService;
 

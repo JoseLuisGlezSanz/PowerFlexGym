@@ -9,11 +9,13 @@ import com.example.proyecto.dto.VisitRequest;
 import com.example.proyecto.dto.VisitResponse;
 import com.example.proyecto.service.VisitService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/visits")
 @RequiredArgsConstructor
+@Tag(name = "Visits", description = "Provides methods for managing visits")
 public class VisitController {
 
     private final VisitService visitService;

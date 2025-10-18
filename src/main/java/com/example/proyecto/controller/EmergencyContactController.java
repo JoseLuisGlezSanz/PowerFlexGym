@@ -9,11 +9,13 @@ import com.example.proyecto.dto.EmergencyContactRequest;
 import com.example.proyecto.dto.EmergencyContactResponse;
 import com.example.proyecto.service.EmergencyContactService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/emergency-contacts")
 @RequiredArgsConstructor
+@Tag(name = "EmergencyContact", description = "Provides methods for managing emergency contact")
 public class EmergencyContactController {
     private final EmergencyContactService emergencyContactService;
 

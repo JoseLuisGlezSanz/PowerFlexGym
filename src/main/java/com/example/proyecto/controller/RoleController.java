@@ -9,11 +9,13 @@ import com.example.proyecto.dto.RoleRequest;
 import com.example.proyecto.dto.RoleResponse;
 import com.example.proyecto.service.RoleService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/roles")
 @RequiredArgsConstructor
+@Tag(name = "Roles", description = "Provides methods for managing roles")
 public class RoleController {
     private final RoleService roleService;
 

@@ -9,11 +9,13 @@ import com.example.proyecto.dto.UserRequest;
 import com.example.proyecto.dto.UserResponse;
 import com.example.proyecto.service.UserService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
+@Tag(name = "Users", description = "Provides methods for managing users")
 public class UserController {
 
     private final UserService userService;

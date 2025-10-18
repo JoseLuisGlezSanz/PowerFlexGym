@@ -9,11 +9,13 @@ import com.example.proyecto.dto.TicketRequest;
 import com.example.proyecto.dto.TicketResponse;
 import com.example.proyecto.service.TicketService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/tickets")
 @RequiredArgsConstructor
+@Tag(name = "Tickets", description = "Provides methods for managing tickets")
 public class TicketController {
     private final TicketService ticketService;
 
