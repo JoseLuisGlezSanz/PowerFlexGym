@@ -12,6 +12,6 @@ public interface UserService {
     UserResponse update(Integer id, UserRequest userRequest);
     void delete(Integer id);
     UserResponse findByMail(String mail);
-    UserResponse findByUsername(String username);
+    List<UserResponse> findByUsername(String user);
     List<UserResponse> findByRoleId(Integer idRole);
 }

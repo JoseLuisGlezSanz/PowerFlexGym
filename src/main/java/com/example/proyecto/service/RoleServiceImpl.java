@@ -57,8 +57,7 @@ public class RoleServiceImpl implements RoleService{
 
     @Override
     public List<RoleResponse> findByStatus(Integer status) {
-        return roleRepository.findAll().stream()
-                .filter(r -> r.getStatus().equals(status))
+        return roleRepository.findByStatus(status).stream()
                 .map(RoleMapper::toResponse)
                 .toList();
     }

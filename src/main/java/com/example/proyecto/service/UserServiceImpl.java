@@ -76,17 +76,15 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserResponse findByUsername(String username) {
-        return userRepository.findByUser(username).stream()
-                .findFirst()
+    public List<UserResponse> findByUsername(String user) {
+        return userRepository.findByUsername(user).stream()
                 .map(UserMapper::toResponse)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con username: " + username));
+                .toList();
     }
 
     @Override
     public List<UserResponse> findByRoleId(Integer idRole) {
         return userRepository.findAll().stream()
-                .filter(u -> u.getRole().getIdRole().equals(idRole))
                 .map(UserMapper::toResponse)
                 .toList();
     }

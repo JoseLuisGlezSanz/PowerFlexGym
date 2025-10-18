@@ -64,24 +64,22 @@ public class MembershipServiceImpl implements MembershipService{
     }
 
     @Override
-    public List<MembershipResponse> findByMembershipName(String membershipName) {
-        return membershipRepository.findByMembership(membershipName).stream()
+    public List<MembershipResponse> findByMembership(String membership) {
+        return membershipRepository.findByMembership(membership).stream()
                 .map(MembershipMapper::toResponse)
                 .toList();
     }
 
     @Override
     public List<MembershipResponse> findByStatus(Integer status) {
-        return membershipRepository.findAll().stream()
-                .filter(m -> m.getStatus().equals(status))
+        return membershipRepository.findByStatus(status).stream()
                 .map(MembershipMapper::toResponse)
                 .toList();
     }
 
     @Override
     public List<MembershipResponse> findByGymId(Integer idGym) {
-        return membershipRepository.findAll().stream()
-                .filter(m -> m.getGym().getIdGym().equals(idGym))
+        return membershipRepository.findByGymId(idGym).stream()
                 .map(MembershipMapper::toResponse)
                 .toList();
     }

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -63,6 +64,7 @@ public class Ticket {
 
     //Relaciones
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<TicketDetail> ticketsDetails;
 
     @ManyToOne

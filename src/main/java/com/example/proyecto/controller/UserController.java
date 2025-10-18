@@ -7,8 +7,14 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 import com.example.proyecto.dto.UserRequest;
 import com.example.proyecto.dto.UserResponse;
+import com.example.proyecto.model.User;
 import com.example.proyecto.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -21,50 +27,72 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
+    @Operation(summary = "Get all users")
+    @ApiResponse(responseCode = "200", description = "List of all users", 
+            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))})
     public ResponseEntity<List<UserResponse>> findAll() {
         List<UserResponse> users = userService.findAll();
         return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get user by ID")
+    @ApiResponse(responseCode = "200", description = "User found", 
+            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))})
     public ResponseEntity<UserResponse> findById(@PathVariable Integer id) {
         UserResponse user = userService.findById(id);
         return ResponseEntity.ok(user);
     }
 
     @PostMapping
+    @Operation(summary = "Create a new user")
+    @ApiResponse(responseCode = "200", description = "User created successfully", 
+            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))})
     public ResponseEntity<UserResponse> create(@RequestBody UserRequest userRequest) {
         UserResponse createdUser = userService.save(userRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Update user by ID")
+    @ApiResponse(responseCode = "200", description = "User updated successfully", 
+            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))})
     public ResponseEntity<UserResponse> update(@PathVariable Integer id, @RequestBody UserRequest userRequest) {
         UserResponse updatedUser = userService.update(id, userRequest);
         return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete user by ID")
+    @ApiResponse(responseCode = "200", description = "User deleted successfully", 
+            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))})
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         userService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/search/email")
+    @Operation(summary = "Search user by email")
+    @ApiResponse(responseCode = "200", description = "User found by email", 
+            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))})
     public ResponseEntity<UserResponse> findByMail(@RequestParam String email) {
         UserResponse user = userService.findByMail(email);
         return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/search/username")
-    public ResponseEntity<UserResponse> findByUsername(@RequestParam String username) {
-        UserResponse user = userService.findByUsername(username);
-        return ResponseEntity.ok(user);
+    @GetMapping("/search/{user}")
+    @Operation(summary = "Search user by username")
+    @ApiResponse(responseCode = "200", description = "User found by username", 
+            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))})
+    public List<UserResponse> findByUsername(@PathVariable String user) {
+        return userService.findByUsername(user);
     }
 
-    @GetMapping("/role/{roleId}")
-    public ResponseEntity<List<UserResponse>> findByRoleId(@PathVariable Integer roleId) {
-        List<UserResponse> users = userService.findByRoleId(roleId);
-        return ResponseEntity.ok(users);
+    @GetMapping("/role/{idRole}")
+    @Operation(summary = "Get users by role ID")
+    @ApiResponse(responseCode = "200", description = "List of users with the specified role", 
+            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))})
+    public List<UserResponse> findByRoleId(@PathVariable Integer idRole) {
+        return userService.findByRoleId(idRole);
     }
 }

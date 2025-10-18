@@ -80,7 +80,7 @@ public class CustomerMembershipServiceImpl implements CustomerMembershipService{
 
     @Override
     public List<CustomerMembershipResponse> findByCustomerId(Integer idCustomer) {
-        return customerMembershipRepository.findByCustomerIdCustomer(idCustomer).stream()
+        return customerMembershipRepository.findByCustomerId(idCustomer).stream()
                 .map(CustomerMembershipMapper::toResponse)
                 .toList();
     }
@@ -93,7 +93,7 @@ public class CustomerMembershipServiceImpl implements CustomerMembershipService{
     }
 
     @Override
-    public List<CustomerMembershipResponse> findByCustomerIdAndStatus(Integer idCustomer, Boolean status) {
+    public List<CustomerMembershipResponse> findByCustomerIdCustomerAndMembershipStatus(Integer idCustomer, Boolean status) {
         return customerMembershipRepository.findByCustomerIdCustomerAndMembershipStatus(idCustomer, status).stream()
                 .map(CustomerMembershipMapper::toResponse)
                 .toList();
@@ -101,8 +101,7 @@ public class CustomerMembershipServiceImpl implements CustomerMembershipService{
 
     @Override
     public List<CustomerMembershipResponse> findActiveMembershipsExpiringSoon() {
-        return customerMembershipRepository.findByMembershipStatus(true).stream()
-                .filter(cm -> cm.getEndDate() != null && cm.getEndDate().isBefore(java.time.LocalDate.now().plusDays(7)))
+        return customerMembershipRepository.findActiveMembershipsExpiringSoon().stream()
                 .map(CustomerMembershipMapper::toResponse)
                 .toList();
     }

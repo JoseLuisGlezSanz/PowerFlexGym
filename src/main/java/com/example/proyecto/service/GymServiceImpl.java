@@ -54,9 +54,9 @@ public class GymServiceImpl implements GymService{
     }
 
     @Override
-    public List<GymResponse> findByGymName(String gymName) {
-        return gymRepository.findByGym(gymName).stream()
-                .map(GymMapper::toResponse)
+    public List<GymResponse> findByGym(String gym) {
+        return gymRepository.findByGym(gym).stream()
+                .map(GymMapper::toResponse) 
                 .toList();
     }
 }

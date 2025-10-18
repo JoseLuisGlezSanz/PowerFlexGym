@@ -83,22 +83,21 @@ public class MembershipSaleServiceImpl implements MembershipSaleService{
 
     @Override
     public List<MembershipSaleResponse> findByCustomerId(Integer idCustomer) {
-        return membershipSaleRepository.findByCustomerIdCustomer(idCustomer).stream()
+        return membershipSaleRepository.findByCustomerId(idCustomer).stream()
                 .map(MembershipSaleMapper::toResponse)
                 .toList();
     }
 
     @Override
     public List<MembershipSaleResponse> findByGymId(Integer idGym) {
-        return membershipSaleRepository.findByGymIdGym(idGym).stream()
+        return membershipSaleRepository.findByGymId(idGym).stream()
                 .map(MembershipSaleMapper::toResponse)
                 .toList();
     }
 
     @Override
     public List<MembershipSaleResponse> findNotCancelled() {
-        return membershipSaleRepository.findAll().stream()
-                .filter(ms -> !ms.getCancellation())
+        return membershipSaleRepository.findNotCancelled().stream()
                 .map(MembershipSaleMapper::toResponse)
                 .toList();
     }

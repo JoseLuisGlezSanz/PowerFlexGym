@@ -70,22 +70,14 @@ public class TicketServiceImpl implements TicketService{
 
     @Override
     public List<TicketResponse> findByCustomerId(Integer idCustomer) {
-        return ticketRepository.findByCustomerIdCustomer(idCustomer).stream()
+        return ticketRepository.findByCustomerId(idCustomer).stream()
                 .map(TicketMapper::toResponse)
                 .toList();
     }
 
     @Override
     public List<TicketResponse> findByUserId(Integer idUser) {
-        return ticketRepository.findByUserIdUser(idUser).stream()
-                .map(TicketMapper::toResponse)
-                .toList();
-    }
-
-    @Override
-    public List<TicketResponse> findByStatus(Integer status) {
-        return ticketRepository.findAll().stream()
-                .filter(t -> t.getStatus().equals(status))
+        return ticketRepository.findByUserId(idUser).stream()
                 .map(TicketMapper::toResponse)
                 .toList();
     }

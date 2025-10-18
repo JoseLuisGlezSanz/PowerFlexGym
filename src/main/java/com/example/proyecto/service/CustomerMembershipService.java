@@ -14,6 +14,6 @@ public interface CustomerMembershipService {
     void delete(Integer idCustomer, Integer idMembership);
     List<CustomerMembershipResponse> findByCustomerId(Integer idCustomer);
     List<CustomerMembershipResponse> findByMembershipStatus(Boolean status);
-    List<CustomerMembershipResponse> findByCustomerIdAndStatus(Integer idCustomer, Boolean status);
+    List<CustomerMembershipResponse> findByCustomerIdCustomerAndMembershipStatus(Integer idCustomer, Boolean status);
     List<CustomerMembershipResponse> findActiveMembershipsExpiringSoon();
 }

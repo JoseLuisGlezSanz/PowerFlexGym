@@ -13,5 +13,4 @@ public interface VisitService {
     void delete(Integer id);
     List<VisitResponse> findByCustomerId(Integer idCustomer);
     List<VisitResponse> findByGymId(Integer idGym);
-    List<VisitResponse> findByPending(Integer pending);
 }

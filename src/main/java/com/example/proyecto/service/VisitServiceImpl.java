@@ -70,22 +70,14 @@ public class VisitServiceImpl implements VisitService{
 
     @Override
     public List<VisitResponse> findByCustomerId(Integer idCustomer) {
-        return visitRepository.findByCustomerIdCustomer(idCustomer).stream()
+        return visitRepository.findByCustomerId(idCustomer).stream()
                 .map(VisitMapper::toResponse)
                 .toList();
     }
 
     @Override
     public List<VisitResponse> findByGymId(Integer idGym) {
-        return visitRepository.findByGymIdGym(idGym).stream()
-                .map(VisitMapper::toResponse)
-                .toList();
-    }
-
-    @Override
-    public List<VisitResponse> findByPending(Integer pending) {
-        return visitRepository.findAll().stream()
-                .filter(v -> v.getPending().equals(pending))
+        return visitRepository.findByGymId(idGym).stream()
                 .map(VisitMapper::toResponse)
                 .toList();
     }

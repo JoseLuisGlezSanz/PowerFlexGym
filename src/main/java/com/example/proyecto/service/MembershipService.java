@@ -11,7 +11,7 @@ public interface MembershipService {
     MembershipResponse save(MembershipRequest membershipRequest);
     MembershipResponse update(Integer id, MembershipRequest membershipRequest);
     void delete(Integer id);
-    List<MembershipResponse> findByMembershipName(String membershipName);
+    List<MembershipResponse> findByMembership(String membership);
     List<MembershipResponse> findByStatus(Integer status);
     List<MembershipResponse> findByGymId(Integer idGym);
 }

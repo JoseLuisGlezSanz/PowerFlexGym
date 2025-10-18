@@ -2,6 +2,7 @@ package com.example.proyecto.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -38,20 +39,26 @@ public class Gym {
 
     //Relaciones
     @OneToMany(mappedBy = "gym", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Customer> customers;
 
     @OneToMany(mappedBy = "gym", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<User> users;
 
     @OneToMany(mappedBy = "gym", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Membership> memberships;
 
     @OneToMany(mappedBy = "gym", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<MembershipSale> membershipsSales;
 
     @OneToMany(mappedBy = "gym", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Visit> visits;
 
     @OneToMany(mappedBy = "gym", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<CustomerMembership> customersMemberships;
 }

@@ -70,8 +70,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public List<ProductResponse> findByStockLessThan(Integer stock) {
-        return productRepository.findAll().stream()
-                .filter(p -> p.getStock() < stock)
+        return productRepository.findByStockLessThan(stock).stream()
                 .map(ProductMapper::toResponse)
                 .toList();
     }

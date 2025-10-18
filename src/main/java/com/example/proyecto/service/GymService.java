@@ -11,5 +11,5 @@ public interface GymService {
     GymResponse save(GymRequest gymRequest);
     GymResponse update(Integer id, GymRequest gymRequest);
     void delete(Integer id);
-    List<GymResponse> findByGymName(String gymName);
+    List<GymResponse> findByGym(String gym);
 }

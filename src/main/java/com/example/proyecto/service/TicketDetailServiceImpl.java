@@ -71,16 +71,14 @@ public class TicketDetailServiceImpl implements TicketDetailService{
 
     @Override
     public List<TicketDetailResponse> findByTicketId(Integer idTicket) {
-        return ticketDetailRepository.findAll().stream()
-                .filter(td -> td.getTicket().getIdTicket().equals(idTicket))
+        return ticketDetailRepository.findByTicketId(idTicket).stream()
                 .map(TicketDetailMapper::toResponse)
                 .toList();
     }
 
     @Override
     public List<TicketDetailResponse> findByProductId(Integer idProduct) {
-        return ticketDetailRepository.findAll().stream()
-                .filter(td -> td.getProduct().getIdProduct().equals(idProduct))
+        return ticketDetailRepository.findByProductId(idProduct).stream()
                 .map(TicketDetailMapper::toResponse)
                 .toList();
     }

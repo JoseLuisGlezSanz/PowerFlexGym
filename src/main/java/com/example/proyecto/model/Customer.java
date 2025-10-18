@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -78,15 +79,19 @@ public class Customer {
     private EmergencyContact emergencyContact;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<CustomerMembership> customerMemberships;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Ticket> tickets;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<MembershipSale> membershipsSales;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Visit> visits;
 
     @ManyToOne

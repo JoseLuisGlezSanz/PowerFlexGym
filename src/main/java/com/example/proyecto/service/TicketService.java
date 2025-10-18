@@ -13,5 +13,4 @@ public interface TicketService {
     void delete(Integer id);
     List<TicketResponse> findByCustomerId(Integer idCustomer);
     List<TicketResponse> findByUserId(Integer idUser);
-    List<TicketResponse> findByStatus(Integer status);
 }

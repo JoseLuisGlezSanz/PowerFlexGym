@@ -2,6 +2,7 @@ package com.example.proyecto.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -42,5 +43,6 @@ public class Role {
 
     //Relaciones
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<User> users;
 }
