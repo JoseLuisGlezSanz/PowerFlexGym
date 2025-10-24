@@ -79,12 +79,12 @@ CREATE TABLE products (
 CREATE TABLE tickets (
     id_ticket SERIAL PRIMARY KEY,
     date TIMESTAMP NOT NULL,
-    id_customer INT,
     total NUMERIC(10,2) NOT NULL,
     status INT NOT NULL,
     sale_date TIMESTAMP,
     method_payment INT,
     payment_with NUMERIC(10,2),
+    id_customer INT,
     id_user INT NOT NULL,
     CONSTRAINT fk_ticket_user FOREIGN KEY (id_user) REFERENCES users (id_user)
     CONSTRAINT fk_ticket_customer FOREIGN KEY (id_customer) REFERENCES customers (id_customer)

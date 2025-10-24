@@ -2,14 +2,15 @@ package com.example.proyecto.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dto.EmergencyContactRequest;
 import com.example.proyecto.dto.EmergencyContactResponse;
 import com.example.proyecto.mapper.EmergencyContactMapper;
-import com.example.proyecto.model.Customer;
 import com.example.proyecto.model.EmergencyContact;
-import com.example.proyecto.repository.CustomerRepository;
 import com.example.proyecto.repository.EmergencyContactRepository;
 
 import jakarta.transaction.Transactional;
@@ -20,11 +21,10 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class EmergencyContactServiceImpl implements EmergencyContactService{
     private final EmergencyContactRepository emergencyContactRepository;
-    private final CustomerRepository customerRepository;
 
     @Override
     public List<EmergencyContactResponse> findAll() {
-        return emergencyContactRepository.findAll().stream()
+        return emergencyContactRepository.findAll(Sort.by("idContact").ascending()).stream()
                 .map(EmergencyContactMapper::toResponse)
                 .toList();
     }
@@ -36,16 +36,16 @@ public class EmergencyContactServiceImpl implements EmergencyContactService{
         return EmergencyContactMapper.toResponse(contact);
     }
 
-    @Override
-    public EmergencyContactResponse save(EmergencyContactRequest req) {
-        Customer customer = customerRepository.findById(req.getIdCustomer())
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + req.getIdCustomer()));
+    // @Override
+    // public EmergencyContactResponse save(EmergencyContactRequest req) {
+    //     Customer customer = customerRepository.findById(req.getIdCustomer())
+    //             .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + req.getIdCustomer()));
         
-        EmergencyContact contact = EmergencyContactMapper.toEntity(req);
-        contact.setCustomer(customer);
-        EmergencyContact savedContact = emergencyContactRepository.save(contact);
-        return EmergencyContactMapper.toResponse(savedContact);
-    }
+    //     EmergencyContact contact = EmergencyContactMapper.toEntity(req);
+    //     contact.setCustomer(customer);
+    //     EmergencyContact savedContact = emergencyContactRepository.save(contact);
+    //     return EmergencyContactMapper.toResponse(savedContact);
+    // } 
 
     @Override
     public EmergencyContactResponse update(Integer id, EmergencyContactRequest req) {
@@ -57,15 +57,21 @@ public class EmergencyContactServiceImpl implements EmergencyContactService{
         return EmergencyContactMapper.toResponse(updatedContact);
     }
 
-    @Override
-    public void delete(Integer id) {
-        emergencyContactRepository.deleteById(id);
-    }
+    // @Override
+    // public void delete(Integer id) {
+    //     emergencyContactRepository.deleteById(id);
+    // }
 
     @Override
     public EmergencyContactResponse findByIdCustomer(Integer idCustomer) {
         return emergencyContactRepository.findByIdCustomer(idCustomer)
                 .map(EmergencyContactMapper::toResponse)
                 .orElseThrow(() -> new RuntimeException("Contacto de emergencia no encontrado para el cliente con ID: " + idCustomer));
+    }
+
+    public List<EmergencyContactResponse> getAll(int page, int pageSize) {
+        PageRequest pageReq = PageRequest.of(page, pageSize, Sort.by("idContact").ascending());
+        Page<EmergencyContact> emergencysContacts = emergencyContactRepository.findAll(pageReq);
+        return emergencysContacts.getContent().stream().map(EmergencyContactMapper::toResponse).toList();
     }
 }

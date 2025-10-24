@@ -61,17 +61,17 @@ public class CustomerController {
         return ResponseEntity.ok(updatedCustomer);
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete customer by ID")
-    @ApiResponse(responseCode = "200", description = "Customer deleted successfully", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Customer.class)))})
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        customerService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
+    // @DeleteMapping("/{id}")
+    // @Operation(summary = "Delete customer by ID")
+    // @ApiResponse(responseCode = "200", description = "Customer deleted successfully", 
+    //         content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Customer.class)))})
+    // public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    //     customerService.delete(id);
+    //     return ResponseEntity.noContent().build();
+    // }
 
     @GetMapping("/search/{name}")
-    @Operation(summary = "Search customers by name")
+    @Operation(summary = "Get customers by name")
     @ApiResponse(responseCode = "200", description = "List of customers matching the name", 
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Customer.class)))})
     public List<CustomerResponse> findByName(@PathVariable String name) {
@@ -84,5 +84,37 @@ public class CustomerController {
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Customer.class)))})
     public List<CustomerResponse> findByVerifiedNumberTrue() {
         return customerService.findByVerifiedNumberTrue();
+    }
+
+    @GetMapping(value = "paginationAll", params = { "page", "pageSize" })
+    @Operation(summary = "Get all customers with pagination")
+    public List<CustomerResponse> getAllPaginated(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
+        List<CustomerResponse> customers = customerService.getAll(page, pageSize);
+        return customers;
+    }
+
+    @GetMapping(value = "paginationByVerifiedNumberTrue", params = { "page", "pageSize" })
+    @Operation(summary = "Get customers with verified number with pagination")
+    public List<CustomerResponse> getByVerifiedNumberTruePaginated(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
+        List<CustomerResponse> customers = customerService.getByVerifiedNumberTrue(page, pageSize);
+        return customers;
+    }
+
+    @GetMapping("/gym/{idGym}")
+    @Operation(summary = "Get customers by gym")
+    @ApiResponse(responseCode = "200", description = "List of customers matching the gym", 
+            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Customer.class)))})
+    public List<CustomerResponse> findByGymId(@PathVariable Integer idGym) {
+        return customerService.findByGymId(idGym);
+    }
+
+    @GetMapping(value = "paginationByGymId", params = { "page", "pageSize" })
+    @Operation(summary = "Get customers by gym with pagination")
+    public List<CustomerResponse> getByGymIdPaginated(@RequestParam(value = "page", defaultValue = "0", required = false) int page, 
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize, @RequestParam Integer gymId) {
+        List<CustomerResponse> customers = customerService.getByGymId(page, pageSize, gymId);
+        return customers;
     }
 }

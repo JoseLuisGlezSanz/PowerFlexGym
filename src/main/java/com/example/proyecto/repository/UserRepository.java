@@ -20,4 +20,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     // Buscar usuario por rol de usuario
     @Query(value = "SELECT * FROM users WHERE id_role = :idRole;", nativeQuery = true)
     List<User> findByRoleId(@Param("idRole") Integer idRole);
+
+    //Buscar usuario por gym
+    @Query(value = "SELECT * FROM users WHERE id_gym = :idGym;", nativeQuery = true)
+    List<User> findByGymId(@Param("idGym") Integer idGym);   
 }

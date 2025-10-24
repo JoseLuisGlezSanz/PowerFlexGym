@@ -2,6 +2,9 @@ package com.example.proyecto.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dto.ProductRequest;
@@ -21,7 +24,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public List<ProductResponse> findAll() {
-        return productRepository.findAll().stream()
+        return productRepository.findAll(Sort.by("idProduct").ascending()).stream()
                 .map(ProductMapper::toResponse)
                 .toList();
     }
@@ -49,10 +52,10 @@ public class ProductServiceImpl implements ProductService{
         return ProductMapper.toResponse(updatedProduct);
     }
 
-    @Override
-    public void delete(Integer id) {
-        productRepository.deleteById(id);
-    }
+    // @Override
+    // public void delete(Integer id) {
+    //     productRepository.deleteById(id);
+    // }
 
     @Override
     public List<ProductResponse> findByName(String name) {
@@ -73,5 +76,11 @@ public class ProductServiceImpl implements ProductService{
         return productRepository.findByStockLessThan(stock).stream()
                 .map(ProductMapper::toResponse)
                 .toList();
+    }
+
+    public List<ProductResponse> getAll(int page, int pageSize) {
+        PageRequest pageReq = PageRequest.of(page, pageSize, Sort.by("idProduct").ascending());
+        Page<Product> products = productRepository.findAll(pageReq);
+        return products.getContent().stream().map(ProductMapper::toResponse).toList();
     }
 }

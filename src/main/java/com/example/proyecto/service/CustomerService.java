@@ -10,7 +10,10 @@ public interface CustomerService {
     CustomerResponse findById(Integer id);
     CustomerResponse save(CustomerRequest customerRequest);
     CustomerResponse update(Integer id, CustomerRequest customerRequest);
-    void delete(Integer id);
     List<CustomerResponse> findByName(String name);
     List<CustomerResponse> findByVerifiedNumberTrue();
+    List<CustomerResponse> getAll(int page, int pageSize);
+    List<CustomerResponse> getByVerifiedNumberTrue(int page, int pageSize);
+    List<CustomerResponse> findByGymId(Integer idGym);
+    List<CustomerResponse> getByGymId(int page, int pageSize, Integer gymId);
 }

@@ -61,17 +61,17 @@ public class ProductController {
         return ResponseEntity.ok(updatedProduct);
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete product by ID")
-    @ApiResponse(responseCode = "200", description = "Product deleted successfully", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Product.class)))})
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        productService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
+    // @DeleteMapping("/{id}")
+    // @Operation(summary = "Delete product by ID")
+    // @ApiResponse(responseCode = "200", description = "Product deleted successfully", 
+    //         content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Product.class)))})
+    // public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    //     productService.delete(id);
+    //     return ResponseEntity.noContent().build();
+    // }
 
     @GetMapping("/search/{name}")
-    @Operation(summary = "Search products by name")
+    @Operation(summary = "Get products by name")
     @ApiResponse(responseCode = "200", description = "List of products matching the name", 
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Product.class)))})
     public List<ProductResponse> findByName(@PathVariable String name) {
@@ -92,5 +92,13 @@ public class ProductController {
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Product.class)))})
     public List<ProductResponse> findByStockLessThan(@PathVariable Integer stock) {
         return productService.findByStockLessThan(stock);
+    }
+
+    @GetMapping(value = "paginationAll", params = { "page", "pageSize" })
+    @Operation(summary = "Get all products with pagination")
+    public List<ProductResponse> getAllPaginated(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
+        List<ProductResponse> products = productService.getAll(page, pageSize);
+        return products;
     }
 }

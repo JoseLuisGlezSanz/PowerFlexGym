@@ -2,6 +2,9 @@ package com.example.proyecto.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dto.UserRequest;
@@ -25,7 +28,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<UserResponse> findAll() {
-        return userRepository.findAll().stream()
+        return userRepository.findAll(Sort.by("idUser").ascending()).stream()
                 .map(UserMapper::toResponse)
                 .toList();
     }
@@ -56,16 +59,25 @@ public class UserServiceImpl implements UserService{
     public UserResponse update(Integer id, UserRequest req) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
+
+        Role role = roleRepository.findById(req.getIdRole())
+            .orElseThrow(() -> new RuntimeException("Role no encontrado con ID: " + req.getIdRole()));
+      
+        Gym gym = gymRepository.findById(req.getIdGym())
+            .orElseThrow(() -> new RuntimeException("Gym no encontrado con ID: " + req.getIdGym()));
         
         UserMapper.copyToEntity(req, existingUser);
+
+        existingUser.setRole(role);
+        existingUser.setGym(gym);
         User updatedUser = userRepository.save(existingUser);
         return UserMapper.toResponse(updatedUser);
     }
 
-    @Override
-    public void delete(Integer id) {
-        userRepository.deleteById(id);
-    }
+    // @Override
+    // public void delete(Integer id) {
+    //     userRepository.deleteById(id);
+    // }
 
     @Override
     public UserResponse findByMail(String mail) {
@@ -85,6 +97,19 @@ public class UserServiceImpl implements UserService{
     @Override
     public List<UserResponse> findByRoleId(Integer idRole) {
         return userRepository.findByRoleId(idRole).stream()
+                .map(UserMapper::toResponse)
+                .toList();
+    }
+
+    public List<UserResponse> getAll(int page, int pageSize) {
+        PageRequest pageReq = PageRequest.of(page, pageSize, Sort.by("idUser").ascending());
+        Page<User> users = userRepository.findAll(pageReq);
+        return users.getContent().stream().map(UserMapper::toResponse).toList();
+    }
+
+    @Override
+    public List<UserResponse> findByGymId(Integer idGym) {
+        return userRepository.findByGymId(idGym).stream()
                 .map(UserMapper::toResponse)
                 .toList();
     }

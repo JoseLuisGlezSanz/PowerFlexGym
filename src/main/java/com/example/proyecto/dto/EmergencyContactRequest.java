@@ -6,5 +6,4 @@ import lombok.Data;
 public class EmergencyContactRequest {
     private String contactName;
     private String contactPhone;
-    private Integer idCustomer;
 }

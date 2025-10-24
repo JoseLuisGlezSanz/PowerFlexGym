@@ -50,10 +50,10 @@ public class RoleServiceImpl implements RoleService{
         return RoleMapper.toResponse(updatedRole);
     }
 
-    @Override
-    public void delete(Integer id) {
-        roleRepository.deleteById(id);
-    }
+    // @Override
+    // public void delete(Integer id) {
+    //     roleRepository.deleteById(id);
+    // }
 
     @Override
     public List<RoleResponse> findByStatus(Integer status) {

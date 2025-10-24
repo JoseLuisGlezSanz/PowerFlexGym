@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 
 import com.example.proyecto.dto.CustomerRequest;
 import com.example.proyecto.dto.CustomerResponse;
+import com.example.proyecto.dto.EmergencyContactResponse;
 import com.example.proyecto.dto.GymResponse;
 import com.example.proyecto.model.Customer;
-import com.example.proyecto.model.Gym;
 
 public class CustomerMapper {
     public static CustomerResponse toResponse(Customer customer) {
@@ -15,6 +15,12 @@ public class CustomerMapper {
         GymResponse gymResponse = GymResponse.builder()
                 .idGym(customer.getGym().getIdGym())
                 .gym(customer.getGym().getGym())
+                .build();
+
+        EmergencyContactResponse emergencyContactResponse = EmergencyContactResponse.builder()
+                .idContact(customer.getEmergencyContact().getIdContact())
+                .contactName(customer.getEmergencyContact().getContactName())
+                .contactPhone(customer.getEmergencyContact().getContactPhone())
                 .build();
 
         return CustomerResponse.builder()
@@ -29,14 +35,12 @@ public class CustomerMapper {
                 .photoCredential(customer.getPhotoCredential())
                 .verifiedNumber(customer.getVerifiedNumber())
                 .gym(gymResponse)
+                .emergencyContact(emergencyContactResponse)
                 .build();
     }
 
     public static Customer toEntity(CustomerRequest dto) {
         if (dto == null) return null;
-
-        Gym gym = new Gym();
-        gym.setIdGym(dto.getIdGym());
         
         return Customer.builder()
                 .name(dto.getName())
@@ -47,8 +51,7 @@ public class CustomerMapper {
                 .registrationDate(LocalDateTime.now())
                 .photo(dto.getPhoto())                  
                 .photoCredential(dto.getPhotoCredential()) 
-                .verifiedNumber(dto.getVerifiedNumber()) 
-                .gym(gym)
+                .verifiedNumber(dto.getVerifiedNumber())
                 .build();
     }
 
@@ -63,11 +66,5 @@ public class CustomerMapper {
         entity.setPhoto(dto.getPhoto());
         entity.setPhotoCredential(dto.getPhotoCredential());
         entity.setVerifiedNumber(dto.getVerifiedNumber());
-
-        if (!entity.getGym().getIdGym().equals(dto.getIdGym())) {
-            Gym gym = new Gym();
-            gym.setIdGym(dto.getIdGym());
-            entity.setGym(gym);
-        }
     }
 }

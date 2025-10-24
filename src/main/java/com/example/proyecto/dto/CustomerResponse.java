@@ -1,12 +1,14 @@
 package com.example.proyecto.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Value
+@Data
 @Builder
+@AllArgsConstructor
 public class CustomerResponse {
     private Integer idCustomer;
     private String name;
@@ -19,4 +21,5 @@ public class CustomerResponse {
     private String photoCredential;
     private Boolean verifiedNumber;
     private GymResponse gym;
+    private EmergencyContactResponse emergencyContact;
 }

@@ -61,20 +61,28 @@ public class GymController {
         return ResponseEntity.ok(updatedGym);
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete gym by ID")
-    @ApiResponse(responseCode = "200", description = "Gym deleted successfully", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Gym.class)))})
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        gymService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
+    // @DeleteMapping("/{id}")
+    // @Operation(summary = "Delete gym by ID")
+    // @ApiResponse(responseCode = "200", description = "Gym deleted successfully", 
+    //         content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Gym.class)))})
+    // public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    //     gymService.delete(id);
+    //     return ResponseEntity.noContent().build();
+    // }
 
     @GetMapping("/search/{gym}")
-    @Operation(summary = "Search gyms by name")
+    @Operation(summary = "Get gyms by name")
     @ApiResponse(responseCode = "200", description = "List of gyms matching the name", 
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Gym.class)))})
     public List<GymResponse> findByGym(@RequestParam String gym) {
         return gymService.findByGym(gym);
+    }
+
+    @GetMapping(value = "paginationAll", params = { "page", "pageSize" })
+    @Operation(summary = "Get all gyms with pagination")
+    public List<GymResponse> getAllPaginated(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
+        List<GymResponse> gyms = gymService.getAll(page, pageSize);
+        return gyms;
     }
 }

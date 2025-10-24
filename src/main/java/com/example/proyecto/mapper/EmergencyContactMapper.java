@@ -13,20 +13,16 @@ public class EmergencyContactMapper {
                 .idContact(emergencyContact.getIdContact())
                 .contactName(emergencyContact.getContactName())
                 .contactPhone(emergencyContact.getContactPhone())
-                .idCustomer(emergencyContact.getCustomer().getIdCustomer())
-                .customerName(emergencyContact.getCustomer().getName())
                 .build();
     }
 
-    public static EmergencyContact toEntity(EmergencyContactRequest dto) {
-        if (dto == null) return null;
-        
-        Customer customer = new Customer();
-        customer.setIdCustomer(dto.getIdCustomer());
+    public static EmergencyContact toEntity(String contactName, String contactPhone, Customer customer) {
+        if (contactName == null && contactPhone == null) return null;
         
         return EmergencyContact.builder()
-                .contactName(dto.getContactName())
-                .contactPhone(dto.getContactPhone())
+                .contactName(contactName)
+                .contactPhone(contactPhone)
+                .customer(customer)
                 .build();
     }
 

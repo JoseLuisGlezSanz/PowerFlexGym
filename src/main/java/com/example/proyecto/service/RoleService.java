@@ -10,6 +10,6 @@ public interface RoleService {
     RoleResponse findById(Integer id);
     RoleResponse save(RoleRequest roleRequest);
     RoleResponse update(Integer id, RoleRequest roleRequest);
-    void delete(Integer id);
+    // void delete(Integer id);
     List<RoleResponse> findByStatus(Integer status);
 }

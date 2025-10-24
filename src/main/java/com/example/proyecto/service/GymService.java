@@ -10,6 +10,6 @@ public interface GymService {
     GymResponse findById(Integer id);
     GymResponse save(GymRequest gymRequest);
     GymResponse update(Integer id, GymRequest gymRequest);
-    void delete(Integer id);
     List<GymResponse> findByGym(String gym);
+    List<GymResponse> getAll(int page, int pageSize);
 }

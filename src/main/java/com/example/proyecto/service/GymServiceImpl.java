@@ -2,6 +2,9 @@ package com.example.proyecto.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dto.GymRequest;
@@ -21,7 +24,7 @@ public class GymServiceImpl implements GymService{
 
     @Override
     public List<GymResponse> findAll() {
-        return gymRepository.findAll().stream()
+        return gymRepository.findAll(Sort.by("idGym").ascending()).stream()
                 .map(GymMapper::toResponse)
                 .toList();
     }
@@ -49,14 +52,17 @@ public class GymServiceImpl implements GymService{
     }
 
     @Override
-    public void delete(Integer id) {
-        gymRepository.deleteById(id);
-    }
-
-    @Override
     public List<GymResponse> findByGym(String gym) {
         return gymRepository.findByGym(gym).stream()
                 .map(GymMapper::toResponse) 
+                .toList();
+    }
+
+    public List<GymResponse> getAll(int page, int pageSize) {
+        PageRequest pageReq = PageRequest.of(page, pageSize, Sort.by("idGym").ascending());
+        Page<Gym> gyms = gymRepository.findAll(pageReq);
+        return gyms.getContent().stream()
+                .map(GymMapper::toResponse)
                 .toList();
     }
 }

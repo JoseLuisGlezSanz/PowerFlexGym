@@ -1,5 +1,6 @@
 package com.example.proyecto.dto;
 
+
 import lombok.Builder;
 import lombok.Value;
 
@@ -11,9 +12,8 @@ public class UserResponse {
     private String mail;
     private String phone;
     private String name;
+    private String password;
     private Integer status;
-    private Integer idRole;
-    private String roleName;
-    private Integer idGym;
-    private String gymName;
+    private RoleResponse role;
+    private GymResponse gym;
 }

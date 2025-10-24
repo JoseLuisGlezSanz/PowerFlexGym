@@ -1,7 +1,6 @@
 package com.example.proyecto.controller;
 
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -43,14 +42,14 @@ public class EmergencyContactController {
         return ResponseEntity.ok(contact);
     }
 
-    @PostMapping
-    @Operation(summary = "Create a new emergency contact")
-    @ApiResponse(responseCode = "200", description = "Emergency contact created successfully",
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EmergencyContact.class)))})
-    public ResponseEntity<EmergencyContactResponse> create(@RequestBody EmergencyContactRequest contactRequest) {
-        EmergencyContactResponse createdContact = emergencyContactService.save(contactRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdContact);
-    }
+    // @PostMapping
+    // @Operation(summary = "Create a new emergency contact")
+    // @ApiResponse(responseCode = "200", description = "Emergency contact created successfully",
+    //         content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EmergencyContact.class)))})
+    // public ResponseEntity<EmergencyContactResponse> create(@RequestBody EmergencyContactRequest contactRequest) {
+    //     EmergencyContactResponse createdContact = emergencyContactService.save(contactRequest);
+    //     return ResponseEntity.status(HttpStatus.CREATED).body(createdContact);
+    // }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update emergency contact by ID")
@@ -61,14 +60,14 @@ public class EmergencyContactController {
         return ResponseEntity.ok(updatedContact);
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete emergency contact by ID")
-    @ApiResponse(responseCode = "200", description = "Emergency contact deleted successfully",
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EmergencyContact.class)))})
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        emergencyContactService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
+    // @DeleteMapping("/{id}")
+    // @Operation(summary = "Delete emergency contact by ID")
+    // @ApiResponse(responseCode = "200", description = "Emergency contact deleted successfully",
+    //         content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EmergencyContact.class)))})
+    // public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    //     emergencyContactService.delete(id);
+    //     return ResponseEntity.noContent().build();
+    // }
 
     @GetMapping("/customer/{idCustomer}")
     @Operation(summary = "Get emergency contact by customer ID")
@@ -76,5 +75,13 @@ public class EmergencyContactController {
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EmergencyContact.class)))})
     public EmergencyContactResponse findByIdCustomer(@PathVariable Integer idCustomer) {
         return emergencyContactService.findByIdCustomer(idCustomer);
+    }
+
+    @GetMapping(value = "paginationAll", params = { "page", "pageSize" })
+    @Operation(summary = "Get all emegency contacts with pagination")
+    public List<EmergencyContactResponse> getAllPaginated(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
+        List<EmergencyContactResponse> emergencyContacts = emergencyContactService.getAll(page, pageSize);
+        return emergencyContacts;
     }
 }

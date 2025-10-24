@@ -61,14 +61,14 @@ public class RoleController {
         return ResponseEntity.ok(updatedRole);
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete role by ID")
-    @ApiResponse(responseCode = "200", description = "Role deleted successfully", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Role.class)))})
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        roleService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
+    // @DeleteMapping("/{id}")
+    // @Operation(summary = "Delete role by ID")
+    // @ApiResponse(responseCode = "200", description = "Role deleted successfully", 
+    //         content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Role.class)))})
+    // public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    //     roleService.delete(id);
+    //     return ResponseEntity.noContent().build();
+    // }
 
     @GetMapping("/status/{status}")
     @Operation(summary = "Get roles by status")

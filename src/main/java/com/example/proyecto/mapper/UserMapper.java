@@ -1,5 +1,7 @@
 package com.example.proyecto.mapper;
 
+import com.example.proyecto.dto.GymResponse;
+import com.example.proyecto.dto.RoleResponse;
 import com.example.proyecto.dto.UserRequest;
 import com.example.proyecto.dto.UserResponse;
 import com.example.proyecto.model.User;
@@ -8,6 +10,17 @@ public class UserMapper {
     public static UserResponse toResponse(User user) {
         if (user == null) return null;
         
+        RoleResponse roleResponse = RoleResponse.builder()
+            .idRole(user.getRole().getIdRole())
+            .role(user.getRole().getRole())
+            .status(user.getRole().getStatus())
+            .build();
+
+        GymResponse gymResponse = GymResponse.builder()
+            .idGym(user.getGym().getIdGym())
+            .gym(user.getGym().getGym())
+            .build();
+            
         return UserResponse.builder()
                 .idUser(user.getIdUser())
                 .user(user.getUser())
@@ -15,10 +28,9 @@ public class UserMapper {
                 .phone(user.getPhone())
                 .name(user.getName())
                 .status(user.getStatus())
-                .idRole(user.getRole().getIdRole())
-                .roleName(user.getRole().getRole())
-                .idGym(user.getGym().getIdGym())
-                .gymName(user.getGym().getGym())
+                .password(user.getPassword())
+                .role(roleResponse)
+                .gym(gymResponse)
                 .build();
     }
 
@@ -42,9 +54,7 @@ public class UserMapper {
         entity.setMail(dto.getMail());
         entity.setPhone(dto.getPhone());
         entity.setName(dto.getName());
-        if (dto.getPassword() != null) {
-            entity.setPassword(dto.getPassword());
-        }
+        entity.setPassword(dto.getPassword());
         entity.setStatus(dto.getStatus());
     }
 }

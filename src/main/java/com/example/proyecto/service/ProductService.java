@@ -10,8 +10,9 @@ public interface ProductService {
     ProductResponse findById(Integer id);
     ProductResponse save(ProductRequest productRequest);
     ProductResponse update(Integer id, ProductRequest productRequest);
-    void delete(Integer id);
+    // void delete(Integer id);
     List<ProductResponse> findByName(String name);
     List<ProductResponse> findByStatus(Integer status);
     List<ProductResponse> findByStockLessThan(Integer stock);
+    List<ProductResponse> getAll(int page, int pageSize);
 }

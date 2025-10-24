@@ -16,4 +16,6 @@ public class CustomerRequest {
     private String photoCredential;
     private Boolean verifiedNumber;
     private Integer idGym;
+    private String contactName;
+    private String contactPhone;
 }
