@@ -30,5 +30,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
     // Buscar clientes por gymnasio paginado
     @Query(value = "SELECT * FROM customers WHERE id_gym = :idGym", nativeQuery = true)
-    Page<Customer> findByGymId(@Param("idGym") Integer idGym,Pageable pageable);
+    Page<Customer> findByGymId(@Param("idGym") Integer idGym, Pageable pageable);
 }

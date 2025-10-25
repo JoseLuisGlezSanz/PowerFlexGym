@@ -13,5 +13,4 @@ public class CustomerMembershipRequest {
     private LocalDate endDate;
     private Boolean membershipStatus;
     private LocalDateTime memberSince;
-    private Integer idGym;
 }

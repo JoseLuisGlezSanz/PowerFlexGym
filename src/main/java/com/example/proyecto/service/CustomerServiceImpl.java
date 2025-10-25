@@ -106,9 +106,9 @@ public class CustomerServiceImpl implements CustomerService{
                 .toList();
     }
 
-    public List<CustomerResponse> getByGymId(int page, int pageSize, Integer gymId) {
+    public List<CustomerResponse> getByGymId(int page, int pageSize, Integer idGym) {
         PageRequest pageReq = PageRequest.of(page, pageSize, Sort.by("id_Customer").ascending());
-        Page<Customer> customers = customerRepository.findByGymId(gymId, pageReq);
+        Page<Customer> customers = customerRepository.findByGymId(idGym, pageReq);
         return customers.getContent().stream().map(CustomerMapper::toResponse).toList();
     }
 }   

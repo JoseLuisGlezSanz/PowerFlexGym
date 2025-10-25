@@ -2,6 +2,7 @@ package com.example.proyecto.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dto.CustomerMembershipRequest;
@@ -10,11 +11,9 @@ import com.example.proyecto.mapper.CustomerMembershipMapper;
 import com.example.proyecto.model.Customer;
 import com.example.proyecto.model.CustomerMembership;
 import com.example.proyecto.model.CustomerMembershipPk;
-import com.example.proyecto.model.Gym;
 import com.example.proyecto.model.Membership;
 import com.example.proyecto.repository.CustomerMembershipRepository;
 import com.example.proyecto.repository.CustomerRepository;
-import com.example.proyecto.repository.GymRepository;
 import com.example.proyecto.repository.MembershipRepository;
 
 import jakarta.transaction.Transactional;
@@ -27,11 +26,10 @@ public class CustomerMembershipServiceImpl implements CustomerMembershipService{
     private final CustomerMembershipRepository customerMembershipRepository;
     private final CustomerRepository customerRepository;
     private final MembershipRepository membershipRepository;
-    private final GymRepository gymRepository;
 
     @Override
     public List<CustomerMembershipResponse> findAll() {
-        return customerMembershipRepository.findAll().stream()
+        return customerMembershipRepository.findAll(Sort.by("id_customer", "id_membership").ascending()).stream()
                 .map(CustomerMembershipMapper::toResponse)
                 .toList();
     }
@@ -49,14 +47,11 @@ public class CustomerMembershipServiceImpl implements CustomerMembershipService{
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + req.getIdCustomer()));
         Membership membership = membershipRepository.findById(req.getIdMembership())
                 .orElseThrow(() -> new RuntimeException("Membresía no encontrada con ID: " + req.getIdMembership()));
-        Gym gym = gymRepository.findById(req.getIdGym())
-                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + req.getIdGym()));
         
         CustomerMembership customerMembership = CustomerMembershipMapper.toEntity(req);
+        
         customerMembership.setCustomer(customer);
         customerMembership.setMembership(membership);
-        customerMembership.setGym(gym);
-        
         CustomerMembership savedCustomerMembership = customerMembershipRepository.save(customerMembership);
         return CustomerMembershipMapper.toResponse(savedCustomerMembership);
     }
@@ -72,11 +67,11 @@ public class CustomerMembershipServiceImpl implements CustomerMembershipService{
         return CustomerMembershipMapper.toResponse(updatedCustomerMembership);
     }
 
-    @Override
-    public void delete(Integer idCustomer, Integer idMembership) {
-        CustomerMembershipPk id = new CustomerMembershipPk(idCustomer, idMembership);
-        customerMembershipRepository.deleteById(id);
-    }
+    // @Override
+    // public void delete(Integer idCustomer, Integer idMembership) {
+    //     CustomerMembershipPk id = new CustomerMembershipPk(idCustomer, idMembership);
+    //     customerMembershipRepository.deleteById(id);
+    // }
 
     @Override
     public List<CustomerMembershipResponse> findByCustomerId(Integer idCustomer) {
@@ -86,15 +81,8 @@ public class CustomerMembershipServiceImpl implements CustomerMembershipService{
     }
 
     @Override
-    public List<CustomerMembershipResponse> findByMembershipStatus(Boolean status) {
-        return customerMembershipRepository.findByMembershipStatus(status).stream()
-                .map(CustomerMembershipMapper::toResponse)
-                .toList();
-    }
-
-    @Override
-    public List<CustomerMembershipResponse> findByCustomerIdCustomerAndMembershipStatus(Integer idCustomer, Boolean status) {
-        return customerMembershipRepository.findByCustomerIdCustomerAndMembershipStatus(idCustomer, status).stream()
+    public List<CustomerMembershipResponse> findByMembershipId(Integer idMembership) {
+        return customerMembershipRepository.findByMembershipId(idMembership).stream()
                 .map(CustomerMembershipMapper::toResponse)
                 .toList();
     }

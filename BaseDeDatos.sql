@@ -131,7 +131,6 @@ CREATE TABLE customers_memberships (
     PRIMARY KEY (id_customer, id_membership),
     CONSTRAINT fk_cm_customer FOREIGN KEY (id_customer) REFERENCES customers (id_customer),
     CONSTRAINT fk_cm_membership FOREIGN KEY (id_membership) REFERENCES memberships (id_membership),
-    CONSTRAINT fk_cm_gym FOREIGN KEY (id_gym) REFERENCES gyms (id_gym)
 );
 
 -- ============================================

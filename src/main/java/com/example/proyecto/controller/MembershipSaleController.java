@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+
 import com.example.proyecto.dto.MembershipSaleRequest;
 import com.example.proyecto.dto.MembershipSaleResponse;
 import com.example.proyecto.model.MembershipSale;
@@ -61,13 +62,21 @@ public class MembershipSaleController {
         return ResponseEntity.ok(updatedSale);
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete membership sale by ID")
-    @ApiResponse(responseCode = "200", description = "Membership sale deleted successfully",
+    // @DeleteMapping("/{id}")
+    // @Operation(summary = "Delete membership sale by ID")
+    // @ApiResponse(responseCode = "200", description = "Membership sale deleted successfully",
+    //         content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = MembershipSale.class)))})
+    // public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    //     membershipSaleService.delete(id);
+    //     return ResponseEntity.noContent().build();
+    // }
+
+    @GetMapping("/user/{idUser}")
+    @Operation(summary = "Get membership sales by user ID")
+    @ApiResponse(responseCode = "200", description = "List of membership sales for the specified user",
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = MembershipSale.class)))})
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        membershipSaleService.delete(id);
-        return ResponseEntity.noContent().build();
+    public List<MembershipSaleResponse> findByUserId(@PathVariable Integer idUser) {
+        return membershipSaleService.findByUserId(idUser);
     }
 
     @GetMapping("/customer/{idCustomer}")
@@ -86,11 +95,27 @@ public class MembershipSaleController {
         return membershipSaleService.findByGymId(idGym);
     }
 
-    @GetMapping("/not-cancelled")
-    @Operation(summary = "Get not cancelled membership sales")
-    @ApiResponse(responseCode = "200", description = "List of membership sales that are not cancelled",
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = MembershipSale.class)))})
-    public List<MembershipSaleResponse> findNotCancelled() {
-        return membershipSaleService.findNotCancelled();
+    @GetMapping(value = "paginationAll", params = { "page", "pageSize" })
+    @Operation(summary = "Get all membership sales pagination")
+    public List<MembershipSaleResponse> getAllPaginated(@RequestParam(value = "page", defaultValue = "0", required = false) int page, 
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize){
+        List<MembershipSaleResponse> membershipSales = membershipSaleService.getAll(page, pageSize);
+        return membershipSales;
+    }
+
+    @GetMapping(value = "paginationByUserId", params = { "page", "pageSize" })
+    @Operation(summary = "Get membership sales by user ID")
+    public List<MembershipSaleResponse> getByUserId(@RequestParam(value = "page", defaultValue = "0", required = false) int page, 
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize, @RequestParam Integer idUser) {
+        List<MembershipSaleResponse> membershipSales = membershipSaleService.findByUserId(page, pageSize, idUser);
+        return membershipSales;
+    }
+
+    @GetMapping(value = "paginationByGymId", params = { "page", "pageSize" })
+    @Operation(summary = "Get membership sales by gym ID")
+    public List<MembershipSaleResponse> getByGymId(@RequestParam(value = "page", defaultValue = "0", required = false) int page, 
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize, @RequestParam Integer idGym) {
+        List<MembershipSaleResponse> membershipSales = membershipSaleService.findByGymId(page, pageSize, idGym);
+        return membershipSales;
     }
 }

@@ -61,37 +61,29 @@ public class CustomerMembershipController {
         return ResponseEntity.ok(updatedCustomerMembership);
     }
 
-    @DeleteMapping("/{idCustomer}/{idMembership}")
-    @Operation(summary = "Delete customer membership")
-    @ApiResponse(responseCode = "200", description = "Customer membership deleted successfully", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CustomerMembership.class)))})
-    public ResponseEntity<Void> delete(@PathVariable Integer idCustomer, @PathVariable Integer idMembership) {
-        customerMembershipService.delete(idCustomer, idMembership);
-        return ResponseEntity.noContent().build();
-    }
+    // @DeleteMapping("/{idCustomer}/{idMembership}")
+    // @Operation(summary = "Delete customer membership")
+    // @ApiResponse(responseCode = "200", description = "Customer membership deleted successfully", 
+    //         content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CustomerMembership.class)))})
+    // public ResponseEntity<Void> delete(@PathVariable Integer idCustomer, @PathVariable Integer idMembership) {
+    //     customerMembershipService.delete(idCustomer, idMembership);
+    //     return ResponseEntity.noContent().build();
+    // }
 
-    @GetMapping("/customer/{customerId}")
+    @GetMapping("/customer/{idCustomer}")
     @Operation(summary = "Get customer memberships by customer ID")
     @ApiResponse(responseCode = "200", description = "List of customer memberships for the specified customer",
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CustomerMembership.class)))})
-    public List<CustomerMembershipResponse> findByCustomerId(@PathVariable Integer customerId) {
-        return customerMembershipService.findByCustomerId(customerId);
+    public List<CustomerMembershipResponse> findByCustomerId(@PathVariable Integer idCustomer) {
+        return customerMembershipService.findByCustomerId(idCustomer);
     }
 
-    @GetMapping("/status/{status}")
-    @Operation(summary = "Get customer memberships by status")
-    @ApiResponse(responseCode = "200", description = "List of customer memberships with the specified status",
+    @GetMapping("/membership/{idMembership}")
+    @Operation(summary = "Get customer memberships by membership ID")
+    @ApiResponse(responseCode = "200", description = "List of customer memberships for the specified membership",
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CustomerMembership.class)))})
-    public List<CustomerMembershipResponse> findByMembershipStatus(@PathVariable Boolean status) {
-        return customerMembershipService.findByMembershipStatus(status);
-    }
-
-    @GetMapping("/customer/{customerId}/status/{status}")
-    @Operation(summary = "Get customer memberships by customer ID and status")
-    @ApiResponse(responseCode = "200", description = "List of customer memberships matching customer ID and status",
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CustomerMembership.class)))})
-    public List<CustomerMembershipResponse> findByCustomerIdAndStatus(@PathVariable Integer customerId, @PathVariable Boolean status) {
-        return customerMembershipService.findByCustomerIdCustomerAndMembershipStatus(customerId, status);
+    public List<CustomerMembershipResponse> findByMembershipId(@PathVariable Integer idMembership) {
+        return customerMembershipService.findByMembershipId(idMembership);
     }
 
     @GetMapping("/expiring-soon")

@@ -2,6 +2,9 @@ package com.example.proyecto.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dto.MembershipSaleRequest;
@@ -33,7 +36,7 @@ public class MembershipSaleServiceImpl implements MembershipSaleService{
 
     @Override
     public List<MembershipSaleResponse> findAll() {
-        return membershipSaleRepository.findAll().stream()
+        return membershipSaleRepository.findAll(Sort.by("idMembershipSales").ascending()).stream()
                 .map(MembershipSaleMapper::toResponse)
                 .toList();
     }
@@ -70,15 +73,36 @@ public class MembershipSaleServiceImpl implements MembershipSaleService{
     public MembershipSaleResponse update(Integer id, MembershipSaleRequest req) {
         MembershipSale existingMembershipSale = membershipSaleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Venta de membresía no encontrada con ID: " + id));
+
+        Customer customer = customerRepository.findById(req.getIdCustomer())
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + req.getIdCustomer()));
+        Membership membership = membershipRepository.findById(req.getIdMembership())
+                .orElseThrow(() -> new RuntimeException("Membresía no encontrada con ID: " + req.getIdMembership()));
+        Gym gym = gymRepository.findById(req.getIdGym())
+                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + req.getIdGym()));
+        User user = userRepository.findById(req.getIdUser())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + req.getIdUser()));
         
         MembershipSaleMapper.copyToEntity(req, existingMembershipSale);
+
+        existingMembershipSale.setCustomer(customer);
+        existingMembershipSale.setMembership(membership);
+        existingMembershipSale.setGym(gym);
+        existingMembershipSale.setUser(user);
         MembershipSale updatedMembershipSale = membershipSaleRepository.save(existingMembershipSale);
         return MembershipSaleMapper.toResponse(updatedMembershipSale);
     }
 
+//     @Override
+//     public void delete(Integer id) {
+//         membershipSaleRepository.deleteById(id);
+//     }
+
     @Override
-    public void delete(Integer id) {
-        membershipSaleRepository.deleteById(id);
+    public List<MembershipSaleResponse> findByUserId(Integer idUser) {
+        return membershipSaleRepository.findByUserId(idUser).stream()
+                .map(MembershipSaleMapper::toResponse)
+                .toList();
     }
 
     @Override
@@ -95,10 +119,21 @@ public class MembershipSaleServiceImpl implements MembershipSaleService{
                 .toList();
     }
 
-    @Override
-    public List<MembershipSaleResponse> findNotCancelled() {
-        return membershipSaleRepository.findNotCancelled().stream()
-                .map(MembershipSaleMapper::toResponse)
-                .toList();
+    public List<MembershipSaleResponse> getAll(int page, int pageSize) {
+        PageRequest pageReq = PageRequest.of(page, pageSize);
+        Page<MembershipSale> membershipSales = membershipSaleRepository.findAll(pageReq);
+        return membershipSales.getContent().stream().map(MembershipSaleMapper::toResponse).toList();
+    }
+
+    public List<MembershipSaleResponse> findByUserId(int page, int pageSize, Integer idUser) {
+        PageRequest pageReq = PageRequest.of(page, pageSize, Sort.by("idMembershipSales").ascending());
+        Page<MembershipSale> membershipSales = membershipSaleRepository.findByUserId(idUser, pageReq);
+        return membershipSales.getContent().stream().map(MembershipSaleMapper::toResponse).toList();
+    }
+
+    public List<MembershipSaleResponse> findByGymId(int page, int pageSize, Integer idGym) {
+        PageRequest pageReq = PageRequest.of(page, pageSize, Sort.by("idMembershipSales").ascending());
+        Page<MembershipSale> membershipSales = membershipSaleRepository.findByGymId(idGym, pageReq);
+        return membershipSales.getContent().stream().map(MembershipSaleMapper::toResponse).toList();
     }
 }

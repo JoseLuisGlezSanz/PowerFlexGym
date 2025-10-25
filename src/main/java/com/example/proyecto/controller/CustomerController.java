@@ -113,8 +113,8 @@ public class CustomerController {
     @GetMapping(value = "paginationByGymId", params = { "page", "pageSize" })
     @Operation(summary = "Get customers by gym with pagination")
     public List<CustomerResponse> getByGymIdPaginated(@RequestParam(value = "page", defaultValue = "0", required = false) int page, 
-            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize, @RequestParam Integer gymId) {
-        List<CustomerResponse> customers = customerService.getByGymId(page, pageSize, gymId);
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize, @RequestParam Integer idGym) {
+        List<CustomerResponse> customers = customerService.getByGymId(page, pageSize, idGym);
         return customers;
     }
 }
