@@ -10,7 +10,7 @@ public interface VisitService {
     VisitResponse findById(Integer id);
     VisitResponse save(VisitRequest visitRequest);
     VisitResponse update(Integer id, VisitRequest visitRequest);
-    void delete(Integer id);
+    // void delete(Integer id);
     List<VisitResponse> findByCustomerId(Integer idCustomer);
     List<VisitResponse> findByGymId(Integer idGym);
 }

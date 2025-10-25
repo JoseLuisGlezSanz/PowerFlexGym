@@ -62,14 +62,14 @@ public class VisitController {
         return ResponseEntity.ok(updatedVisit);
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete visit by ID")
-    @ApiResponse(responseCode = "200", description = "Visit deleted successfully", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Visit.class)))})
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        visitService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
+    // @DeleteMapping("/{id}")
+    // @Operation(summary = "Delete visit by ID")
+    // @ApiResponse(responseCode = "200", description = "Visit deleted successfully", 
+    //         content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Visit.class)))})
+    // public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    //     visitService.delete(id);
+    //     return ResponseEntity.noContent().build();
+    // }
 
     @GetMapping("/customer/{idCustomer}")
     @Operation(summary = "Get visits by customer ID")

@@ -63,10 +63,10 @@ public class VisitServiceImpl implements VisitService{
         return VisitMapper.toResponse(updatedVisit);
     }
 
-    @Override
-    public void delete(Integer id) {
-        visitRepository.deleteById(id);
-    }
+    // @Override
+    // public void delete(Integer id) {
+    //     visitRepository.deleteById(id);
+    // }
 
     @Override
     public List<VisitResponse> findByCustomerId(Integer idCustomer) {

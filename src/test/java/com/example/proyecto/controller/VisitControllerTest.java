@@ -193,38 +193,7 @@ class VisitControllerTest {
     }
 
     /*
-     * PRUEBA 4: DELETE /api/v1/visits/{id} - Eliminar visita
-     * Único controller que tiene DELETE activo
-     */
-    @Test
-    @DisplayName("DELETE /api/v1/visits/{id} existente → 204")
-    void delete_Ok() throws Exception {
-        // Arrange
-        doNothing().when(service).delete(1);
-
-        // Act & Assert
-        mvc.perform(delete(BASE + "/{id}", 1))
-                .andExpect(status().isNoContent())
-                .andExpect(content().string(""));
-
-        verify(service, times(1)).delete(1);
-    }
-
-    @Test
-    @DisplayName("DELETE /api/v1/visits/{id} no existente → 404")
-    void delete_NotFound() throws Exception {
-        // Arrange
-        doThrow(new EntityNotFoundException("Visit not found")).when(service).delete(999);
-
-        // Act & Assert
-        mvc.perform(delete(BASE + "/{id}", 999))
-                .andExpect(status().isNotFound());
-
-        verify(service, times(1)).delete(999);
-    }
-
-    /*
-     * PRUEBA ADICIONAL: GET /api/v1/visits/customer/{idCustomer} - Búsqueda por ID de cliente
+     * PRUEBA 4: GET /api/v1/visits/customer/{idCustomer} - Búsqueda por ID de cliente
      */
     @Test
     @DisplayName("GET /api/v1/visits/customer/{idCustomer} → 200 con visitas del cliente")
