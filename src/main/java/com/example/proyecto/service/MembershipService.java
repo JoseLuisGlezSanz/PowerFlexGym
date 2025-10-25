@@ -10,8 +10,7 @@ public interface MembershipService {
     MembershipResponse findById(Integer id);
     MembershipResponse save(MembershipRequest membershipRequest);
     MembershipResponse update(Integer id, MembershipRequest membershipRequest);
-    void delete(Integer id);
+    // void delete(Integer id);
     List<MembershipResponse> findByMembership(String membership);
-    List<MembershipResponse> findByStatus(Integer status);
     List<MembershipResponse> findByGymId(Integer idGym);
 }

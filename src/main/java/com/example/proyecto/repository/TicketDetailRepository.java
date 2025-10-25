@@ -14,6 +14,6 @@ public interface TicketDetailRepository extends JpaRepository<TicketDetail, Inte
     List<TicketDetail> findByTicketId(@Param("idTicket") Integer idTicket);
 
     // Encontrar detalle del ticket por id product
-    @Query(value = "SELECT * FROM tickets_details WHERE id_product = :idProduct;", nativeQuery = true)
-    List<TicketDetail> findByProductId(@Param("idProduct") Integer idProduct);
+    // @Query(value = "SELECT * FROM tickets_details WHERE id_product = :idProduct;", nativeQuery = true)
+    // List<TicketDetail> findByProductId(@Param("idProduct") Integer idProduct);
 }

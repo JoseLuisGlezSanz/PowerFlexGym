@@ -2,6 +2,9 @@ package com.example.proyecto.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dto.TicketRequest;
@@ -27,7 +30,7 @@ public class TicketServiceImpl implements TicketService{
 
     @Override
     public List<TicketResponse> findAll() {
-        return ticketRepository.findAll().stream()
+        return ticketRepository.findAll(Sort.by("idTicket").ascending()).stream()
                 .map(TicketMapper::toResponse)
                 .toList();
     }
@@ -57,16 +60,25 @@ public class TicketServiceImpl implements TicketService{
     public TicketResponse update(Integer id, TicketRequest req) {
         Ticket existingTicket = ticketRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ticket no encontrado con ID: " + id));
+
+        // Customer customer = customerRepository.findById(req.getIdCustomer())
+        //         .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + req.getIdCustomer()));
         
+        User user = userRepository.findById(req.getIdUser())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + req.getIdUser()));
+
         TicketMapper.copyToEntity(req, existingTicket);
+
+        // existingTicket.setCustomer(customer);
+        existingTicket.setUser(user);
         Ticket updatedTicket = ticketRepository.save(existingTicket);
         return TicketMapper.toResponse(updatedTicket);
     }
 
-    @Override
-    public void delete(Integer id) {
-        ticketRepository.deleteById(id);
-    }
+    // @Override
+    // public void delete(Integer id) {
+    //     ticketRepository.deleteById(id);
+    // }
 
     @Override
     public List<TicketResponse> findByCustomerId(Integer idCustomer) {
@@ -80,5 +92,11 @@ public class TicketServiceImpl implements TicketService{
         return ticketRepository.findByUserId(idUser).stream()
                 .map(TicketMapper::toResponse)
                 .toList();
+    }
+
+    public List<TicketResponse> getAll(int page, int pageSize) {
+        PageRequest pageReq = PageRequest.of(page, pageSize, Sort.by("idTicket").ascending());
+        Page<Ticket> tickets = ticketRepository.findAll(pageReq);
+        return tickets.getContent().stream().map(TicketMapper::toResponse).toList();
     }
 }

@@ -2,6 +2,9 @@ package com.example.proyecto.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dto.TicketDetailRequest;
@@ -27,7 +30,7 @@ public class TicketDetailServiceImpl implements TicketDetailService{
 
     @Override
     public List<TicketDetailResponse> findAll() {
-        return ticketDetailRepository.findAll().stream()
+        return ticketDetailRepository.findAll(Sort.by("idDetailTicket").ascending()).stream()
                 .map(TicketDetailMapper::toResponse)
                 .toList();
     }
@@ -64,10 +67,10 @@ public class TicketDetailServiceImpl implements TicketDetailService{
         return TicketDetailMapper.toResponse(updatedTicketDetail);
     }
 
-    @Override
-    public void delete(Integer id) {
-        ticketDetailRepository.deleteById(id);
-    }
+    // @Override
+    // public void delete(Integer id) {
+    //     ticketDetailRepository.deleteById(id);
+    // }
 
     @Override
     public List<TicketDetailResponse> findByTicketId(Integer idTicket) {
@@ -76,10 +79,16 @@ public class TicketDetailServiceImpl implements TicketDetailService{
                 .toList();
     }
 
-    @Override
-    public List<TicketDetailResponse> findByProductId(Integer idProduct) {
-        return ticketDetailRepository.findByProductId(idProduct).stream()
-                .map(TicketDetailMapper::toResponse)
-                .toList();
+    // @Override
+    // public List<TicketDetailResponse> findByProductId(Integer idProduct) {
+    //     return ticketDetailRepository.findByProductId(idProduct).stream()
+    //             .map(TicketDetailMapper::toResponse)
+    //             .toList();
+    // }
+
+    public List<TicketDetailResponse> getAll(int page, int pageSize) {
+        PageRequest pageReq = PageRequest.of(page, pageSize, Sort.by("idDetailTicket").ascending());
+        Page<TicketDetail> ticketsDetails = ticketDetailRepository.findAll(pageReq);
+        return ticketsDetails.getContent().stream().map(TicketDetailMapper::toResponse).toList();
     }
 }

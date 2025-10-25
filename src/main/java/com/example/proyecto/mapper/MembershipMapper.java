@@ -1,5 +1,6 @@
 package com.example.proyecto.mapper;
 
+import com.example.proyecto.dto.GymResponse;
 import com.example.proyecto.dto.MembershipRequest;
 import com.example.proyecto.dto.MembershipResponse;
 import com.example.proyecto.model.Membership;
@@ -8,14 +9,18 @@ public class MembershipMapper {
     public static MembershipResponse toResponse(Membership membership) {
         if (membership == null) return null;
         
+        GymResponse gymResponse = GymResponse.builder()
+            .idGym(membership.getGym().getIdGym())
+            .gym(membership.getGym().getGym())
+            .build();
+
         return MembershipResponse.builder()
                 .idMembership(membership.getIdMembership())
                 .membership(membership.getMembership())
                 .duration(membership.getDuration())
                 .price(membership.getPrice())
                 .status(membership.getStatus())
-                .idGym(membership.getGym().getIdGym())
-                .gymName(membership.getGym().getGym())
+                .gym(gymResponse)
                 .build();
     }
 

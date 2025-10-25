@@ -61,29 +61,21 @@ public class MembershipController {
         return ResponseEntity.ok(updatedMembership);
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete membership by ID")
-    @ApiResponse(responseCode = "200", description = "Membership deleted successfully", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Membership.class)))})
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        membershipService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
+    // @DeleteMapping("/{id}")
+    // @Operation(summary = "Delete membership by ID")
+    // @ApiResponse(responseCode = "200", description = "Membership deleted successfully", 
+    //         content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Membership.class)))})
+    // public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    //     membershipService.delete(id);
+    //     return ResponseEntity.noContent().build();
+    // }
 
     @GetMapping("/search/{membership}")
-    @Operation(summary = "Search memberships by name")
+    @Operation(summary = "Get memberships by name")
     @ApiResponse(responseCode = "200", description = "List of memberships matching the name",
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Membership.class)))})
     public List<MembershipResponse> findByMembership(@PathVariable String membership) {
         return membershipService.findByMembership(membership);
-    }
-
-    @GetMapping("/status/{status}")
-    @Operation(summary = "Get memberships by status")
-    @ApiResponse(responseCode = "200", description = "List of memberships with the specified status",
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Membership.class)))})
-    public List<MembershipResponse> findByStatus(@PathVariable Integer status) {
-        return membershipService.findByStatus(status);
     }
 
     @GetMapping("/gym/{idGym}")

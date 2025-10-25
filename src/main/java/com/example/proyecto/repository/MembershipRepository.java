@@ -13,10 +13,6 @@ public interface MembershipRepository extends JpaRepository<Membership, Integer>
     @Query(value = "SELECT * FROM memberships WHERE LOWER(membership) = LOWER(:membership);", nativeQuery = true)
     List<Membership> findByMembership(@Param("membership") String membership);
 
-    // Buscar membresía por estatus
-    @Query(value = "SELECT * FROM memberships WHERE status = :status;", nativeQuery = true)
-    List<Membership> findByStatus(@Param("status") Integer status);
-
     // Buscar membresía por ID gym
     @Query(value = "SELECT * FROM memberships WHERE id_gym = :idGym;", nativeQuery = true)
     List<Membership> findByGymId(@Param("idGym") Integer idGym);

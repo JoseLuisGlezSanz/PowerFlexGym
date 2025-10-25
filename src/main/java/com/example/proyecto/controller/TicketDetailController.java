@@ -61,14 +61,14 @@ public class TicketDetailController {
         return ResponseEntity.ok(updatedTicketDetail);
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete ticket detail by ID")
-    @ApiResponse(responseCode = "200", description = "Delete ticket detail by ID", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TicketDetail.class)))})
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        ticketDetailService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
+    // @DeleteMapping("/{id}")
+    // @Operation(summary = "Delete ticket detail by ID")
+    // @ApiResponse(responseCode = "200", description = "Delete ticket detail by ID", 
+    //         content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TicketDetail.class)))})
+    // public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    //     ticketDetailService.delete(id);
+    //     return ResponseEntity.noContent().build();
+    // }
 
     @GetMapping("/ticket/{idTicket}")
     @Operation(summary = "Get ticket details by ticket ID")
@@ -78,11 +78,19 @@ public class TicketDetailController {
         return ticketDetailService.findByTicketId(idTicket);
     }
 
-    @GetMapping("/product/{idProduct}")
-    @Operation(summary = "Get ticket details by product ID")
-    @ApiResponse(responseCode = "200", description = "List of ticket details for the specified product", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TicketDetail.class)))})
-    public List<TicketDetailResponse> findByProductId(@PathVariable Integer idProduct) {
-        return ticketDetailService.findByProductId(idProduct);
+    // @GetMapping("/product/{idProduct}")
+    // @Operation(summary = "Get ticket details by product ID")
+    // @ApiResponse(responseCode = "200", description = "List of ticket details for the specified product", 
+    //         content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TicketDetail.class)))})
+    // public List<TicketDetailResponse> findByProductId(@PathVariable Integer idProduct) {
+    //     return ticketDetailService.findByProductId(idProduct);
+    // }
+
+    @GetMapping(value = "paginationAll", params = { "page", "pageSize" })
+    @Operation(summary = "Get all ticket details with pagination")
+    public List<TicketDetailResponse> getAllPaginated(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
+        List<TicketDetailResponse> ticketsDetails = ticketDetailService.getAll(page, pageSize);
+        return ticketsDetails;
     }
 }

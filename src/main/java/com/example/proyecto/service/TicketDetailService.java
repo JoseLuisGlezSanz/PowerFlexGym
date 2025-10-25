@@ -10,7 +10,8 @@ public interface TicketDetailService {
     TicketDetailResponse findById(Integer id);
     TicketDetailResponse save(TicketDetailRequest ticketDetailRequest);
     TicketDetailResponse update(Integer id, TicketDetailRequest ticketDetailRequest);
-    void delete(Integer id);
+    // void delete(Integer id);
     List<TicketDetailResponse> findByTicketId(Integer idTicket);
-    List<TicketDetailResponse> findByProductId(Integer idProduct);
+    // List<TicketDetailResponse> findByProductId(Integer idProduct);
+    List<TicketDetailResponse> getAll(int page, int pageSize);
 }

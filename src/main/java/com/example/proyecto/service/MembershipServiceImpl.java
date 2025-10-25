@@ -2,6 +2,7 @@ package com.example.proyecto.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dto.MembershipRequest;
@@ -24,7 +25,7 @@ public class MembershipServiceImpl implements MembershipService{
 
     @Override
     public List<MembershipResponse> findAll() {
-        return membershipRepository.findAll().stream()
+        return membershipRepository.findAll(Sort.by("idMembership").ascending()).stream()
                 .map(MembershipMapper::toResponse)
                 .toList();
     }
@@ -42,8 +43,8 @@ public class MembershipServiceImpl implements MembershipService{
                 .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + req.getIdGym()));
         
         Membership membership = MembershipMapper.toEntity(req);
+       
         membership.setGym(gym);
-        
         Membership savedMembership = membershipRepository.save(membership);
         return MembershipMapper.toResponse(savedMembership);
     }
@@ -52,27 +53,25 @@ public class MembershipServiceImpl implements MembershipService{
     public MembershipResponse update(Integer id, MembershipRequest req) {
         Membership existingMembership = membershipRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Membresía no encontrada con ID: " + id));
+
+        Gym gym = gymRepository.findById(req.getIdGym())
+            .orElseThrow(() -> new RuntimeException("Gym no encontrado con ID: " + req.getIdGym()));
         
         MembershipMapper.copyToEntity(req, existingMembership);
+
+        existingMembership.setGym(gym);
         Membership updatedMembership = membershipRepository.save(existingMembership);
         return MembershipMapper.toResponse(updatedMembership);
     }
 
-    @Override
-    public void delete(Integer id) {
-        membershipRepository.deleteById(id);
-    }
+    // @Override
+    // public void delete(Integer id) {
+    //     membershipRepository.deleteById(id);
+    // }
 
     @Override
     public List<MembershipResponse> findByMembership(String membership) {
         return membershipRepository.findByMembership(membership).stream()
-                .map(MembershipMapper::toResponse)
-                .toList();
-    }
-
-    @Override
-    public List<MembershipResponse> findByStatus(Integer status) {
-        return membershipRepository.findByStatus(status).stream()
                 .map(MembershipMapper::toResponse)
                 .toList();
     }

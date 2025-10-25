@@ -61,14 +61,14 @@ public class TicketController {
         return ResponseEntity.ok(updatedTicket);
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete ticket by ID")
-    @ApiResponse(responseCode = "200", description = "Ticket deleted successfully", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Ticket.class)))})
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        ticketService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
+    // @DeleteMapping("/{id}")
+    // @Operation(summary = "Delete ticket by ID")
+    // @ApiResponse(responseCode = "200", description = "Ticket deleted successfully", 
+    //         content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Ticket.class)))})
+    // public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    //     ticketService.delete(id);
+    //     return ResponseEntity.noContent().build();
+    // }
 
     @GetMapping("/customer/{idCustomer}")
     @Operation(summary = "Get tickets by customer ID")
@@ -84,5 +84,13 @@ public class TicketController {
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Ticket.class)))})
     public List<TicketResponse> findByUserId(@PathVariable Integer idUser) {
         return ticketService.findByUserId(idUser);
+    }
+
+    @GetMapping(value = "paginationAll", params = { "page", "pageSize" })
+    @Operation(summary = "Get all products with pagination")
+    public List<TicketResponse> getAllPaginated(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
+        List<TicketResponse> tickets = ticketService.getAll(page, pageSize);
+        return tickets;
     }
 }

@@ -11,6 +11,5 @@ public class MembershipResponse {
     private String duration;
     private Double price;
     private Integer status;
-    private Integer idGym;
-    private String gymName;
+    private GymResponse gym;
 }
