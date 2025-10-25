@@ -2,17 +2,11 @@ package com.example.proyecto.mapper;
 
 import com.example.proyecto.dto.CustomerMembershipRequest;
 import com.example.proyecto.dto.CustomerMembershipResponse;
-import com.example.proyecto.dto.GymResponse;
 import com.example.proyecto.model.CustomerMembership;
 
 public class CustomerMembershipMapper {
     public static CustomerMembershipResponse toResponse(CustomerMembership customerMembership) {
         if (customerMembership == null) return null;
-        
-        GymResponse gymResponse = GymResponse.builder()
-            .idGym(customerMembership.getGym().getIdGym())
-            .gym(customerMembership.getGym().getGym())
-            .build();
 
         return CustomerMembershipResponse.builder()
                 .idCustomer(customerMembership.getCustomer().getIdCustomer())
@@ -23,7 +17,7 @@ public class CustomerMembershipMapper {
                 .endDate(customerMembership.getEndDate())
                 .memberSince(customerMembership.getMemberSince())
                 .membershipStatus(customerMembership.getMembershipStatus())
-                .gym(gymResponse)
+                .gym(GymMapper.toResponse(customerMembership.getGym()))
                 .build();
     }
 

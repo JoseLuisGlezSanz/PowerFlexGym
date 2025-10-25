@@ -11,6 +11,7 @@ import com.example.proyecto.mapper.CustomerMembershipMapper;
 import com.example.proyecto.model.Customer;
 import com.example.proyecto.model.CustomerMembership;
 import com.example.proyecto.model.CustomerMembershipPk;
+import com.example.proyecto.model.Gym;
 import com.example.proyecto.model.Membership;
 import com.example.proyecto.repository.CustomerMembershipRepository;
 import com.example.proyecto.repository.CustomerRepository;
@@ -47,11 +48,18 @@ public class CustomerMembershipServiceImpl implements CustomerMembershipService{
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + req.getIdCustomer()));
         Membership membership = membershipRepository.findById(req.getIdMembership())
                 .orElseThrow(() -> new RuntimeException("Membresía no encontrada con ID: " + req.getIdMembership()));
+
+        Gym gym = customer.getGym(); // ← Usar el gym del customer
+        
+        if (!membership.getGym().getIdGym().equals(gym.getIdGym())) {
+            throw new RuntimeException("La membresía no pertenece al mismo gym que el cliente");
+        }
         
         CustomerMembership customerMembership = CustomerMembershipMapper.toEntity(req);
         
         customerMembership.setCustomer(customer);
         customerMembership.setMembership(membership);
+        customerMembership.setGym(gym);
         CustomerMembership savedCustomerMembership = customerMembershipRepository.save(customerMembership);
         return CustomerMembershipMapper.toResponse(savedCustomerMembership);
     }
@@ -60,9 +68,25 @@ public class CustomerMembershipServiceImpl implements CustomerMembershipService{
     public CustomerMembershipResponse update(Integer idCustomer, Integer idMembership, CustomerMembershipRequest req) {
         CustomerMembershipPk id = new CustomerMembershipPk(idCustomer, idMembership);
         CustomerMembership existingCustomerMembership = customerMembershipRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Membresía de cliente no encontrada con ID: " + id));
+                .orElseThrow(() -> new RuntimeException("Membresía de cliente no encontrada"));
+
+        Customer customer = customerRepository.findById(idCustomer)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + idCustomer));
         
+        Membership membership = membershipRepository.findById(idMembership)
+                .orElseThrow(() -> new RuntimeException("Membresía no encontrada con ID: " + idMembership));
+        
+        Gym gym = customer.getGym(); // Obtener el gym del customer
+
+        if (!membership.getGym().getIdGym().equals(gym.getIdGym())) {
+            throw new RuntimeException("La membresía no pertenece al mismo gym que el cliente");
+        }
+
         CustomerMembershipMapper.copyToEntity(req, existingCustomerMembership);
+
+        existingCustomerMembership.setCustomer(customer);
+        existingCustomerMembership.setMembership(membership);
+        existingCustomerMembership.setGym(gym);
         CustomerMembership updatedCustomerMembership = customerMembershipRepository.save(existingCustomerMembership);
         return CustomerMembershipMapper.toResponse(updatedCustomerMembership);
     }
