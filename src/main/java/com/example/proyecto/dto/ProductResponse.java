@@ -13,18 +13,13 @@ public class ProductResponse {
     @JsonProperty("Product identifier")
     private Integer idProduct;
 
-    @JsonProperty("Product name")
     private String name;
 
-    @JsonProperty("Price")
     private BigDecimal price;
 
-    @JsonProperty("Stock")
     private Integer stock;
 
-    @JsonProperty("Status")
     private Integer status;
 
-    @JsonProperty("Photo")
     private String photo;
 }

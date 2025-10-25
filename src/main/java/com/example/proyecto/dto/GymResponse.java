@@ -11,6 +11,5 @@ public class GymResponse {
     @JsonProperty("Gym identifier:")
     private Integer idGym;
 
-    @JsonProperty("Gym name:")
     private String gym;
 }

@@ -11,9 +11,7 @@ public class RoleResponse {
     @JsonProperty("Role identifier")
     private Integer idRole;
 
-    @JsonProperty("Role name")
     private String role;
 
-    @JsonProperty("Status")
     private Integer status;
 }

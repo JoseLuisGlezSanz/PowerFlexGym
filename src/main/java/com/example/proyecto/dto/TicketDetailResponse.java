@@ -13,21 +13,15 @@ public class TicketDetailResponse {
     @JsonProperty("Detail identifier")
     private Integer idDetailTicket;
 
-    @JsonProperty("Quantity")
     private Integer amount;
 
-    @JsonProperty("Unit price")
     private Double unitPrice;
 
-    @JsonProperty("Subtotal")
     private BigDecimal subtotal;
 
-    @JsonProperty("Product identifier")
     private Integer idProduct;
 
-    @JsonProperty("Product name")
     private String productName;
 
-    @JsonProperty("Ticket identifier")
     private Integer idTicket;
 }

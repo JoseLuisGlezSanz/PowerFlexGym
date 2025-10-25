@@ -12,27 +12,19 @@ public class UserResponse {
     @JsonProperty("User identifier")
     private Integer idUser;
 
-    @JsonProperty("Username")
     private String user;
 
-    @JsonProperty("Email")
     private String mail;
 
-    @JsonProperty("Phone number")
     private String phone;
 
-    @JsonProperty("Full name")
     private String name;
 
-    @JsonProperty("Password")
     private String password;
 
-    @JsonProperty("Status")
     private Integer status;
 
-    @JsonProperty("Role information")
     private RoleResponse role;
 
-    @JsonProperty("Gym information")
     private GymResponse gym;
 }

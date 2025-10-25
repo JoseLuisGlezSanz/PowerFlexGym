@@ -11,18 +11,13 @@ public class MembershipResponse {
     @JsonProperty("Membership identifier:")
     private Integer idMembership;
 
-    @JsonProperty("Membership name:")
     private String membership;
 
-    @JsonProperty("Duration:")
     private String duration;
 
-    @JsonProperty("Price:")
     private Double price;
 
-    @JsonProperty("Status:")
     private Integer status;
 
-    @JsonProperty("Gym information:")
     private GymResponse gym;
 }

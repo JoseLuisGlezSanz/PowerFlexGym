@@ -11,9 +11,9 @@ public class EmergencyContactResponse {
     @JsonProperty("Contact identifier:")
     private Integer idContact;
 
-    @JsonProperty("Contact name:")
+
     private String contactName;
 
-    @JsonProperty("Contact phone:")
+
     private String contactPhone;
 }
