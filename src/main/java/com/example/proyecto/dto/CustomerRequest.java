@@ -1,11 +1,14 @@
 package com.example.proyecto.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 
 import jakarta.validation.constraints.Pattern;
 
 @Data
+@NoArgsConstructor
 public class CustomerRequest {
     private String name;
     private String cologne;
