@@ -5,9 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.sql.Date;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Data
@@ -16,27 +17,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @AllArgsConstructor
 public class CustomerResponse {
     @JsonProperty("Customer identifier:")
-    private Integer idCustomer;
+    private Long id;
 
     private String name;
-
     private String cologne;
-
     private String phone;
-
-    private LocalDate birthDate;
-
+    private Date birthDate;
     private Boolean medicalCondition;
-
-    private LocalDateTime registrationDate;
-
     private String photo;
-
     private String photoCredential;
-
     private Boolean verifiedNumber;
-
-    private GymResponse gym;
-
-    private EmergencyContactResponse emergencyContact;
+    private Long gymId;
+    private Long idContact;
+    
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime registrationDate;
 }

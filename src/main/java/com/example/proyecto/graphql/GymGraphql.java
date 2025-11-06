@@ -44,7 +44,7 @@ public class GymGraphql {
     // }
 
     @QueryMapping
-    public List<GymResponse> findAllGymsPaginated(@Argument int page, int pageSize) {
+    public List<GymResponse> findAllGymsPaginated(@Argument int page, @Argument int pageSize) {
         List<GymResponse> gyms = gymService.getAll(page, pageSize);
         return gyms;
     }

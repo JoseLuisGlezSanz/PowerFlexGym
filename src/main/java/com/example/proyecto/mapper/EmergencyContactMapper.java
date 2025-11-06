@@ -2,7 +2,6 @@ package com.example.proyecto.mapper;
 
 import com.example.proyecto.dto.EmergencyContactRequest;
 import com.example.proyecto.dto.EmergencyContactResponse;
-import com.example.proyecto.model.Customer;
 import com.example.proyecto.model.EmergencyContact;
 
 public class EmergencyContactMapper {
@@ -16,13 +15,12 @@ public class EmergencyContactMapper {
                 .build();
     }
 
-    public static EmergencyContact toEntity(String contactName, String contactPhone, Customer customer) {
+    public static EmergencyContact toEntity(String contactName, String contactPhone) {
         if (contactName == null && contactPhone == null) return null;
         
         return EmergencyContact.builder()
                 .contactName(contactName)
                 .contactPhone(contactPhone)
-                .customer(customer)
                 .build();
     }
 

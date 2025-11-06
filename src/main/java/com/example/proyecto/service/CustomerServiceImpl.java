@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dto.CustomerRequest;
@@ -15,6 +14,7 @@ import com.example.proyecto.model.Customer;
 import com.example.proyecto.model.EmergencyContact;
 import com.example.proyecto.model.Gym;
 import com.example.proyecto.repository.CustomerRepository;
+import com.example.proyecto.repository.EmergencyContactRepository;
 import com.example.proyecto.repository.GymRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -24,91 +24,99 @@ import lombok.RequiredArgsConstructor;
 public class CustomerServiceImpl implements CustomerService{
     private final CustomerRepository customerRepository;
     private final GymRepository gymRepository;
+    private final EmergencyContactRepository emergencyContactRepository;
 
     @Override
     public List<CustomerResponse> findAll() {
-        return customerRepository.findAll(Sort.by("idCustomer").ascending()).stream()
+        return customerRepository.findAll().stream()
                 .map(CustomerMapper::toResponse)
                 .toList();
     }
 
     @Override
-    public CustomerResponse findById(Integer id) {
-        Customer customer = customerRepository.findById(id).orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + id));
+    public CustomerResponse findById(Long id) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + id));
         return CustomerMapper.toResponse(customer);
     }
 
     @Override
-    public CustomerResponse save(CustomerRequest customerRequest) {
-        Gym gym = gymRepository.findById(customerRequest.getIdGym())
-            .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + customerRequest.getIdGym()));
-
-        Customer customer = CustomerMapper.toEntity(customerRequest);
-        customer.setGym(gym);
+    public CustomerResponse create(CustomerRequest customerRequest) {
+        Gym gym = gymRepository.findById(customerRequest.getGymId())
+            .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + customerRequest.getGymId()));
 
         EmergencyContact emergencyContact = EmergencyContactMapper.toEntity(
             customerRequest.getContactName(), 
-            customerRequest.getContactPhone(),
-            customer
+            customerRequest.getContactPhone()
         );
 
+        Customer customer = CustomerMapper.toEntity(customerRequest, gym, emergencyContact);
+
         customer.setEmergencyContact(emergencyContact);
+        emergencyContact.setCustomer(customer);
+        emergencyContactRepository.save(emergencyContact);
 
         Customer savedCustomer = customerRepository.save(customer);
         return CustomerMapper.toResponse(savedCustomer);
     }
 
     @Override
-    public CustomerResponse update(Integer id, CustomerRequest req) {
-        Customer existingCustomer = customerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + id));
+    public CustomerResponse update(Long id, CustomerRequest customerRequest) {
+        Customer excistingCustomer = customerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Customer no encontrado con ID: " + id));
         
-        Gym gym = gymRepository.findById(req.getIdGym())
-            .orElseThrow(() -> new RuntimeException("Gym no encontrado con ID: " + req.getIdGym()));
+        Gym gym = gymRepository.findById(customerRequest.getGymId())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID" + customerRequest.getGymId()));
         
-        CustomerMapper.copyToEntity(req, existingCustomer);
+        EmergencyContact emergencyContact = excistingCustomer.getEmergencyContact();
 
-        existingCustomer.setGym(gym);
-        Customer updatedCustomer = customerRepository.save(existingCustomer);
-        return CustomerMapper.toResponse(updatedCustomer);
+        emergencyContact.setContactName(customerRequest.getContactName());
+        emergencyContact.setContactPhone(customerRequest.getContactPhone());
+
+        CustomerMapper.copyToEntity(customerRequest, excistingCustomer, gym, emergencyContact);
+
+        Customer updateCustomer = customerRepository.save(excistingCustomer);
+        return CustomerMapper.toResponse(updateCustomer);
     }
 
-    @Override
-    public List<CustomerResponse> findByName(String name) {
-        return customerRepository.findByName(name).stream()
-                .map(CustomerMapper::toResponse)
-                .toList();
-    }
-
-    @Override
-    public List<CustomerResponse> findByVerifiedNumberTrue() {
-        return customerRepository.findByVerifiedNumberTrue(Sort.by("id_Customer").ascending()).stream()
-                .map(CustomerMapper::toResponse)
-                .toList();
-    }
+     // @Override
+     // public void delete(Long id){
+     //      customerRepository.deleteById(id);
+     // }
 
     public List<CustomerResponse> getAll(int page, int pageSize) {
-        PageRequest pageReq = PageRequest.of(page, pageSize, Sort.by("idCustomer").ascending());
+        PageRequest pageReq = PageRequest.of(page, pageSize);
         Page<Customer> customers = customerRepository.findAll(pageReq);
         return customers.getContent().stream().map(CustomerMapper::toResponse).toList();
     }
 
+    @Override
+    public List<CustomerResponse> findByName(String name) {
+          List<Customer> customers = customerRepository.findByName(name);
+          return customers.stream().map(CustomerMapper::toResponse).toList();
+    }
+
+    @Override
+    public List<CustomerResponse> findByVerifiedNumberTrue() {
+          List<Customer> customers = customerRepository.findByVerifiedNumberTrue();
+          return customers.stream().map(CustomerMapper::toResponse).toList();
+    }
+
     public List<CustomerResponse> getByVerifiedNumberTrue(int page, int pageSize) {
-        PageRequest pageReq = PageRequest.of(page, pageSize, Sort.by("id_Customer").ascending());
+        PageRequest pageReq = PageRequest.of(page, pageSize);
         Page<Customer> customers = customerRepository.findByVerifiedNumberTrue(pageReq);
         return customers.getContent().stream().map(CustomerMapper::toResponse).toList();
     }
 
     @Override
-    public List<CustomerResponse> findByGymId(Integer idGym) {
-        return customerRepository.findByGymId(idGym).stream()
-                .map(CustomerMapper::toResponse)
-                .toList();
+    public List<CustomerResponse> findAllCustomersByGymId(Long gymId) {
+          List<Customer> customers = customerRepository.findAllCustomersByGymId(gymId);
+          return customers.stream().map(CustomerMapper::toResponse).toList();
     }
 
-    public List<CustomerResponse> getByGymId(int page, int pageSize, Integer idGym) {
-        PageRequest pageReq = PageRequest.of(page, pageSize, Sort.by("id_Customer").ascending());
-        Page<Customer> customers = customerRepository.findByGymId(idGym, pageReq);
+    public List<CustomerResponse> getAllCustomersByGymId(int page, int pageSize, Long gymId) {
+        PageRequest pageReq = PageRequest.of(page, pageSize);
+        Page<Customer> customers = customerRepository.getAllCustomersByGymId(gymId, pageReq);
         return customers.getContent().stream().map(CustomerMapper::toResponse).toList();
     }
 }   

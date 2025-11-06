@@ -9,6 +9,16 @@ type Query{
     findByIdGym(id: Int!): GymResponse
     findAllGymsPaginated(page: Int!, pageSize: Int!): [GymResponse]
     findByNameGym(name: String!): [GymResponse]
+
+    #Customer
+    findAllCustomers: [CustomerResponse]
+    findByIdCustomer(id: Int!): CustomerResponse
+    findAllCustomersPaginated(page: Int!, pageSize: Int!): [CustomerResponse]
+    findByNameCustomer(name: String!): [CustomerResponse]
+    findCustomerByVerifiedNumberTrue(): [CustomerResponse]
+    findCustomerByVerifiedNumberTruePaginated(page: Int!, pageSize: Int!): [CustomerResponse]
+    findAllCustomersByGymId(gymId: Int!): [CustomerResponse]
+    findAllCustomersByGymIdPaginated(page: Int!, pageSize: Int!, gymId: Int!): [CustomerResponse]
 }
 
 type Mutation{
@@ -16,13 +26,47 @@ type Mutation{
     createGym(gymRequest: GymRequest!): GymResponse
     updateGym(id: Int!, gymRequest: GymRequest!): GymResponse
     # deleteGym(id: Int!): Boolean
+
+    #Customer
+    createCustomer(customerRequest: CustomerRequest!): CustomerResponse
+    updateCustomer(id: Int!, customerRequest: CustomerRequest!): CustomerResponse
+    # deleteCustomer(id: Int!): Boolean
 }
 #-------------------Gym-------------------
-input UserRequest{
+input GymRequest{
     name: String!
 }
 
-type{
+type GymResponse{
     id: Int!
     name: String!
+}
+#------------------Customer----------------
+input CustomerRequest{
+    name: String!
+    cologne: String!
+    phone: String!
+    birthDate: Date!
+    medicalCondition: Boolean!
+    photo: String!
+    photoCredential: String!
+    verifiedNumber: Boolean
+    gymId: Int!
+    contactName: String!
+    contactPhone:String!
+}
+
+type CustomerResponse{
+    id: Int!
+    name: String!
+    cologne: String!
+    phone: String!
+    birthDate: Date!
+    medicalCondition: Boolean!
+    photo: String!
+    photoCredential: String!
+    verifiedNumber: Boolean
+    gymId: Int!
+    idContact: Int!
+    registrationDate: LocalDateTime!
 }

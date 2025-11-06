@@ -1,6 +1,6 @@
 package com.example.proyecto.model;
 
-import java.time.LocalDate;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -36,7 +36,7 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_customer")
     @JsonProperty("identificador del cliente")
-    private Integer idCustomer;
+    private Long id;
     
     @Column(name = "name", nullable = false)
     @JsonProperty("nombre del cliente")
@@ -52,7 +52,7 @@ public class Customer {
 
     @Column(name = "birth_date", nullable = false)
     @JsonProperty("fecha de nacimiento del cliente")
-    private LocalDate birthDate;
+    private Date birthDate;
 
     @Column(name = "medical_condition", nullable = false)
     @JsonProperty("condiciones medicas del cliente")
@@ -95,6 +95,6 @@ public class Customer {
     private List<Visit> visits;
 
     @ManyToOne
-    @JoinColumn(name = "id_gym")
+    @JoinColumn(name = "gym_id")
     private Gym gym;
 }

@@ -9,7 +9,7 @@ import lombok.Value;
 @Builder
 public class EmergencyContactResponse {
     @JsonProperty("Contact identifier:")
-    private Integer idContact;
+    private Long idContact;
     private String contactName;
     private String contactPhone;
 }

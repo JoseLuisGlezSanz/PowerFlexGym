@@ -1,6 +1,7 @@
 package com.example.proyecto.controller;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
@@ -43,8 +44,8 @@ public class GymController {
 
     @PostMapping
     @Operation(summary = "Create a new gym")
-    @ApiResponse(responseCode = "200", description = "Gym creation", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Gym.class)))})
+    @ApiResponse(responseCode = "200", description = "Gym creation", content = {
+        @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Gym.class)))})
     public ResponseEntity<GymResponse> create(@RequestBody GymRequest gymRequest) {
         GymResponse createdGym = gymService.create(gymRequest);
         return ResponseEntity
@@ -53,9 +54,10 @@ public class GymController {
     }
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Update gym by ID")
-    @ApiResponse(responseCode = "200", description = "Gym update", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Gym.class)))})
+    @ApiResponse(responseCode = "200", description = "Gym update", content = {
+        @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Gym.class)))})
     public GymResponse update(@PathVariable Long id, @RequestBody GymRequest gymRequest) {
         return gymService.update(id, gymRequest);
     }

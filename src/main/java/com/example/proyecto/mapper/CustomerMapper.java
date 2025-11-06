@@ -4,67 +4,60 @@ import java.time.LocalDateTime;
 
 import com.example.proyecto.dto.CustomerRequest;
 import com.example.proyecto.dto.CustomerResponse;
-import com.example.proyecto.dto.EmergencyContactResponse;
-import com.example.proyecto.dto.GymResponse;
 import com.example.proyecto.model.Customer;
+import com.example.proyecto.model.EmergencyContact;
+import com.example.proyecto.model.Gym;
 
 public class CustomerMapper {
     public static CustomerResponse toResponse(Customer customer) {
         if (customer == null) return null;
 
-        GymResponse gymResponse = GymResponse.builder()
-                .idGym(customer.getGym().getIdGym())
-                .gym(customer.getGym().getGym())
-                .build();
-
-        EmergencyContactResponse emergencyContactResponse = EmergencyContactResponse.builder()
-                .idContact(customer.getEmergencyContact().getIdContact())
-                .contactName(customer.getEmergencyContact().getContactName())
-                .contactPhone(customer.getEmergencyContact().getContactPhone())
-                .build();
-
         return CustomerResponse.builder()
-                .idCustomer(customer.getIdCustomer())
+                .id(customer.getId())
                 .name(customer.getName())
                 .cologne(customer.getCologne())
                 .phone(customer.getPhone())
                 .birthDate(customer.getBirthDate())
                 .medicalCondition(customer.getMedicalCondition())
-                .registrationDate(customer.getRegistrationDate())
                 .photo(customer.getPhoto())
                 .photoCredential(customer.getPhotoCredential())
                 .verifiedNumber(customer.getVerifiedNumber())
-                .gym(gymResponse)
-                .emergencyContact(emergencyContactResponse)
+                .gymId(customer.getGym().getId())
+                .idContact(customer.getEmergencyContact().getIdContact())
+                .registrationDate(customer.getRegistrationDate())
                 .build();
     }
 
-    public static Customer toEntity(CustomerRequest dto) {
-        if (dto == null) return null;
+    public static Customer toEntity(CustomerRequest customerRequest, Gym gym, EmergencyContact emergencyContact) {
+        if (customerRequest == null) return null;
         
         return Customer.builder()
-                .name(dto.getName())
-                .cologne(dto.getCologne())
-                .phone(dto.getPhone())
-                .birthDate(dto.getBirthDate())
-                .medicalCondition(dto.getMedicalCondition())
+                .name(customerRequest.getName())
+                .cologne(customerRequest.getCologne())
+                .phone(customerRequest.getPhone())
+                .birthDate(customerRequest.getBirthDate())
+                .medicalCondition(customerRequest.getMedicalCondition())
+                .photo(customerRequest.getPhoto())                  
+                .photoCredential(customerRequest.getPhotoCredential()) 
+                .verifiedNumber(customerRequest.getVerifiedNumber())
+                .emergencyContact(emergencyContact)
+                .gym(gym)
                 .registrationDate(LocalDateTime.now())
-                .photo(dto.getPhoto())                  
-                .photoCredential(dto.getPhotoCredential()) 
-                .verifiedNumber(dto.getVerifiedNumber())
                 .build();
     }
 
-    public static void copyToEntity(CustomerRequest dto, Customer entity) {
-        if (dto == null || entity == null) return;
+    public static void copyToEntity(CustomerRequest customerRequest, Customer entity, Gym gym, EmergencyContact emergencyContact) {
+        if (customerRequest == null || entity == null) return;
         
-        entity.setName(dto.getName());
-        entity.setCologne(dto.getCologne());
-        entity.setPhone(dto.getPhone());
-        entity.setBirthDate(dto.getBirthDate());
-        entity.setMedicalCondition(dto.getMedicalCondition());
-        entity.setPhoto(dto.getPhoto());
-        entity.setPhotoCredential(dto.getPhotoCredential());
-        entity.setVerifiedNumber(dto.getVerifiedNumber());
+        entity.setName(customerRequest.getName());
+        entity.setCologne(customerRequest.getCologne());
+        entity.setPhone(customerRequest.getPhone());
+        entity.setBirthDate(customerRequest.getBirthDate());
+        entity.setMedicalCondition(customerRequest.getMedicalCondition());
+        entity.setPhoto(customerRequest.getPhoto());
+        entity.setPhotoCredential(customerRequest.getPhotoCredential());
+        entity.setVerifiedNumber(customerRequest.getVerifiedNumber());
+        entity.setEmergencyContact(emergencyContact);
+        entity.setGym(gym);
     }
 }
