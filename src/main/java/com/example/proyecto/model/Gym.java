@@ -31,11 +31,11 @@ public class Gym {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_gym")
     @JsonProperty("identificador del gimnasio")
-    private Integer idGym;
+    private Long id;
 
     @Column(name = "gym", nullable = false)
     @JsonProperty("nombre del gimnasio")
-    private String gym;
+    private String name;
 
     //Relaciones
     @OneToMany(mappedBy = "gym", cascade = CascadeType.ALL, orphanRemoval = true)

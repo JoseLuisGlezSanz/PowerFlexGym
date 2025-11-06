@@ -1,0 +1,28 @@
+schema{
+    query: Query
+    mutation: Mutation
+}
+
+type Query{
+    #Gym
+    findAllGyms: [GymResponse]
+    findByIdGym(id: Int!): GymResponse
+    findAllGymsPaginated(page: Int!, pageSize: Int!): [GymResponse]
+    findByNameGym(name: String!): [GymResponse]
+}
+
+type Mutation{
+    #Gym
+    createGym(gymRequest: GymRequest!): GymResponse
+    updateGym(id: Int!, gymRequest: GymRequest!): GymResponse
+    # deleteGym(id: Int!): Boolean
+}
+#-------------------Gym-------------------
+input UserRequest{
+    name: String!
+}
+
+type{
+    id: Int!
+    name: String!
+}

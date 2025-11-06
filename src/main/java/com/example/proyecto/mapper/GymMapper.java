@@ -9,22 +9,22 @@ public class GymMapper {
         if (gym == null) return null;
         
         return GymResponse.builder()
-                .idGym(gym.getIdGym())
-                .gym(gym.getGym())
+                .id(gym.getId())
+                .name(gym.getName())
                 .build();
     }
 
-    public static Gym toEntity(GymRequest dto) {
-        if (dto == null) return null;
+    public static Gym toEntity(GymRequest gymRequest) {
+        if (gymRequest == null) return null;
         
         return Gym.builder()
-                .gym(dto.getGym())
+                .name(gymRequest.getName())
                 .build();
     }
 
-    public static void copyToEntity(GymRequest dto, Gym entity) {
-        if (dto == null || entity == null) return;
+    public static void copyToEntity(GymRequest gymRequest, Gym entity) {
+        if (gymRequest == null || entity == null) return;
         
-        entity.setGym(dto.getGym());
+        entity.setName(gymRequest.getName());
     }
 }
