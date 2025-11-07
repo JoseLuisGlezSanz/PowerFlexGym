@@ -33,11 +33,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user")
     @JsonProperty("identificador del usuario")
-    private Integer idUser;
+    private Long id;
 
     @Column(name = "user_name", nullable = false, length = 50)
     @JsonProperty("nombre de usuario")
-    private String user;
+    private String nameUser;
 
     @Column(name = "mail", nullable = false, length = 255)
     @JsonProperty("correo del usuario")

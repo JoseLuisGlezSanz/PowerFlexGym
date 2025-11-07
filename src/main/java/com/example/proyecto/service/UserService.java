@@ -7,13 +7,13 @@ import com.example.proyecto.dto.UserResponse;
 
 public interface UserService {
     List<UserResponse> findAll();
-    UserResponse findById(Integer id);
-    UserResponse save(UserRequest userRequest);
-    UserResponse update(Integer id, UserRequest userRequest);
-    // void delete(Integer id);
+    UserResponse findById(Long id);
+    UserResponse create(UserRequest userRequest);
+    UserResponse update(Long id, UserRequest userRequest);
+    // void delete(Long id);
     UserResponse findByMail(String mail);
-    List<UserResponse> findByUsername(String user);
-    List<UserResponse> findByRoleId(Integer idRole);
+    UserResponse findByUsername(String nameUser);
+    List<UserResponse> findByRoleId(Long idRole);
     List<UserResponse> getAll(int page, int pageSize);
-    List<UserResponse> findByGymId(Integer idGym);
+    List<UserResponse> findByGymId(Long idGym);
 }

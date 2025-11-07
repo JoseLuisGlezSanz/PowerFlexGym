@@ -8,20 +8,20 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.proyecto.model.User;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, Long> {
     // Buscar usuario por email
     @Query(value = "SELECT * FROM users WHERE LOWER(mail) = LOWER(:mail);", nativeQuery = true)
-    List<User> findByMail(@Param("mail") String mail);
+    User findByMail(@Param("mail") String mail);
     
     // Buscar usuario por nombre de usuario
-    @Query(value = "SELECT * FROM users WHERE LOWER(user_name) = LOWER(:user);", nativeQuery = true)
-    List<User> findByUsername(@Param("user") String user);
+    @Query(value = "SELECT * FROM users WHERE LOWER(user_name) = LOWER(:nameUser);", nativeQuery = true)
+    User findByUserName(@Param("nameUser") String nameUser);
 
     // Buscar usuario por rol de usuario
-    @Query(value = "SELECT * FROM users WHERE id_role = :idRole;", nativeQuery = true)
-    List<User> findByRoleId(@Param("idRole") Integer idRole);
+    @Query(value = "SELECT * FROM users WHERE id_role = :roleId;", nativeQuery = true)
+    List<User> findByRoleId(@Param("roleId") Long roleId);
 
     //Buscar usuario por gym
-    @Query(value = "SELECT * FROM users WHERE id_gym = :idGym;", nativeQuery = true)
-    List<User> findByGymId(@Param("idGym") Integer idGym);   
+    @Query(value = "SELECT * FROM users WHERE id_gym = :gymId;", nativeQuery = true)
+    List<User> findByGymId(@Param("gymId") Long gymId);   
 }

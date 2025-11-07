@@ -1,60 +1,53 @@
 package com.example.proyecto.mapper;
 
-import com.example.proyecto.dto.GymResponse;
-import com.example.proyecto.dto.RoleResponse;
 import com.example.proyecto.dto.UserRequest;
 import com.example.proyecto.dto.UserResponse;
+import com.example.proyecto.model.Gym;
+import com.example.proyecto.model.Role;
 import com.example.proyecto.model.User;
 
 public class UserMapper {
     public static UserResponse toResponse(User user) {
         if (user == null) return null;
-        
-        RoleResponse roleResponse = RoleResponse.builder()
-            .idRole(user.getRole().getIdRole())
-            .role(user.getRole().getRole())
-            .status(user.getRole().getStatus())
-            .build();
-
-        GymResponse gymResponse = GymResponse.builder()
-            .idGym(user.getGym().getIdGym())
-            .gym(user.getGym().getGym())
-            .build();
             
         return UserResponse.builder()
-                .idUser(user.getIdUser())
-                .user(user.getUser())
+                .id(user.getId())
+                .nameUser(user.getNameUser())
                 .mail(user.getMail())
                 .phone(user.getPhone())
                 .name(user.getName())
                 .status(user.getStatus())
                 .password(user.getPassword())
-                .role(roleResponse)
-                .gym(gymResponse)
+                .roleId(user.getRole().getId())
+                .gymId(user.getGym().getId())
                 .build();
     }
 
-    public static User toEntity(UserRequest dto) {
-        if (dto == null) return null;
+    public static User toEntity(UserRequest userRequest, Role role, Gym gym) {
+        if (userRequest == null) return null;
 
         return User.builder()
-                .user(dto.getUser())
-                .mail(dto.getMail())
-                .phone(dto.getPhone())
-                .name(dto.getName())
-                .password(dto.getPassword())
-                .status(dto.getStatus())
+                .nameUser(userRequest.getNameUser())
+                .mail(userRequest.getMail())
+                .phone(userRequest.getPhone())
+                .name(userRequest.getName())
+                .password(userRequest.getPassword())
+                .status(userRequest.getStatus())
+                .role(role)
+                .gym(gym)
                 .build();
     }
 
-    public static void copyToEntity(UserRequest dto, User entity) {
-        if (dto == null || entity == null) return;
+    public static void copyToEntity(UserRequest userRequest, User entity, Role role, Gym gym) {
+        if (userRequest == null || entity == null) return;
         
-        entity.setUser(dto.getUser());
-        entity.setMail(dto.getMail());
-        entity.setPhone(dto.getPhone());
-        entity.setName(dto.getName());
-        entity.setPassword(dto.getPassword());
-        entity.setStatus(dto.getStatus());
+        entity.setNameUser(userRequest.getNameUser());
+        entity.setMail(userRequest.getMail());
+        entity.setPhone(userRequest.getPhone());
+        entity.setName(userRequest.getName());
+        entity.setPassword(userRequest.getPassword());
+        entity.setStatus(userRequest.getStatus());
+        entity.setRole(role);
+        entity.setGym(gym);
     }
 }

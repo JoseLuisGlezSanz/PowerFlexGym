@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dto.UserRequest;
@@ -28,89 +27,81 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<UserResponse> findAll() {
-        return userRepository.findAll(Sort.by("idUser").ascending()).stream()
+        return userRepository.findAll().stream()
                 .map(UserMapper::toResponse)
                 .toList();
     }
 
     @Override
-    public UserResponse findById(Integer id) {
+    public UserResponse findById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
         return UserMapper.toResponse(user);
     }
 
     @Override
-    public UserResponse save(UserRequest req) {
-        Role role = roleRepository.findById(req.getIdRole())
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID: " + req.getIdRole()));
-        Gym gym = gymRepository.findById(req.getIdGym())
-                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + req.getIdGym()));
+    public UserResponse create(UserRequest userRequest) {
+        Role role = roleRepository.findById(userRequest.getRoleId())
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID: " + userRequest.getRoleId()));
+
+        Gym gym = gymRepository.findById(userRequest.getGymId())
+                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + userRequest.getGymId()));
         
-        User user = UserMapper.toEntity(req);
-        user.setRole(role);
-        user.setGym(gym);    
+        User user = UserMapper.toEntity(userRequest, role, gym);   
         
         User savedUser = userRepository.save(user);
         return UserMapper.toResponse(savedUser);
     }
 
     @Override
-    public UserResponse update(Integer id, UserRequest req) {
+    public UserResponse update(Long id, UserRequest userRequest) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
 
-        Role role = roleRepository.findById(req.getIdRole())
-            .orElseThrow(() -> new RuntimeException("Role no encontrado con ID: " + req.getIdRole()));
-      
-        Gym gym = gymRepository.findById(req.getIdGym())
-            .orElseThrow(() -> new RuntimeException("Gym no encontrado con ID: " + req.getIdGym()));
-        
-        UserMapper.copyToEntity(req, existingUser);
+        Role role = roleRepository.findById(userRequest.getRoleId())
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID: " + userRequest.getRoleId()));
 
-        existingUser.setRole(role);
-        existingUser.setGym(gym);
+        Gym gym = gymRepository.findById(userRequest.getGymId())
+                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + userRequest.getGymId()));
+        
+        UserMapper.copyToEntity(userRequest, existingUser, role, gym);
+
         User updatedUser = userRepository.save(existingUser);
         return UserMapper.toResponse(updatedUser);
     }
 
     // @Override
-    // public void delete(Integer id) {
+    // public void delete(Long id) {
     //     userRepository.deleteById(id);
     // }
 
-    @Override
-    public UserResponse findByMail(String mail) {
-        return userRepository.findByMail(mail).stream()
-                .findFirst()
-                .map(UserMapper::toResponse)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con email: " + mail));
-    }
-
-    @Override
-    public List<UserResponse> findByUsername(String user) {
-        return userRepository.findByUsername(user).stream()
-                .map(UserMapper::toResponse)
-                .toList();
-    }
-
-    @Override
-    public List<UserResponse> findByRoleId(Integer idRole) {
-        return userRepository.findByRoleId(idRole).stream()
-                .map(UserMapper::toResponse)
-                .toList();
-    }
-
     public List<UserResponse> getAll(int page, int pageSize) {
-        PageRequest pageReq = PageRequest.of(page, pageSize, Sort.by("idUser").ascending());
+        PageRequest pageReq = PageRequest.of(page, pageSize);
         Page<User> users = userRepository.findAll(pageReq);
         return users.getContent().stream().map(UserMapper::toResponse).toList();
     }
 
     @Override
-    public List<UserResponse> findByGymId(Integer idGym) {
-        return userRepository.findByGymId(idGym).stream()
-                .map(UserMapper::toResponse)
-                .toList();
+    public UserResponse findByMail(String mail) {
+        User user = userRepository.findByMail(mail);
+        return UserMapper.toResponse(user);
+    }
+
+    @Override
+    public UserResponse findByUsername(String nameUser) {
+        User user = userRepository.findByUserName(nameUser);
+        return UserMapper.toResponse(user);
+    }
+
+    @Override
+    public List<UserResponse> findByRoleId(Long roleId) {
+          List<User> users = userRepository.findByRoleId(roleId);
+          return users.stream().map(UserMapper::toResponse).toList();
+    }
+
+    @Override
+    public List<UserResponse> findByGymId(Long gymId) {
+          List<User> users = userRepository.findByGymId(gymId);
+          return users.stream().map(UserMapper::toResponse).toList();
     }
 }

@@ -4,12 +4,12 @@ import lombok.Data;
 
 @Data
 public class UserRequest {
-    private String user;
+    private String nameUser;
     private String mail;
     private String phone;
     private String name;
     private String password;
     private Integer status;
-    private Integer idRole;
-    private Integer idGym;
+    private Long roleId;
+    private Long gymId;
 }

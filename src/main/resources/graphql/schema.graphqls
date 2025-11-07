@@ -30,6 +30,15 @@ type Query {
     findAllRoles: [RoleResponse]
     findByIdRole(id: Int!): RoleResponse
     findByStatusRole(statusValue: Int!): [RoleResponse]
+
+    #User
+    findAllUsers: [UserResponse]
+    findByIdUser(id: Int!): UserResponse
+    findAllUsersPaginated(page: Int!, pageSize: Int!): [UserResponse]
+    findByMailUser(mail: String!): UserResponse
+    findByNameUser(nameUser: String!): UserResponse
+    findByRoleIdUser(roleId: Int!): [UserResponse]
+    findByGymIdUser(gymId: Int!): [UserResponse]
 }
 
 type Mutation {
@@ -51,6 +60,11 @@ type Mutation {
     createRole(roleRequest: RoleRequest!): RoleResponse
     updateRole(id: Int!, roleRequest: RoleRequest!): RoleResponse
     # deleteRole(id: Int!): Boolean
+
+    #User
+    createUser(userRequest: UserRequest!): UserResponse
+    updateRole(id: Int!, userRequest: UserRequest!): UserResponse
+    # deleteUser(id: Int!): Boolean
 }
 #-------------------Gym-------------------
 input GymRequest {
@@ -111,4 +125,27 @@ type RoleResponse {
     id: Int!
     name: String!
     status: Int!
+}
+#----------------------User-------------------
+input UserRequest {
+    nameUser: String!
+    mail: String!
+    phone: String!
+    name: String!
+    password: String!
+    status: Int!
+    roleId: Int!
+    gymId: Int!
+}
+
+type RoleResponse {
+    id: Int!
+    nameUser: String!
+    mail: String!
+    phone: String!
+    name: String!
+    password: String!
+    status: Int!
+    roleId: Int!
+    gymId: Int!
 }
