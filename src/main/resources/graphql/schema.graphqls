@@ -56,6 +56,12 @@ type Query {
     findAllTicketsByUserId(userId: Int!): [TicketResponse]
     findAllTicketsByCustomerIdPaginated(page: Int!, pageSize: Int!, customerId: Int!): [TicketResponse]
     findAllTicketsByUserIdPaginated(page: Int!, pageSize: Int!, userId: Int!): [TicketResponse]
+
+    #Ticket-Detail
+    findAllTicketDetails: [TicketDetailResponse]
+    findByIdTicketDetail(id: Int!): TicketDetailResponse
+    getAllTicketDetailsPaginated(page: Int!, pageSize: Int!): [TicketDetailResponse]
+    findByTicketIdTicketDetails(ticketId: Int!): [TicketDetailResponse]
 }
 
 type Mutation {
@@ -90,6 +96,10 @@ type Mutation {
     #Ticket
     createTicket(ticketRequest: TicketRequest!): TicketResponse
     updateTicket(id: Int!, ticketRequest: TicketRequest!): TicketResponse
+
+    #Ticket-Detail
+    createTicketDetail(ticketDetailRequest: TicketDetailRequest!): TicketDetailResponse
+    updateTicketDetail(id: Int!, ticketDetailRequest: TicketDetailRequest!): TicketDetailResponse
 }
 
 #-------------------Gym-------------------
@@ -214,4 +224,20 @@ type TicketResponse {
     customerName: String!
     userId: Int!
     userName: String!
+}
+#----------------Ticket-Detail-------------
+input TicketDetailRequest {
+    amount: Int!
+    productId: Int!
+    ticketId: Int!
+}
+
+type TicketDetailResponse {
+    id: Int!
+    amount: Int!
+    unitPrice: Float!
+    subtotal: Float!
+    productId: Int!
+    productName: String!
+    ticketId: Int!
 }

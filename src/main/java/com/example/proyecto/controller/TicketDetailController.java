@@ -4,7 +4,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.net.URI;
 import java.util.List;
+
 import com.example.proyecto.dto.TicketDetailRequest;
 import com.example.proyecto.dto.TicketDetailResponse;
 import com.example.proyecto.model.TicketDetail;
@@ -27,38 +29,38 @@ public class TicketDetailController {
 
     @GetMapping
     @Operation(summary = "Get all ticket details")
-    @ApiResponse(responseCode = "200", description = "List of all ticket details", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TicketDetail.class)))})
-    public ResponseEntity<List<TicketDetailResponse>> findAll() {
-        List<TicketDetailResponse> ticketDetails = ticketDetailService.findAll();
-        return ResponseEntity.ok(ticketDetails);
+    @ApiResponse(responseCode = "200", description = "List of all ticket details", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TicketDetail.class)))})
+    public List<TicketDetailResponse> findAll() {
+        return ticketDetailService.findAll();
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get ticket detail by ID")
-    @ApiResponse(responseCode = "200", description = "Ticket detail found", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TicketDetail.class)))})
-    public ResponseEntity<TicketDetailResponse> findById(@PathVariable Integer id) {
-        TicketDetailResponse ticketDetail = ticketDetailService.findById(id);
-        return ResponseEntity.ok(ticketDetail);
+    @ApiResponse(responseCode = "200", description = "Ticket detail by ID", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TicketDetail.class)))})
+    public TicketDetailResponse findById(@PathVariable Long id) {
+        return ticketDetailService.findById(id);
     }
 
     @PostMapping
     @Operation(summary = "Create a new ticket detail")
-    @ApiResponse(responseCode = "200", description = "Ticket detail created successfully", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TicketDetail.class)))})
+    @ApiResponse(responseCode = "200", description = "Ticket detail create", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TicketDetail.class)))})
     public ResponseEntity<TicketDetailResponse> create(@RequestBody TicketDetailRequest ticketDetailRequest) {
-        TicketDetailResponse createdTicketDetail = ticketDetailService.save(ticketDetailRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdTicketDetail);
+        TicketDetailResponse createdtTicketDetail = ticketDetailService.create(ticketDetailRequest);
+        return ResponseEntity
+                .created(URI.create("/api/v1/ticket-details/" + createdtTicketDetail.getId()))
+                .body(createdtTicketDetail);
     }
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Update ticket detail by ID")
-    @ApiResponse(responseCode = "200", description = "Ticket detail updated successfully", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TicketDetail.class)))})
-    public ResponseEntity<TicketDetailResponse> update(@PathVariable Integer id, @RequestBody TicketDetailRequest ticketDetailRequest) {
-        TicketDetailResponse updatedTicketDetail = ticketDetailService.update(id, ticketDetailRequest);
-        return ResponseEntity.ok(updatedTicketDetail);
+    @ApiResponse(responseCode = "200", description = "Ticket detail update", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TicketDetail.class)))})
+    public TicketDetailResponse update(@PathVariable Long id, @RequestBody TicketDetailRequest ticketDetailRequest) {
+        return ticketDetailService.update(id, ticketDetailRequest);
     }
 
     // @DeleteMapping("/{id}")
@@ -70,27 +72,22 @@ public class TicketDetailController {
     //     return ResponseEntity.noContent().build();
     // }
 
-    @GetMapping("/ticket/{idTicket}")
-    @Operation(summary = "Get ticket details by ticket ID")
-    @ApiResponse(responseCode = "200", description = "List of ticket details for the specified ticket", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TicketDetail.class)))})
-    public List<TicketDetailResponse> findByTicketId(@PathVariable Integer idTicket) {
-        return ticketDetailService.findByTicketId(idTicket);
-    }
-
-    // @GetMapping("/product/{idProduct}")
-    // @Operation(summary = "Get ticket details by product ID")
-    // @ApiResponse(responseCode = "200", description = "List of ticket details for the specified product", 
-    //         content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TicketDetail.class)))})
-    // public List<TicketDetailResponse> findByProductId(@PathVariable Integer idProduct) {
-    //     return ticketDetailService.findByProductId(idProduct);
-    // }
-
     @GetMapping(value = "paginationAll", params = { "page", "pageSize" })
     @Operation(summary = "Get all ticket details with pagination")
-    public List<TicketDetailResponse> getAllPaginated(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
+    @ApiResponse(responseCode = "200", description = "List of all ticket details paginated", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TicketDetail.class)))})
+    public List<TicketDetailResponse> getAllPaginated(
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
         List<TicketDetailResponse> ticketsDetails = ticketDetailService.getAll(page, pageSize);
         return ticketsDetails;
+    }
+
+    @GetMapping("/{idTicket}")
+    @Operation(summary = "Get ticket details by ticket ID")
+    @ApiResponse(responseCode = "200", description = "List of ticket details by ticket ID", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TicketDetail.class)))})
+    public List<TicketDetailResponse> findByTicketId(@PathVariable Long ticketId) {
+        return ticketDetailService.findByTicketId(ticketId);
     }
 }

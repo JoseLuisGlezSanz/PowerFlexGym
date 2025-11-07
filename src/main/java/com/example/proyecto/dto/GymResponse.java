@@ -14,5 +14,6 @@ import lombok.NoArgsConstructor;
 public class GymResponse {
     @JsonProperty("Gym identifier:")
     private Long id;
+    
     private String name;
 }

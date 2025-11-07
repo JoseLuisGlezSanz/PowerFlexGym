@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dto.TicketDetailRequest;
@@ -30,39 +29,46 @@ public class TicketDetailServiceImpl implements TicketDetailService{
 
     @Override
     public List<TicketDetailResponse> findAll() {
-        return ticketDetailRepository.findAll(Sort.by("idDetailTicket").ascending()).stream()
+        return ticketDetailRepository.findAll().stream()
                 .map(TicketDetailMapper::toResponse)
                 .toList();
     }
 
     @Override
-    public TicketDetailResponse findById(Integer id) {
+    public TicketDetailResponse findById(Long id) {
         TicketDetail ticketDetail = ticketDetailRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Detalle de ticket no encontrado con ID: " + id));
+
         return TicketDetailMapper.toResponse(ticketDetail);
     }
 
     @Override
-    public TicketDetailResponse save(TicketDetailRequest req) {
-        Product product = productRepository.findById(req.getIdProduct())
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + req.getIdProduct()));
-        Ticket ticket = ticketRepository.findById(req.getIdTicket())
-                .orElseThrow(() -> new RuntimeException("Ticket no encontrado con ID: " + req.getIdTicket()));
+    public TicketDetailResponse create(TicketDetailRequest ticketDetailRequest) {
+        Product product = productRepository.findById(ticketDetailRequest.getProductId())
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + ticketDetailRequest.getProductId()));
+
+        Ticket ticket = ticketRepository.findById(ticketDetailRequest.getTicketId())
+                .orElseThrow(() -> new RuntimeException("Ticket no encontrado con ID: " + ticketDetailRequest.getTicketId()));
         
-        TicketDetail ticketDetail = TicketDetailMapper.toEntity(req);
-        ticketDetail.setProduct(product);
-        ticketDetail.setTicket(ticket);
+        TicketDetail ticketDetail = TicketDetailMapper.toEntity(ticketDetailRequest, product, ticket);
         
         TicketDetail savedTicketDetail = ticketDetailRepository.save(ticketDetail);
         return TicketDetailMapper.toResponse(savedTicketDetail);
     }
 
     @Override
-    public TicketDetailResponse update(Integer id, TicketDetailRequest req) {
+    public TicketDetailResponse update(Long id, TicketDetailRequest ticketDetailRequest) {
         TicketDetail existingTicketDetail = ticketDetailRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Detalle de ticket no encontrado con ID: " + id));
+
+        Product product = productRepository.findById(ticketDetailRequest.getProductId())
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + ticketDetailRequest.getProductId()));
+
+        Ticket ticket = ticketRepository.findById(ticketDetailRequest.getTicketId())
+                .orElseThrow(() -> new RuntimeException("Ticket no encontrado con ID: " + ticketDetailRequest.getTicketId()));
         
-        TicketDetailMapper.copyToEntity(req, existingTicketDetail);
+        TicketDetailMapper.copyToEntity(ticketDetailRequest, existingTicketDetail, product, ticket);
+
         TicketDetail updatedTicketDetail = ticketDetailRepository.save(existingTicketDetail);
         return TicketDetailMapper.toResponse(updatedTicketDetail);
     }
@@ -72,23 +78,15 @@ public class TicketDetailServiceImpl implements TicketDetailService{
     //     ticketDetailRepository.deleteById(id);
     // }
 
-    @Override
-    public List<TicketDetailResponse> findByTicketId(Integer idTicket) {
-        return ticketDetailRepository.findByTicketId(idTicket).stream()
-                .map(TicketDetailMapper::toResponse)
-                .toList();
-    }
-
-    // @Override
-    // public List<TicketDetailResponse> findByProductId(Integer idProduct) {
-    //     return ticketDetailRepository.findByProductId(idProduct).stream()
-    //             .map(TicketDetailMapper::toResponse)
-    //             .toList();
-    // }
-
     public List<TicketDetailResponse> getAll(int page, int pageSize) {
-        PageRequest pageReq = PageRequest.of(page, pageSize, Sort.by("idDetailTicket").ascending());
+        PageRequest pageReq = PageRequest.of(page, pageSize);
         Page<TicketDetail> ticketsDetails = ticketDetailRepository.findAll(pageReq);
         return ticketsDetails.getContent().stream().map(TicketDetailMapper::toResponse).toList();
+    }
+
+    @Override
+    public List<TicketDetailResponse> findByTicketId(Long ticketId) {
+        List<TicketDetail> ticketDetailResponses = ticketDetailRepository.findByTicketId(ticketId);
+        return ticketDetailResponses.stream().map(TicketDetailMapper::toResponse).toList();
     }
 }

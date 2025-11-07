@@ -4,24 +4,23 @@ import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TicketDetailResponse {
     @JsonProperty("Detail identifier")
-    private Integer idDetailTicket;
+    private Long id;
 
     private Integer amount;
-
-    private Double unitPrice;
-
+    private BigDecimal unitPrice;
     private BigDecimal subtotal;
-
-    private Integer idProduct;
-
+    private Long productId;
     private String productName;
-
-    private Integer idTicket;
+    private Long ticketId;
 }

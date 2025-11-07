@@ -31,7 +31,7 @@ public class TicketDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_detail_ticket")
     @JsonProperty("identificador del detalle")
-    private Integer idDetailTicket;
+    private Long id;
 
     @Column(name = "amount")
     @JsonProperty("cantidad del producto")
@@ -39,7 +39,7 @@ public class TicketDetail {
 
     @Column(name = "unit_price")
     @JsonProperty("precio unitario")
-    private Double unitPrice;
+    private BigDecimal unitPrice;
 
     @Column(name = "subtotal")
     @JsonProperty("Subtotal del ticket")
@@ -47,10 +47,10 @@ public class TicketDetail {
 
     // Relaciones
     @ManyToOne
-    @JoinColumn(name = "id_product")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "id_ticket")
+    @JoinColumn(name = "ticket_id")
     private Ticket ticket;
 }
