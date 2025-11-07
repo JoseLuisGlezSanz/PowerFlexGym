@@ -62,6 +62,12 @@ type Query {
     findByIdTicketDetail(id: Int!): TicketDetailResponse
     getAllTicketDetailsPaginated(page: Int!, pageSize: Int!): [TicketDetailResponse]
     findByTicketIdTicketDetails(ticketId: Int!): [TicketDetailResponse]
+
+    #Membership
+    findAllMemberships: [MembershipResponse]
+    findByIdMembership(id: Int!): MembershipResponse
+    findMembershipByName(name: String!): [MembershipResponse]
+    findMembershipByGymId(gymId: Int!): [MembershipResponse]
 }
 
 type Mutation {
@@ -100,6 +106,10 @@ type Mutation {
     #Ticket-Detail
     createTicketDetail(ticketDetailRequest: TicketDetailRequest!): TicketDetailResponse
     updateTicketDetail(id: Int!, ticketDetailRequest: TicketDetailRequest!): TicketDetailResponse
+
+    #Membership
+    createMembership(membershipRequest: MembershipRequest!): MembershipResponse
+    updateMembership(id: Int!, membershipRequest: MembershipRequest!): MembershipResponse
 }
 
 #-------------------Gym-------------------
@@ -240,4 +250,21 @@ type TicketDetailResponse {
     productId: Int!
     productName: String!
     ticketId: Int!
+}
+#------------------Membership---------------
+input MembershipRequest {
+    name: String!
+    duration: String!
+    price: Float!
+    status: Int!
+    gymId: Int!
+}
+
+type MembershipResponse {
+    id: Int!
+    name: String!
+    duration: String!
+    price: Float!
+    status: Int!
+    gymId: Int!
 }

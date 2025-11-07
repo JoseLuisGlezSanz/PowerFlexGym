@@ -7,10 +7,10 @@ import com.example.proyecto.dto.MembershipResponse;
 
 public interface MembershipService {
     List<MembershipResponse> findAll();
-    MembershipResponse findById(Integer id);
-    MembershipResponse save(MembershipRequest membershipRequest);
-    MembershipResponse update(Integer id, MembershipRequest membershipRequest);
+    MembershipResponse findById(Long id);
+    MembershipResponse create(MembershipRequest membershipRequest);
+    MembershipResponse update(Long id, MembershipRequest membershipRequest);
     // void delete(Integer id);
-    List<MembershipResponse> findByMembership(String membership);
-    List<MembershipResponse> findByGymId(Integer idGym);
+    List<MembershipResponse> findMembershipByName(String name);
+    List<MembershipResponse> findMembershipByGymId(Long gymId);
 }

@@ -8,12 +8,12 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.proyecto.model.Membership;
 
-public interface MembershipRepository extends JpaRepository<Membership, Integer> {
+public interface MembershipRepository extends JpaRepository<Membership, Long> {
     // Buscar membresía por nombre
-    @Query(value = "SELECT * FROM memberships WHERE LOWER(membership) = LOWER(:membership);", nativeQuery = true)
-    List<Membership> findByMembership(@Param("membership") String membership);
+    @Query(value = "SELECT * FROM memberships WHERE LOWER(name) = LOWER(:name);", nativeQuery = true)
+    List<Membership> findMembershipByName(@Param("name") String name);
 
     // Buscar membresía por ID gym
-    @Query(value = "SELECT * FROM memberships WHERE id_gym = :idGym;", nativeQuery = true)
-    List<Membership> findByGymId(@Param("idGym") Integer idGym);
+    @Query(value = "SELECT * FROM memberships WHERE gym_id = :gymId;", nativeQuery = true)
+    List<Membership> findMembershipByGymId(@Param("gymId") Long gymId);
 }

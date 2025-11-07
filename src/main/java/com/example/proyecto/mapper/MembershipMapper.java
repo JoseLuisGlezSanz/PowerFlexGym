@@ -1,46 +1,43 @@
 package com.example.proyecto.mapper;
 
-import com.example.proyecto.dto.GymResponse;
 import com.example.proyecto.dto.MembershipRequest;
 import com.example.proyecto.dto.MembershipResponse;
+import com.example.proyecto.model.Gym;
 import com.example.proyecto.model.Membership;
 
 public class MembershipMapper {
     public static MembershipResponse toResponse(Membership membership) {
         if (membership == null) return null;
-        
-        GymResponse gymResponse = GymResponse.builder()
-            .idGym(membership.getGym().getIdGym())
-            .gym(membership.getGym().getGym())
-            .build();
 
         return MembershipResponse.builder()
-                .idMembership(membership.getIdMembership())
-                .membership(membership.getMembership())
+                .id(membership.getId())
+                .name(membership.getName())
                 .duration(membership.getDuration())
                 .price(membership.getPrice())
                 .status(membership.getStatus())
-                .gym(gymResponse)
+                .gymId(membership.getGym().getId())
                 .build();
     }
 
-    public static Membership toEntity(MembershipRequest dto) {
-        if (dto == null) return null;
+    public static Membership toEntity(MembershipRequest membershipRequest, Gym gym) {
+        if (membershipRequest == null) return null;
         
         return Membership.builder()
-                .membership(dto.getMembership())
-                .duration(dto.getDuration())
-                .price(dto.getPrice())
-                .status(dto.getStatus())
+                .name(membershipRequest.getName())
+                .duration(membershipRequest.getDuration())
+                .price(membershipRequest.getPrice())
+                .status(membershipRequest.getStatus())
+                .gym(gym)
                 .build();
     }
 
-    public static void copyToEntity(MembershipRequest dto, Membership entity) {
-        if (dto == null || entity == null) return;
+    public static void copyToEntity(MembershipRequest membershipRequest, Membership entity, Gym gym) {
+        if (membershipRequest == null || entity == null) return;
         
-        entity.setMembership(dto.getMembership());
-        entity.setDuration(dto.getDuration());
-        entity.setPrice(dto.getPrice());
-        entity.setStatus(dto.getStatus());
+        entity.setName(membershipRequest.getName());
+        entity.setDuration(membershipRequest.getDuration());
+        entity.setPrice(membershipRequest.getPrice());
+        entity.setStatus(membershipRequest.getStatus());
+        entity.setGym(gym);
     }
 }

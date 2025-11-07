@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class MembershipRequest {
-    private String membership;
+    private String name;
     private String duration;
     private Double price;
     private Integer status;
-    private Integer idGym;
+    private Long gymId;
 }

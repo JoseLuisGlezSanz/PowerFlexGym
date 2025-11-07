@@ -2,7 +2,6 @@ package com.example.proyecto.service;
 
 import java.util.List;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dto.MembershipRequest;
@@ -25,41 +24,40 @@ public class MembershipServiceImpl implements MembershipService{
 
     @Override
     public List<MembershipResponse> findAll() {
-        return membershipRepository.findAll(Sort.by("idMembership").ascending()).stream()
+        return membershipRepository.findAll().stream()
                 .map(MembershipMapper::toResponse)
                 .toList();
     }
 
     @Override
-    public MembershipResponse findById(Integer id) {
+    public MembershipResponse findById(Long id) {
         Membership membership = membershipRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Membresía no encontrada con ID: " + id));
+
         return MembershipMapper.toResponse(membership);
     }
 
     @Override
-    public MembershipResponse save(MembershipRequest req) {
-        Gym gym = gymRepository.findById(req.getIdGym())
-                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + req.getIdGym()));
+    public MembershipResponse create(MembershipRequest membershipRequest) {
+        Gym gym = gymRepository.findById(membershipRequest.getGymId())
+                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + membershipRequest.getGymId()));
         
-        Membership membership = MembershipMapper.toEntity(req);
+        Membership membership = MembershipMapper.toEntity(membershipRequest, gym);
        
-        membership.setGym(gym);
         Membership savedMembership = membershipRepository.save(membership);
         return MembershipMapper.toResponse(savedMembership);
     }
 
     @Override
-    public MembershipResponse update(Integer id, MembershipRequest req) {
+    public MembershipResponse update(Long id, MembershipRequest membershipRequest) {
         Membership existingMembership = membershipRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Membresía no encontrada con ID: " + id));
 
-        Gym gym = gymRepository.findById(req.getIdGym())
-            .orElseThrow(() -> new RuntimeException("Gym no encontrado con ID: " + req.getIdGym()));
+        Gym gym = gymRepository.findById(membershipRequest.getGymId())
+            .orElseThrow(() -> new RuntimeException("Gym no encontrado con ID: " + membershipRequest.getGymId()));
         
-        MembershipMapper.copyToEntity(req, existingMembership);
+        MembershipMapper.copyToEntity(membershipRequest, existingMembership, gym);
 
-        existingMembership.setGym(gym);
         Membership updatedMembership = membershipRepository.save(existingMembership);
         return MembershipMapper.toResponse(updatedMembership);
     }
@@ -70,16 +68,14 @@ public class MembershipServiceImpl implements MembershipService{
     // }
 
     @Override
-    public List<MembershipResponse> findByMembership(String membership) {
-        return membershipRepository.findByMembership(membership).stream()
-                .map(MembershipMapper::toResponse)
-                .toList();
+    public List<MembershipResponse> findMembershipByName(String membership) {
+        List<Membership> memberships = membershipRepository.findMembershipByName(membership);
+        return memberships.stream().map(MembershipMapper::toResponse).toList();
     }
 
     @Override
-    public List<MembershipResponse> findByGymId(Integer idGym) {
-        return membershipRepository.findByGymId(idGym).stream()
-                .map(MembershipMapper::toResponse)
-                .toList();
+    public List<MembershipResponse> findMembershipByGymId(Long gymId) {
+        List<Membership> memberships = membershipRepository.findMembershipByGymId(gymId);
+        return memberships.stream().map(MembershipMapper::toResponse).toList();
     }
 }

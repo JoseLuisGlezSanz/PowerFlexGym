@@ -33,11 +33,11 @@ public class Membership {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_membership")
     @JsonProperty("identificador de la membresía")
-    private Integer idMembership;
+    private Long id;
 
     @Column(name = "membership", nullable = false)
     @JsonProperty("nombre de la membresía")
-    private String membership;
+    private String name;
 
     @Column(name = "duration", nullable = false, length = 4)
     @JsonProperty("duración de la membresía")
@@ -56,6 +56,6 @@ public class Membership {
     private List<MembershipSale> membershipsSales;
 
     @ManyToOne
-    @JoinColumn(name = "id_gym")
+    @JoinColumn(name = "gym_id")
     private Gym gym;
 }

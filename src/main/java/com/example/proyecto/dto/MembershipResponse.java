@@ -2,22 +2,22 @@ package com.example.proyecto.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MembershipResponse {
     @JsonProperty("Membership identifier:")
-    private Integer idMembership;
+    private Long id;
 
-    private String membership;
-
+    private String name;
     private String duration;
-
     private Double price;
-
     private Integer status;
-
-    private GymResponse gym;
+    private Long gymId;
 }

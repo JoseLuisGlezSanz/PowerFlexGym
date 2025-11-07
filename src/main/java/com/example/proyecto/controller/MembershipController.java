@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.net.URI;
 import java.util.List;
 import com.example.proyecto.dto.MembershipRequest;
 import com.example.proyecto.dto.MembershipResponse;
@@ -27,38 +28,38 @@ public class MembershipController {
 
     @GetMapping
     @Operation(summary = "Get all memberships")
-    @ApiResponse(responseCode = "200", description = "List of all memberships", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Membership.class)))})
-    public ResponseEntity<List<MembershipResponse>> findAll() {
-        List<MembershipResponse> memberships = membershipService.findAll();
-        return ResponseEntity.ok(memberships);
+    @ApiResponse(responseCode = "200", description = "List of all memberships", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Membership.class)))})
+    public List<MembershipResponse> findAll() {
+        return membershipService.findAll();
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get membership by ID")
-    @ApiResponse(responseCode = "200", description = "Membership found", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Membership.class)))})
-    public ResponseEntity<MembershipResponse> findById(@PathVariable Integer id) {
-        MembershipResponse membership = membershipService.findById(id);
-        return ResponseEntity.ok(membership);
+    @ApiResponse(responseCode = "200", description = "Membership by ID", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Membership.class)))})
+    public MembershipResponse findById(@PathVariable Long id) {
+        return membershipService.findById(id);
     }
 
     @PostMapping
     @Operation(summary = "Create a new membership")
-    @ApiResponse(responseCode = "200", description = "Membership created successfully", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Membership.class)))})
+    @ApiResponse(responseCode = "200", description = "Membership create", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Membership.class)))})
     public ResponseEntity<MembershipResponse> create(@RequestBody MembershipRequest membershipRequest) {
-        MembershipResponse createdMembership = membershipService.save(membershipRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdMembership);
+        MembershipResponse createdMembership = membershipService.create(membershipRequest);
+        return ResponseEntity
+                .created(URI.create("/api/v1/memberships/" + createdMembership.getId()))
+                .body(createdMembership);
     }
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Update membership by ID")
-    @ApiResponse(responseCode = "200", description = "Membership updated successfully", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Membership.class)))})
-    public ResponseEntity<MembershipResponse> update(@PathVariable Integer id, @RequestBody MembershipRequest membershipRequest) {
-        MembershipResponse updatedMembership = membershipService.update(id, membershipRequest);
-        return ResponseEntity.ok(updatedMembership);
+    @ApiResponse(responseCode = "200", description = "Membership updated successfully", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Membership.class)))})
+    public MembershipResponse update(@PathVariable Long id, @RequestBody MembershipRequest membershipRequest) {
+        return membershipService.update(id, membershipRequest);
     }
 
     // @DeleteMapping("/{id}")
@@ -70,19 +71,19 @@ public class MembershipController {
     //     return ResponseEntity.noContent().build();
     // }
 
-    @GetMapping("/search/{membership}")
+    @GetMapping("/{name}")
     @Operation(summary = "Get memberships by name")
-    @ApiResponse(responseCode = "200", description = "List of memberships matching the name",
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Membership.class)))})
-    public List<MembershipResponse> findByMembership(@PathVariable String membership) {
-        return membershipService.findByMembership(membership);
+    @ApiResponse(responseCode = "200", description = "List of memberships by name", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Membership.class)))})
+    public List<MembershipResponse> findMembershipByName(@PathVariable String name) {
+        return membershipService.findMembershipByName(name);
     }
 
-    @GetMapping("/gym/{idGym}")
+    @GetMapping("/{idGym}")
     @Operation(summary = "Get memberships by gym ID")
-    @ApiResponse(responseCode = "200", description = "List of memberships for the specified gym",
-            content = {@Content(mediaType = "application/json",array = @ArraySchema(schema = @Schema(implementation = Membership.class)))})
-    public List<MembershipResponse> findByGymId(@PathVariable Integer idGym) {
-        return membershipService.findByGymId(idGym);
+    @ApiResponse(responseCode = "200", description = "List of memberships by gym ID", content = {
+            @Content(mediaType = "application/json",array = @ArraySchema(schema = @Schema(implementation = Membership.class)))})
+    public List<MembershipResponse> findMembershipByGymId(@PathVariable Long gymId) {
+        return membershipService.findMembershipByGymId(gymId);
     }
 }
