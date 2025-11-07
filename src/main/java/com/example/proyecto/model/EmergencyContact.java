@@ -28,7 +28,7 @@ public class EmergencyContact {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_contact")
     @JsonProperty("identificador del contacto de emergencia")
-    private Long idContact;
+    private Long id;
 
     @Column(name = "contact_name", nullable = false)
     @JsonProperty("nombre del contacto de emergencia")

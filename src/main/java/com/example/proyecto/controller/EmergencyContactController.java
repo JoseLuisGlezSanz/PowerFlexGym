@@ -1,7 +1,7 @@
 package com.example.proyecto.controller;
 
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import com.example.proyecto.dto.EmergencyContactRequest;
@@ -18,7 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/emergency-contacts")
+@RequestMapping("/api/v1/emergencys-contacts")
 @RequiredArgsConstructor
 @Tag(name = "EmergencyContact", description = "Provides methods for managing emergency contact")
 public class EmergencyContactController {
@@ -26,38 +26,35 @@ public class EmergencyContactController {
 
     @GetMapping
     @Operation(summary = "Get all emergency contacts")
-    @ApiResponse(responseCode = "200", description = "List of all emergency contacts", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EmergencyContact.class)))})
-    public ResponseEntity<List<EmergencyContactResponse>> findAll() {
-        List<EmergencyContactResponse> contacts = emergencyContactService.findAll();
-        return ResponseEntity.ok(contacts);
+    @ApiResponse(responseCode = "200", description = "List of all emergency contacts", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EmergencyContact.class)))})
+    public List<EmergencyContactResponse> findAll() {
+        return emergencyContactService.findAll();
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get emergency contact by ID")
-    @ApiResponse(responseCode = "200", description = "Emergency contact found", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EmergencyContact.class)))})
-    public ResponseEntity<EmergencyContactResponse> findById(@PathVariable Integer id) {
-        EmergencyContactResponse contact = emergencyContactService.findById(id);
-        return ResponseEntity.ok(contact);
+    @ApiResponse(responseCode = "200", description = "Emergency contact by ID", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EmergencyContact.class)))})
+    public EmergencyContactResponse findById(@PathVariable Long id) {
+        return emergencyContactService.findById(id);
     }
 
     // @PostMapping
     // @Operation(summary = "Create a new emergency contact")
-    // @ApiResponse(responseCode = "200", description = "Emergency contact created successfully",
+    // @ApiResponse(responseCode = "200", description = "Emergency contact created",
     //         content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EmergencyContact.class)))})
-    // public ResponseEntity<EmergencyContactResponse> create(@RequestBody EmergencyContactRequest contactRequest) {
-    //     EmergencyContactResponse createdContact = emergencyContactService.save(contactRequest);
-    //     return ResponseEntity.status(HttpStatus.CREATED).body(createdContact);
+    // public EmergencyContactResponse create(@RequestBody EmergencyContactRequest contactRequest) {
+    //     return emergencyContactService.save(contactRequest);
     // }
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Update emergency contact by ID")
-    @ApiResponse(responseCode = "200", description = "Emergency contact updated successfully",
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EmergencyContact.class)))})
-    public ResponseEntity<EmergencyContactResponse> update(@PathVariable Integer id, @RequestBody EmergencyContactRequest contactRequest) {
-        EmergencyContactResponse updatedContact = emergencyContactService.update(id, contactRequest);
-        return ResponseEntity.ok(updatedContact);
+    @ApiResponse(responseCode = "200", description = "Emergency contact update", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EmergencyContact.class)))})
+    public EmergencyContactResponse update(@PathVariable Long id, @RequestBody EmergencyContactRequest emergencyContactRequest) {
+        return emergencyContactService.update(id, emergencyContactRequest);
     }
 
     // @DeleteMapping("/{id}")
@@ -69,19 +66,19 @@ public class EmergencyContactController {
     //     return ResponseEntity.noContent().build();
     // }
 
-    @GetMapping("/customer/{idCustomer}")
-    @Operation(summary = "Get emergency contact by customer ID")
-    @ApiResponse(responseCode = "200", description = "Emergency contact found for the customer",
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EmergencyContact.class)))})
-    public EmergencyContactResponse findByIdCustomer(@PathVariable Integer idCustomer) {
-        return emergencyContactService.findByIdCustomer(idCustomer);
-    }
-
     @GetMapping(value = "paginationAll", params = { "page", "pageSize" })
     @Operation(summary = "Get all emegency contacts with pagination")
     public List<EmergencyContactResponse> getAllPaginated(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
         List<EmergencyContactResponse> emergencyContacts = emergencyContactService.getAll(page, pageSize);
         return emergencyContacts;
+    }
+
+    @GetMapping("/{customerId}")
+    @Operation(summary = "Get emergency contact by customer ID")
+    @ApiResponse(responseCode = "200", description = "Emergency contact by customer ID", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EmergencyContact.class)))})
+    public EmergencyContactResponse findByIdCustomer(@PathVariable Long customerId) {
+        return emergencyContactService.findEmergencyContactByIdCustomer(customerId);
     }
 }

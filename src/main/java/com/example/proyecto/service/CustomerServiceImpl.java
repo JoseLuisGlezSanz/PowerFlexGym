@@ -84,6 +84,7 @@ public class CustomerServiceImpl implements CustomerService{
      //      customerRepository.deleteById(id);
      // }
 
+    @Override
     public List<CustomerResponse> getAll(int page, int pageSize) {
         PageRequest pageReq = PageRequest.of(page, pageSize);
         Page<Customer> customers = customerRepository.findAll(pageReq);
@@ -102,6 +103,7 @@ public class CustomerServiceImpl implements CustomerService{
           return customers.stream().map(CustomerMapper::toResponse).toList();
     }
 
+    @Override
     public List<CustomerResponse> getByVerifiedNumberTrue(int page, int pageSize) {
         PageRequest pageReq = PageRequest.of(page, pageSize);
         Page<Customer> customers = customerRepository.findByVerifiedNumberTrue(pageReq);
@@ -114,6 +116,7 @@ public class CustomerServiceImpl implements CustomerService{
           return customers.stream().map(CustomerMapper::toResponse).toList();
     }
 
+    @Override
     public List<CustomerResponse> getAllCustomersByGymId(int page, int pageSize, Long gymId) {
         PageRequest pageReq = PageRequest.of(page, pageSize);
         Page<Customer> customers = customerRepository.getAllCustomersByGymId(gymId, pageReq);

@@ -57,6 +57,7 @@ public class GymServiceImpl implements GymService{
      //      gymRepository.deleteById(id);
      // }
 
+    @Override
     public List<GymResponse> getAll(int page, int pageSize) {
         PageRequest pageReq = PageRequest.of(page, pageSize);
         Page<Gym> gyms = gymRepository.findAll(pageReq);

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dto.EmergencyContactRequest;
@@ -24,54 +23,55 @@ public class EmergencyContactServiceImpl implements EmergencyContactService{
 
     @Override
     public List<EmergencyContactResponse> findAll() {
-        return emergencyContactRepository.findAll(Sort.by("idContact").ascending()).stream()
+        return emergencyContactRepository.findAll().stream()
                 .map(EmergencyContactMapper::toResponse)
                 .toList();
     }
 
     @Override
-    public EmergencyContactResponse findById(Integer id) {
+    public EmergencyContactResponse findById(Long id) {
         EmergencyContact contact = emergencyContactRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Contacto de emergencia no encontrado con ID: " + id));
         return EmergencyContactMapper.toResponse(contact);
     }
 
     // @Override
-    // public EmergencyContactResponse save(EmergencyContactRequest req) {
-    //     Customer customer = customerRepository.findById(req.getIdCustomer())
+    // public EmergencyContactResponse create(EmergencyContactRequest emergencyContactRequest) {
+    //     Customer customer = customerRepository.findById(emergencyContactRequest.getIdCustomer())
     //             .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + req.getIdCustomer()));
         
-    //     EmergencyContact contact = EmergencyContactMapper.toEntity(req);
+    //     EmergencyContact contact = EmergencyContactMapper.toEntity(emergencyContactRequest);
     //     contact.setCustomer(customer);
     //     EmergencyContact savedContact = emergencyContactRepository.save(contact);
     //     return EmergencyContactMapper.toResponse(savedContact);
     // } 
 
     @Override
-    public EmergencyContactResponse update(Integer id, EmergencyContactRequest req) {
+    public EmergencyContactResponse update(Long id, EmergencyContactRequest emergencyContactRequest) {
         EmergencyContact existingContact = emergencyContactRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Contacto de emergencia no encontrado con ID: " + id));
         
-        EmergencyContactMapper.copyToEntity(req, existingContact);
+        EmergencyContactMapper.copyToEntity(emergencyContactRequest, existingContact);
         EmergencyContact updatedContact = emergencyContactRepository.save(existingContact);
         return EmergencyContactMapper.toResponse(updatedContact);
     }
 
     // @Override
-    // public void delete(Integer id) {
+    // public void delete(Long id) {
     //     emergencyContactRepository.deleteById(id);
     // }
-
+    
     @Override
-    public EmergencyContactResponse findByIdCustomer(Integer idCustomer) {
-        return emergencyContactRepository.findByIdCustomer(idCustomer)
-                .map(EmergencyContactMapper::toResponse)
-                .orElseThrow(() -> new RuntimeException("Contacto de emergencia no encontrado para el cliente con ID: " + idCustomer));
-    }
-
     public List<EmergencyContactResponse> getAll(int page, int pageSize) {
-        PageRequest pageReq = PageRequest.of(page, pageSize, Sort.by("idContact").ascending());
+        PageRequest pageReq = PageRequest.of(page, pageSize);
         Page<EmergencyContact> emergencysContacts = emergencyContactRepository.findAll(pageReq);
         return emergencysContacts.getContent().stream().map(EmergencyContactMapper::toResponse).toList();
+    }
+
+    @Override
+    public EmergencyContactResponse findEmergencyContactByIdCustomer(Long customerId) {
+        EmergencyContact emergencyContact = emergencyContactRepository.findEmergencyContactByIdCustomer(customerId)
+                .orElseThrow(() -> new RuntimeException("Contacto de emergencia no encontrado para el cliente con ID: " + customerId));
+        return EmergencyContactMapper.toResponse(emergencyContact);
     }
 }

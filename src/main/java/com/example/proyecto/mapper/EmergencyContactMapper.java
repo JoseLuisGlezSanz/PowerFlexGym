@@ -9,7 +9,7 @@ public class EmergencyContactMapper {
         if (emergencyContact == null) return null;
         
         return EmergencyContactResponse.builder()
-                .idContact(emergencyContact.getIdContact())
+                .id(emergencyContact.getId())
                 .contactName(emergencyContact.getContactName())
                 .contactPhone(emergencyContact.getContactPhone())
                 .build();
@@ -24,10 +24,10 @@ public class EmergencyContactMapper {
                 .build();
     }
 
-    public static void copyToEntity(EmergencyContactRequest dto, EmergencyContact entity) {
-        if (dto == null || entity == null) return;
+    public static void copyToEntity(EmergencyContactRequest emergencyContactRequest, EmergencyContact entity) {
+        if (emergencyContactRequest == null || entity == null) return;
         
-        entity.setContactName(dto.getContactName());
-        entity.setContactPhone(dto.getContactPhone());
+        entity.setContactName(emergencyContactRequest.getContactName());
+        entity.setContactPhone(emergencyContactRequest.getContactPhone());
     }
 }

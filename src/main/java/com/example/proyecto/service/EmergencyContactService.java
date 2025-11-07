@@ -7,8 +7,9 @@ import com.example.proyecto.dto.EmergencyContactResponse;
 
 public interface EmergencyContactService {
     List<EmergencyContactResponse> findAll();
-    EmergencyContactResponse findById(Integer id);
-    EmergencyContactResponse update(Integer id, EmergencyContactRequest emergencyContactRequest);
-    EmergencyContactResponse findByIdCustomer(Integer idCustomer);
+    EmergencyContactResponse findById(Long id);
+    EmergencyContactResponse update(Long id, EmergencyContactRequest emergencyContactRequest);
+    // void delete(Long id);
     List<EmergencyContactResponse> getAll(int page, int pageSize);
+    EmergencyContactResponse findEmergencyContactByIdCustomer(Long customerId);
 }

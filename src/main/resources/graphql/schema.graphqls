@@ -1,9 +1,9 @@
-schema{
+schema {
     query: Query
     mutation: Mutation
 }
 
-type Query{
+type Query {
     #Gym
     findAllGyms: [GymResponse]
     findByIdGym(id: Int!): GymResponse
@@ -19,9 +19,15 @@ type Query{
     findCustomerByVerifiedNumberTruePaginated(page: Int!, pageSize: Int!): [CustomerResponse]
     findAllCustomersByGymId(gymId: Int!): [CustomerResponse]
     findAllCustomersByGymIdPaginated(page: Int!, pageSize: Int!, gymId: Int!): [CustomerResponse]
+
+    #EmergencyContact
+    findAllEmergencysContacts: [EmergencyContactResponse]
+    findByIdEmergencyContact(id: Int!): EmergencyContactResponse
+    findAllEmergencysContactsPaginated(page: Int!, pageSize: Int!): [EmergencyContactResponse]
+    findByIdCustomer(customerId: Int!): EmergencyContactResponse
 }
 
-type Mutation{
+type Mutation {
     #Gym
     createGym(gymRequest: GymRequest!): GymResponse
     updateGym(id: Int!, gymRequest: GymRequest!): GymResponse
@@ -31,18 +37,22 @@ type Mutation{
     createCustomer(customerRequest: CustomerRequest!): CustomerResponse
     updateCustomer(id: Int!, customerRequest: CustomerRequest!): CustomerResponse
     # deleteCustomer(id: Int!): Boolean
+
+    #EmergencyContact
+    updateEmergencyContact(id: Int!, emergencyContactRequest: EmergencyContactRequest!): EmergencyContactResponse
+    # deleteEmergencyContact(id: Int!): Boolean
 }
 #-------------------Gym-------------------
-input GymRequest{
+input GymRequest {
     name: String!
 }
 
-type GymResponse{
+type GymResponse {
     id: Int!
     name: String!
 }
 #------------------Customer----------------
-input CustomerRequest{
+input CustomerRequest {
     name: String!
     cologne: String!
     phone: String!
@@ -56,7 +66,7 @@ input CustomerRequest{
     contactPhone:String!
 }
 
-type CustomerResponse{
+type CustomerResponse {
     id: Int!
     name: String!
     cologne: String!
@@ -69,4 +79,15 @@ type CustomerResponse{
     gymId: Int!
     idContact: Int!
     registrationDate: LocalDateTime!
+}
+#---------------EmergencyContact-------------
+input EmergencyContactRequest {
+    contactName: String!
+    contactPhone: String!
+}
+
+type EmergencyContactResponse {
+    id: Int!
+    contactName: String!
+    contactPhone: String!
 }

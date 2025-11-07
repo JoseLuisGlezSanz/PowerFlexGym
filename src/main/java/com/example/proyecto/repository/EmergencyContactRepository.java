@@ -8,8 +8,8 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.proyecto.model.EmergencyContact;
 
-public interface EmergencyContactRepository extends JpaRepository<EmergencyContact, Integer> {
+public interface EmergencyContactRepository extends JpaRepository<EmergencyContact, Long> {
     // Buscar contacto por id cliente
-    @Query(value = "SELECT * FROM emergencys_contacts WHERE id_customer = :idCustomer;", nativeQuery = true)
-    Optional<EmergencyContact> findByIdCustomer(@Param("idCustomer") Integer idCustomer);
+    @Query(value = "SELECT * FROM emergencys_contacts WHERE id_customer = :customerId;", nativeQuery = true)
+    Optional<EmergencyContact> findEmergencyContactByIdCustomer(@Param("customerId") Long customerId);
 }
