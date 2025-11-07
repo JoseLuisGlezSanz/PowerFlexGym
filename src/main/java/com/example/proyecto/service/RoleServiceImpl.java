@@ -27,25 +27,25 @@ public class RoleServiceImpl implements RoleService{
     }
 
     @Override
-    public RoleResponse findById(Integer id) {
+    public RoleResponse findById(Long id) {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID: " + id));
         return RoleMapper.toResponse(role);
     }
 
     @Override
-    public RoleResponse save(RoleRequest req) {
-        Role role = RoleMapper.toEntity(req);
+    public RoleResponse create(RoleRequest roleRequest) {
+        Role role = RoleMapper.toEntity(roleRequest);
         Role savedRole = roleRepository.save(role);
         return RoleMapper.toResponse(savedRole);
     }
 
     @Override
-    public RoleResponse update(Integer id, RoleRequest req) {
+    public RoleResponse update(Long id, RoleRequest roleRequest) {
         Role existingRole = roleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID: " + id));
         
-        RoleMapper.copyToEntity(req, existingRole);
+        RoleMapper.copyToEntity(roleRequest, existingRole);
         Role updatedRole = roleRepository.save(existingRole);
         return RoleMapper.toResponse(updatedRole);
     }
@@ -56,9 +56,8 @@ public class RoleServiceImpl implements RoleService{
     // }
 
     @Override
-    public List<RoleResponse> findByStatus(Integer status) {
-        return roleRepository.findByStatus(status).stream()
-                .map(RoleMapper::toResponse)
-                .toList();
+    public List<RoleResponse> findByStatus(Integer statusValue) {
+          List<Role> roles = roleRepository.findByStatus(statusValue);
+          return roles.stream().map(RoleMapper::toResponse).toList();
     }
 }

@@ -31,11 +31,11 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_role")
     @JsonProperty("identificador del rol")
-    private Integer idRole;
+    private Long id;
 
     @Column(name = "role", nullable = false, length = 50)
     @JsonProperty("nombre del rol")
-    private String role;
+    private String name;
 
     @Column(name = "status", nullable = false)
     @JsonProperty("estado del rol")

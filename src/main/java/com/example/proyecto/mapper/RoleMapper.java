@@ -9,25 +9,25 @@ public class RoleMapper {
         if (role == null) return null;
         
         return RoleResponse.builder()
-                .idRole(role.getIdRole())
-                .role(role.getRole())
+                .id(role.getId())
+                .name(role.getName())
                 .status(role.getStatus())
                 .build();
     }
 
-    public static Role toEntity(RoleRequest dto) {
-        if (dto == null) return null;
+    public static Role toEntity(RoleRequest roleRequest) {
+        if (roleRequest == null) return null;
         
         return Role.builder()
-                .role(dto.getRole())
-                .status(dto.getStatus())
+                .name(roleRequest.getName())
+                .status(roleRequest.getStatus())
                 .build();
     }
 
-    public static void copyToEntity(RoleRequest dto, Role entity) {
-        if (dto == null || entity == null) return;
+    public static void copyToEntity(RoleRequest roleRequest, Role entity) {
+        if (roleRequest == null || entity == null) return;
         
-        entity.setRole(dto.getRole());
-        entity.setStatus(dto.getStatus());
+        entity.setName(roleRequest.getName());
+        entity.setStatus(roleRequest.getStatus());
     }
 }

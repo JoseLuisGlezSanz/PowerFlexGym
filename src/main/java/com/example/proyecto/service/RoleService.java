@@ -7,9 +7,9 @@ import com.example.proyecto.dto.RoleResponse;
 
 public interface RoleService {
     List<RoleResponse> findAll();
-    RoleResponse findById(Integer id);
-    RoleResponse save(RoleRequest roleRequest);
-    RoleResponse update(Integer id, RoleRequest roleRequest);
-    // void delete(Integer id);
-    List<RoleResponse> findByStatus(Integer status);
+    RoleResponse findById(Long id);
+    RoleResponse create(RoleRequest roleRequest);
+    RoleResponse update(Long id, RoleRequest roleRequest);
+    // void delete(Long id);
+    List<RoleResponse> findByStatus(Integer statusValue);
 }

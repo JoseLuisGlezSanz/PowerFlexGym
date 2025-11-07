@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class RoleRequest {
-    private String role;
+    private String name;
     private Integer status;
 }

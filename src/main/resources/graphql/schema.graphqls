@@ -25,6 +25,11 @@ type Query {
     findByIdEmergencyContact(id: Int!): EmergencyContactResponse
     findAllEmergencysContactsPaginated(page: Int!, pageSize: Int!): [EmergencyContactResponse]
     findByIdCustomer(customerId: Int!): EmergencyContactResponse
+
+    #Role
+    findAllRoles: [RoleResponse]
+    findByIdRole(id: Int!): RoleResponse
+    findByStatusRole(statusValue: Int!): [RoleResponse]
 }
 
 type Mutation {
@@ -41,6 +46,11 @@ type Mutation {
     #EmergencyContact
     updateEmergencyContact(id: Int!, emergencyContactRequest: EmergencyContactRequest!): EmergencyContactResponse
     # deleteEmergencyContact(id: Int!): Boolean
+
+    #Role
+    createRole(roleRequest: RoleRequest!): RoleResponse
+    updateRole(id: Int!, roleRequest: RoleRequest!): RoleResponse
+    # deleteRole(id: Int!): Boolean
 }
 #-------------------Gym-------------------
 input GymRequest {
@@ -90,4 +100,15 @@ type EmergencyContactResponse {
     id: Int!
     contactName: String!
     contactPhone: String!
+}
+#---------------------Role-------------------
+input RoleRequest {
+    name: String!
+    status: Int!
+}
+
+type RoleResponse {
+    id: Int!
+    name: String!
+    status: Int!
 }

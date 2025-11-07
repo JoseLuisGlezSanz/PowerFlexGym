@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.net.URI;
 import java.util.List;
 import com.example.proyecto.dto.RoleRequest;
 import com.example.proyecto.dto.RoleResponse;
@@ -27,38 +28,38 @@ public class RoleController {
 
     @GetMapping
     @Operation(summary = "Get all roles")
-    @ApiResponse(responseCode = "200", description = "List of all roles", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Role.class)))})
-    public ResponseEntity<List<RoleResponse>> findAll() {
-        List<RoleResponse> roles = roleService.findAll();
-        return ResponseEntity.ok(roles);
+    @ApiResponse(responseCode = "200", description = "List of all roles", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Role.class)))})
+    public List<RoleResponse> findAll() {
+        return roleService.findAll();
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get role by ID")
-    @ApiResponse(responseCode = "200", description = "Role found", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Role.class)))})
-    public ResponseEntity<RoleResponse> findById(@PathVariable Integer id) {
-        RoleResponse role = roleService.findById(id);
-        return ResponseEntity.ok(role);
+    @ApiResponse(responseCode = "200", description = "Role by ID", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Role.class)))})
+    public RoleResponse findById(@PathVariable Long id) {
+        return roleService.findById(id);
     }
 
     @PostMapping
     @Operation(summary = "Create a new role")
-    @ApiResponse(responseCode = "200", description = "Role created successfully", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Role.class)))})
+    @ApiResponse(responseCode = "200", description = "Role creation", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Role.class)))})
     public ResponseEntity<RoleResponse> create(@RequestBody RoleRequest roleRequest) {
-        RoleResponse createdRole = roleService.save(roleRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdRole);
+        RoleResponse createdRole = roleService.create(roleRequest);
+        return ResponseEntity
+                .created(URI.create("/api/v1/roles/" + createdRole.getId()))
+                .body(createdRole);
     }
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Update role by ID")
-    @ApiResponse(responseCode = "200", description = "Role updated successfully", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Role.class)))})
-    public ResponseEntity<RoleResponse> update(@PathVariable Integer id, @RequestBody RoleRequest roleRequest) {
-        RoleResponse updatedRole = roleService.update(id, roleRequest);
-        return ResponseEntity.ok(updatedRole);
+    @ApiResponse(responseCode = "200", description = "Role update", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Role.class)))})
+    public RoleResponse update(@PathVariable Long id, @RequestBody RoleRequest roleRequest) {
+        return roleService.update(id, roleRequest);
     }
 
     // @DeleteMapping("/{id}")
@@ -70,11 +71,12 @@ public class RoleController {
     //     return ResponseEntity.noContent().build();
     // }
 
-    @GetMapping("/status/{status}")
+    @GetMapping("/{status}")
     @Operation(summary = "Get roles by status")
     @ApiResponse(responseCode = "200", description = "List of roles with the specified status",
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Role.class)))})
-    public List<RoleResponse> findByStatus(@PathVariable Integer status) {
-        return roleService.findByStatus(status);
+    public List<RoleResponse> findByStatus(@PathVariable Integer statusValue) {
+        List<RoleResponse> roles = roleService.findByStatus(statusValue);
+        return roles;
     }
 }

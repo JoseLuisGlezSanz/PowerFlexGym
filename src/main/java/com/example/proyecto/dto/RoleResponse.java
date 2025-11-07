@@ -9,9 +9,8 @@ import lombok.Value;
 @Builder
 public class RoleResponse {
     @JsonProperty("Role identifier")
-    private Integer idRole;
+    private Long id;
 
-    private String role;
-
+    private String name;
     private Integer status;
 }
