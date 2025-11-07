@@ -69,10 +69,10 @@ public class User {
     private List<MembershipSale> membershipsSales;
 
     @ManyToOne
-    @JoinColumn(name = "id_role")
+    @JoinColumn(name = "role_id")
     private Role role;
 
     @ManyToOne
-    @JoinColumn(name = "id_gym")
+    @JoinColumn(name = "gym_id")
     private Gym gym;
 }

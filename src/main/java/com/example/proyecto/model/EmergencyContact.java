@@ -40,6 +40,6 @@ public class EmergencyContact {
 
     //Relaciones
     @OneToOne
-    @JoinColumn(name = "id_customer", nullable = false, unique = true)
+    @JoinColumn(name = "customer_id", nullable = false, unique = true)
     private Customer customer;
 }

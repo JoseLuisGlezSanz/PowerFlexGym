@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dto.TicketRequest;
@@ -30,47 +29,45 @@ public class TicketServiceImpl implements TicketService{
 
     @Override
     public List<TicketResponse> findAll() {
-        return ticketRepository.findAll(Sort.by("idTicket").ascending()).stream()
+        return ticketRepository.findAll().stream()
                 .map(TicketMapper::toResponse)
                 .toList();
     }
 
     @Override
-    public TicketResponse findById(Integer id) {
-        Ticket ticket = ticketRepository.findById(id).orElseThrow(() -> new RuntimeException("Ticket no encontrado con ID: " + id));
+    public TicketResponse findById(Long id) {
+        Ticket ticket = ticketRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ticket no encontrado con ID: " + id));
         return TicketMapper.toResponse(ticket);
     }
 
     @Override
-    public TicketResponse save(TicketRequest req) {
-        Customer customer = customerRepository.findById(req.getIdCustomer())
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + req.getIdCustomer()));
-        User user = userRepository.findById(req.getIdUser())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + req.getIdUser()));
+    public TicketResponse create(TicketRequest ticketRequest) {
+        Customer customer = customerRepository.findById(ticketRequest.getCustomerId())
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + ticketRequest.getCustomerId()));
+
+        User user = userRepository.findById(ticketRequest.getUserId())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + ticketRequest.getUserId()));
         
-        Ticket ticket = TicketMapper.toEntity(req);
-        ticket.setCustomer(customer);
-        ticket.setUser(user);
+        Ticket ticket = TicketMapper.toEntity(ticketRequest, customer, user);
         
         Ticket savedTicket = ticketRepository.save(ticket);
         return TicketMapper.toResponse(savedTicket);
     }
 
     @Override
-    public TicketResponse update(Integer id, TicketRequest req) {
+    public TicketResponse update(Long id, TicketRequest ticketRequest) {
         Ticket existingTicket = ticketRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ticket no encontrado con ID: " + id));
 
-        // Customer customer = customerRepository.findById(req.getIdCustomer())
-        //         .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + req.getIdCustomer()));
-        
-        User user = userRepository.findById(req.getIdUser())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + req.getIdUser()));
+        Customer customer = customerRepository.findById(ticketRequest.getCustomerId())
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + ticketRequest.getCustomerId()));
 
-        TicketMapper.copyToEntity(req, existingTicket);
+        User user = userRepository.findById(ticketRequest.getUserId())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + ticketRequest.getUserId()));
 
-        // existingTicket.setCustomer(customer);
-        existingTicket.setUser(user);
+        TicketMapper.copyToEntity(ticketRequest, existingTicket, customer, user);
+
         Ticket updatedTicket = ticketRepository.save(existingTicket);
         return TicketMapper.toResponse(updatedTicket);
     }
@@ -81,22 +78,35 @@ public class TicketServiceImpl implements TicketService{
     // }
 
     @Override
-    public List<TicketResponse> findByCustomerId(Integer idCustomer) {
-        return ticketRepository.findByCustomerId(idCustomer).stream()
-                .map(TicketMapper::toResponse)
-                .toList();
+    public List<TicketResponse> getAll(int page, int pageSize) {
+        PageRequest pageReq = PageRequest.of(page, pageSize);
+        Page<Ticket> tickets = ticketRepository.findAll(pageReq);
+        return tickets.getContent().stream().map(TicketMapper::toResponse).toList();
     }
 
     @Override
-    public List<TicketResponse> findByUserId(Integer idUser) {
-        return ticketRepository.findByUserId(idUser).stream()
-                .map(TicketMapper::toResponse)
-                .toList();
+    public List<TicketResponse> findAllTicketsByCustomerId(Long customerId) {
+        List<Ticket> tickets = ticketRepository.findAllTicketsByCustomerId(customerId);
+        return tickets.stream().map(TicketMapper::toResponse).toList();
     }
 
-    public List<TicketResponse> getAll(int page, int pageSize) {
-        PageRequest pageReq = PageRequest.of(page, pageSize, Sort.by("idTicket").ascending());
-        Page<Ticket> tickets = ticketRepository.findAll(pageReq);
+    @Override
+    public List<TicketResponse> getAllTicketsByCustomerId(int page, int pageSize, Long customerId) {
+        PageRequest pageReq = PageRequest.of(page, pageSize);
+        Page<Ticket> tickets = ticketRepository.getAllTicketsByCustomerId(customerId, pageReq);
+        return tickets.getContent().stream().map(TicketMapper::toResponse).toList();
+    }
+
+    @Override
+    public List<TicketResponse> findAllTicketsByUserId(Long userId) {
+        List<Ticket> tickets = ticketRepository.findAllTicketsByUserId(userId);
+        return tickets.stream().map(TicketMapper::toResponse).toList();
+    }
+
+    @Override
+    public List<TicketResponse> getAllTicketsByUserId(int page, int pageSize, Long userId) {
+        PageRequest pageReq = PageRequest.of(page, pageSize);
+        Page<Ticket> tickets = ticketRepository.getAllTicketsByUserId(userId, pageReq);
         return tickets.getContent().stream().map(TicketMapper::toResponse).toList();
     }
 }

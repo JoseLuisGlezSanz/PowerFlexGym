@@ -18,10 +18,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByUserName(@Param("nameUser") String nameUser);
 
     // Buscar usuario por rol de usuario
-    @Query(value = "SELECT * FROM users WHERE id_role = :roleId;", nativeQuery = true)
+    @Query(value = "SELECT * FROM users WHERE role_id = :roleId;", nativeQuery = true)
     List<User> findByRoleId(@Param("roleId") Long roleId);
 
     //Buscar usuario por gym
-    @Query(value = "SELECT * FROM users WHERE id_gym = :gymId;", nativeQuery = true)
+    @Query(value = "SELECT * FROM users WHERE gym_id = :gymId;", nativeQuery = true)
     List<User> findByGymId(@Param("gymId") Long gymId);   
 }

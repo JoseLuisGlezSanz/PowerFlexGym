@@ -10,6 +10,6 @@ import com.example.proyecto.model.EmergencyContact;
 
 public interface EmergencyContactRepository extends JpaRepository<EmergencyContact, Long> {
     // Buscar contacto por id cliente
-    @Query(value = "SELECT * FROM emergencys_contacts WHERE id_customer = :customerId;", nativeQuery = true)
+    @Query(value = "SELECT * FROM emergencys_contacts WHERE customer_id = :customerId;", nativeQuery = true)
     Optional<EmergencyContact> findEmergencyContactByIdCustomer(@Param("customerId") Long customerId);
 }

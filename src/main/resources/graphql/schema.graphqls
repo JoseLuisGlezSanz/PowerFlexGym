@@ -47,6 +47,15 @@ type Query {
     findByNameProduct(name: String!): [ProductResponse]
     findByStatusProduct(status: Int!): [ProductResponse]
     findByStockProduct(stock: Int!): [ProductResponse]
+
+    #Ticket
+    findAllTickets: [TicketResponse]
+    findByIdTicket(id: Int!): TicketResponse
+    findAllTicketsPaginated(page: Int!, pageSize: Int!): [TicketResponse]
+    findAllTicketsByCustomerId(customerId: Int!): [TicketResponse]
+    findAllTicketsByUserId(userId: Int!): [TicketResponse]
+    findAllTicketsByCustomerIdPaginated(page: Int!, pageSize: Int!, customerId: Int!): [TicketResponse]
+    findAllTicketsByUserIdPaginated(page: Int!, pageSize: Int!, userId: Int!): [TicketResponse]
 }
 
 type Mutation {
@@ -77,6 +86,10 @@ type Mutation {
     #Product
     createProduct(productRequest: ProductRequest!): ProductResponse
     updateProduct(id: Int!, productRequest: ProductRequest!): ProductResponse
+
+    #Ticket
+    createTicket(ticketRequest: TicketRequest!): TicketResponse
+    updateTicket(id: Int!, ticketRequest: TicketRequest!): TicketResponse
 }
 
 #-------------------Gym-------------------
@@ -178,4 +191,27 @@ type ProductResponse {
     stock: Int!
     status: Int!
     photo: String!
+}
+#--------------------Ticket-----------------
+input TicketRequest {
+    total: Float!
+    status: Int!
+    methodPayment: Int!
+    paymentWith: Float!
+    customerId: Int!
+    userId: Int!
+}
+
+type TicketResponse {
+    id: Int!
+    date: LocalDateTime!
+    saleDate: LocalDateTime!
+    total: Float!
+    status: Int!
+    methodPayment: Int!
+    paymentWith: Float!
+    customerId: Int!
+    customerName: String!
+    userId: Int!
+    userName: String!
 }

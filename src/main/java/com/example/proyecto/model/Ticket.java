@@ -36,7 +36,7 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_ticket")
     @JsonProperty("identificador del ticket")
-    private Integer idTicket;
+    private Long id;
     
     @Column(name = "date", nullable = false)
     @JsonProperty("fecha de creación")
@@ -68,10 +68,10 @@ public class Ticket {
     private List<TicketDetail> ticketsDetails;
 
     @ManyToOne
-    @JoinColumn(name = "id_customer")
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @ManyToOne
-    @JoinColumn(name = "id_user")
+    @JoinColumn(name = "user_id")
     private User user;
 }
