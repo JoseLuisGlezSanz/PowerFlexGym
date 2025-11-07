@@ -39,6 +39,14 @@ type Query {
     findByNameUser(nameUser: String!): UserResponse
     findByRoleIdUser(roleId: Int!): [UserResponse]
     findByGymIdUser(gymId: Int!): [UserResponse]
+
+    #Product
+    findAllProducts: [ProductResponse]
+    findByIdProduct(id: Int): ProductResponse
+    findAllProductsPaginated(page: Int!, pageSize: Int!): [ProductResponse]
+    findByNameProduct(name: String!): [ProductResponse]
+    findByStatusProduct(status: Int!): [ProductResponse]
+    findByStockProduct(stock: Int!): [ProductResponse]
 }
 
 type Mutation {
@@ -65,7 +73,12 @@ type Mutation {
     createUser(userRequest: UserRequest!): UserResponse
     updateRole(id: Int!, userRequest: UserRequest!): UserResponse
     # deleteUser(id: Int!): Boolean
+
+    #Product
+    createProduct(productRequest: ProductRequest!): ProductResponse
+    updateProduct(id: Int!, productRequest: ProductRequest!): ProductResponse
 }
+
 #-------------------Gym-------------------
 input GymRequest {
     name: String!
@@ -148,4 +161,21 @@ type RoleResponse {
     status: Int!
     roleId: Int!
     gymId: Int!
+}
+#--------------------Product-----------------
+input ProductRequest {
+    name: String!
+    price: Float!
+    stock: Int!
+    status: Int!
+    photo: String!
+}
+
+type ProductResponse {
+    id: Int!
+    name: String!
+    price: Float!
+    stock: Int!
+    status: Int!
+    photo: String!
 }

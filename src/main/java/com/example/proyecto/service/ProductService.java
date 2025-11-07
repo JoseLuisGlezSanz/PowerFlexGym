@@ -7,12 +7,12 @@ import com.example.proyecto.dto.ProductResponse;
 
 public interface ProductService {
     List<ProductResponse> findAll();
-    ProductResponse findById(Integer id);
-    ProductResponse save(ProductRequest productRequest);
-    ProductResponse update(Integer id, ProductRequest productRequest);
+    ProductResponse findById(Long id);
+    ProductResponse create(ProductRequest productRequest);
+    ProductResponse update(Long id, ProductRequest productRequest);
     // void delete(Integer id);
+    List<ProductResponse> getAll(int page, int pageSize);
     List<ProductResponse> findByName(String name);
     List<ProductResponse> findByStatus(Integer status);
     List<ProductResponse> findByStockLessThan(Integer stock);
-    List<ProductResponse> getAll(int page, int pageSize);
 }

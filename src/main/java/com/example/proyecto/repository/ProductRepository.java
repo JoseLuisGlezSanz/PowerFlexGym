@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.proyecto.model.Product;
 
-public interface ProductRepository extends JpaRepository<Product, Integer> {
+public interface ProductRepository extends JpaRepository<Product, Long> {
     // Buscar productos por nombre
     @Query(value = "SELECT * FROM products WHERE LOWER(name) = LOWER(:name);", nativeQuery = true)
     List<Product> findByName(@Param("name") String name);

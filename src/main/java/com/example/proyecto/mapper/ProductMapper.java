@@ -9,7 +9,7 @@ public class ProductMapper {
         if (product == null) return null;
         
         return ProductResponse.builder()
-                .idProduct(product.getIdProduct())
+                .id(product.getId())
                 .name(product.getName())
                 .price(product.getPrice())
                 .stock(product.getStock())
@@ -18,25 +18,25 @@ public class ProductMapper {
                 .build();
     }
 
-    public static Product toEntity(ProductRequest dto) {
-        if (dto == null) return null;
+    public static Product toEntity(ProductRequest productRequest) {
+        if (productRequest == null) return null;
         
         return Product.builder()
-                .name(dto.getName())
-                .price(dto.getPrice())
-                .stock(dto.getStock())
-                .status(dto.getStatus())
-                .photo(dto.getPhoto())
+                .name(productRequest.getName())
+                .price(productRequest.getPrice())
+                .stock(productRequest.getStock())
+                .status(productRequest.getStatus())
+                .photo(productRequest.getPhoto())
                 .build();
     }
 
-    public static void copyToEntity(ProductRequest dto, Product entity) {
-        if (dto == null || entity == null) return;
+    public static void copyToEntity(ProductRequest productRequest, Product entity) {
+        if (productRequest == null || entity == null) return;
         
-        entity.setName(dto.getName());
-        entity.setPrice(dto.getPrice());
-        entity.setStock(dto.getStock());
-        entity.setStatus(dto.getStatus());
-        entity.setPhoto(dto.getPhoto());
+        entity.setName(productRequest.getName());
+        entity.setPrice(productRequest.getPrice());
+        entity.setStock(productRequest.getStock());
+        entity.setStatus(productRequest.getStatus());
+        entity.setPhoto(productRequest.getPhoto());
     }
 }

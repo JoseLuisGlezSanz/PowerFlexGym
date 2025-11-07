@@ -32,7 +32,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_product")
     @JsonProperty("identificador del producto")
-    private Integer idProduct;
+    private Long id;
     
     @Column(name = "name", nullable = false, length = 100)
     @JsonProperty("nombre del producto")
