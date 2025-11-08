@@ -1,26 +1,25 @@
 package com.example.proyecto.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Value
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class VisitResponse {
     @JsonProperty("Visit identifier")
-    private Integer idVisit;
+    private Long id;
 
-    private Integer idCustomer;
-
+    private Long customerId;
     private String customerName;
-
     private LocalDateTime date;
-
-    private Integer pending;
-
-    private Integer idGym;
-
+    private Boolean pending;
+    private Long gymId;
     private String gymName;
 }

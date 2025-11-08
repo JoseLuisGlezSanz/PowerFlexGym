@@ -56,9 +56,5 @@ public class Gym {
 
     @OneToMany(mappedBy = "gym", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<MembershipSale> membershipsSales;
-
-    @OneToMany(mappedBy = "gym", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     private List<Visit> visits;
 }

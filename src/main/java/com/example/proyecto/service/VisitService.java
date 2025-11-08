@@ -7,10 +7,10 @@ import com.example.proyecto.dto.VisitResponse;
 
 public interface VisitService {
     List<VisitResponse> findAll();
-    VisitResponse findById(Integer id);
-    VisitResponse save(VisitRequest visitRequest);
-    VisitResponse update(Integer id, VisitRequest visitRequest);
-    // void delete(Integer id);
-    List<VisitResponse> findByCustomerId(Integer idCustomer);
-    List<VisitResponse> findByGymId(Integer idGym);
+    VisitResponse findById(Long id);
+    VisitResponse create(VisitRequest visitRequest);
+    VisitResponse update(Long id, VisitRequest visitRequest);
+    // void delete(Long id);
+    List<VisitResponse> findByCustomerId(Long customerId);
+    List<VisitResponse> findByGymId(Long gymId);
 }

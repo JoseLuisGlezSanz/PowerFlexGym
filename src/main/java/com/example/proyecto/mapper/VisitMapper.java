@@ -1,7 +1,11 @@
 package com.example.proyecto.mapper;
 
+import java.time.LocalDateTime;
+
 import com.example.proyecto.dto.VisitRequest;
 import com.example.proyecto.dto.VisitResponse;
+import com.example.proyecto.model.Customer;
+import com.example.proyecto.model.Gym;
 import com.example.proyecto.model.Visit;
 
 public class VisitMapper {
@@ -9,29 +13,32 @@ public class VisitMapper {
         if (visit == null) return null;
         
         return VisitResponse.builder()
-                .idVisit(visit.getIdVisit())
+                .id(visit.getId())
                 .date(visit.getDate())
                 .pending(visit.getPending())
-                .idCustomer(visit.getCustomer().getIdCustomer())
+                .customerId(visit.getCustomer().getId())
                 .customerName(visit.getCustomer().getName())
-                .idGym(visit.getGym().getIdGym())
-                .gymName(visit.getGym().getGym())
+                .gymId(visit.getGym().getId())
+                .gymName(visit.getGym().getName())
                 .build();
     }
 
-    public static Visit toEntity(VisitRequest dto) {
-        if (dto == null) return null;
+    public static Visit toEntity(VisitRequest visitRequest, Customer customer, Gym gym) {
+        if (visitRequest == null) return null;
         
         return Visit.builder()
-                .date(dto.getDate())
-                .pending(dto.getPending())
+                .date(LocalDateTime.now())
+                .pending(visitRequest.getPending())
+                .customer(customer)
+                .gym(gym)
                 .build();
     }
 
-    public static void copyToEntity(VisitRequest dto, Visit entity) {
-        if (dto == null || entity == null) return;
+    public static void copyToEntity(VisitRequest visitRequest, Visit entity, Customer customer, Gym gym) {
+        if (visitRequest == null || entity == null) return;
         
-        entity.setDate(dto.getDate());
-        entity.setPending(dto.getPending());
+        entity.setPending(visitRequest.getPending());
+        entity.setCustomer(customer);
+        entity.setGym(gym);
     }
 }

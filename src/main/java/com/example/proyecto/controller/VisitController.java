@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.net.URI;
 import java.util.List;
 import com.example.proyecto.dto.VisitRequest;
 import com.example.proyecto.dto.VisitResponse;
@@ -23,43 +24,42 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Tag(name = "Visits", description = "Provides methods for managing visits")
 public class VisitController {
-
     private final VisitService visitService;
 
     @GetMapping
     @Operation(summary = "Get all visits")
-    @ApiResponse(responseCode = "200", description = "List of all visits", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Visit.class)))})
-    public ResponseEntity<List<VisitResponse>> findAll() {
-        List<VisitResponse> visits = visitService.findAll();
-        return ResponseEntity.ok(visits);
+    @ApiResponse(responseCode = "200", description = "List of all visits", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Visit.class)))})
+    public List<VisitResponse> findAll() {
+        return visitService.findAll();
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get visit by ID")
-    @ApiResponse(responseCode = "200", description = "Visit found", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Visit.class)))})
-    public ResponseEntity<VisitResponse> findById(@PathVariable Integer id) {
-        VisitResponse visit = visitService.findById(id);
-        return ResponseEntity.ok(visit);
+    @ApiResponse(responseCode = "200", description = "Visit by ID", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Visit.class)))})
+    public VisitResponse findById(@PathVariable Long id) {
+        return visitService.findById(id);
     }
 
     @PostMapping
     @Operation(summary = "Create a new visit")
-    @ApiResponse(responseCode = "200", description = "Visit created successfully", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Visit.class)))})
+    @ApiResponse(responseCode = "200", description = "Visit create", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Visit.class)))})
     public ResponseEntity<VisitResponse> create(@RequestBody VisitRequest visitRequest) {
-        VisitResponse createdVisit = visitService.save(visitRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdVisit);
+        VisitResponse createdVisit = visitService.create(visitRequest);
+        return ResponseEntity
+                .created(URI.create("/api/v1/visits/" + createdVisit.getId()))
+                .body(createdVisit);
     }
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Update visit by ID")
     @ApiResponse(responseCode = "200", description = "Visit updated successfully", 
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Visit.class)))})
-    public ResponseEntity<VisitResponse> update(@PathVariable Integer id, @RequestBody VisitRequest visitRequest) {
-        VisitResponse updatedVisit = visitService.update(id, visitRequest);
-        return ResponseEntity.ok(updatedVisit);
+    public VisitResponse update(@PathVariable Long id, @RequestBody VisitRequest visitRequest) {
+        return visitService.update(id, visitRequest);
     }
 
     // @DeleteMapping("/{id}")
@@ -71,19 +71,19 @@ public class VisitController {
     //     return ResponseEntity.noContent().build();
     // }
 
-    @GetMapping("/customer/{idCustomer}")
+    @GetMapping("/{customerId}")
     @Operation(summary = "Get visits by customer ID")
-    @ApiResponse(responseCode = "200", description = "List of visits for the specified customer", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Visit.class)))})
-    public List<VisitResponse> findByCustomerId(@PathVariable Integer idCustomer) {
-        return visitService.findByCustomerId(idCustomer);
+    @ApiResponse(responseCode = "200", description = "List of visits by customer ID", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Visit.class)))})
+    public List<VisitResponse> findByCustomerId(@PathVariable Long customerId) {
+        return visitService.findByCustomerId(customerId);
     }
 
-    @GetMapping("/gym/{idGym}")
+    @GetMapping("/{gymId}")
     @Operation(summary = "Get visits by gym ID")
-    @ApiResponse(responseCode = "200", description = "List of visits for the specified gym", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Visit.class)))})
-    public List<VisitResponse> findByGymId(@PathVariable Integer idGym) {
-        return visitService.findByGymId(idGym);
+    @ApiResponse(responseCode = "200", description = "List of visits by gym ID", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Visit.class)))})
+    public List<VisitResponse> findByGymId(@PathVariable Long gymId) {
+        return visitService.findByGymId(gymId);
     }
 }

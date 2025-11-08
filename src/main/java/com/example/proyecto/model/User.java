@@ -64,10 +64,6 @@ public class User {
     @JsonIgnore
     private List<Ticket> tickets;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private List<MembershipSale> membershipsSales;
-
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;

@@ -33,52 +33,58 @@ public class VisitServiceImpl implements VisitService{
     }
 
     @Override
-    public VisitResponse findById(Integer id) {
-        Visit visit = visitRepository.findById(id).orElseThrow(() -> new RuntimeException("Visita no encontrada con ID: " + id));
+    public VisitResponse findById(Long id) {
+        Visit visit = visitRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Visita no encontrada con ID: " + id));
+
         return VisitMapper.toResponse(visit);
     }
 
     @Override
-    public VisitResponse save(VisitRequest req) {
-        Customer customer = customerRepository.findById(req.getIdCustomer())
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + req.getIdCustomer()));
-        Gym gym = gymRepository.findById(req.getIdGym())
-                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + req.getIdGym()));
+    public VisitResponse create(VisitRequest visitRequest) {
+        Customer customer = customerRepository.findById(visitRequest.getCustomerId())
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + visitRequest.getCustomerId()));
+
+        Gym gym = gymRepository.findById(visitRequest.getGymId())
+                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + visitRequest.getGymId()));
         
-        Visit visit = VisitMapper.toEntity(req);
-        visit.setCustomer(customer);
-        visit.setGym(gym);
+        Visit visit = VisitMapper.toEntity(visitRequest, customer, gym);
         
         Visit savedVisit = visitRepository.save(visit);
         return VisitMapper.toResponse(savedVisit);
     }
 
     @Override
-    public VisitResponse update(Integer id, VisitRequest req) {
+    public VisitResponse update(Long id, VisitRequest visitRequest) {
         Visit existingVisit = visitRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Visita no encontrada con ID: " + id));
         
-        VisitMapper.copyToEntity(req, existingVisit);
+        Customer customer = customerRepository.findById(visitRequest.getCustomerId())
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + visitRequest.getCustomerId()));
+
+        Gym gym = gymRepository.findById(visitRequest.getGymId())
+                .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + visitRequest.getGymId()));
+        
+        VisitMapper.copyToEntity(visitRequest, existingVisit, customer, gym);
+
         Visit updatedVisit = visitRepository.save(existingVisit);
         return VisitMapper.toResponse(updatedVisit);
     }
 
     // @Override
-    // public void delete(Integer id) {
+    // public void delete(Long id) {
     //     visitRepository.deleteById(id);
     // }
 
     @Override
-    public List<VisitResponse> findByCustomerId(Integer idCustomer) {
-        return visitRepository.findByCustomerId(idCustomer).stream()
-                .map(VisitMapper::toResponse)
-                .toList();
+    public List<VisitResponse> findByCustomerId(Long customerId) {
+        List<Visit> visits = visitRepository.findByCustomerId(customerId);
+        return visits.stream().map(VisitMapper::toResponse).toList();
     }
 
     @Override
-    public List<VisitResponse> findByGymId(Integer idGym) {
-        return visitRepository.findByGymId(idGym).stream()
-                .map(VisitMapper::toResponse)
-                .toList();
+    public List<VisitResponse> findByGymId(Long gymId) {
+        List<Visit> visits = visitRepository.findByGymId(gymId);
+        return visits.stream().map(VisitMapper::toResponse).toList();
     }
 }

@@ -31,7 +31,7 @@ public class Visit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_visit")
     @JsonProperty("identificador de la visita")
-    private Integer idVisit;
+    private Long id;
 
     @Column(name = "date", nullable = false)
     @JsonProperty("fecha de la visita")
@@ -39,14 +39,14 @@ public class Visit {
     
     @Column(name = "pending")
     @JsonProperty("visita pendiente")
-    private Integer pending;
+    private Boolean pending;
 
     // Relaciones
     @ManyToOne
-    @JoinColumn(name = "id_customer")
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @ManyToOne
-    @JoinColumn(name = "id_gym")
+    @JoinColumn(name = "gym_id")
     private Gym gym;
 }

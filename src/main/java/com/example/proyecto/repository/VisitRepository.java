@@ -8,12 +8,12 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.proyecto.model.Visit;
 
-public interface VisitRepository extends JpaRepository<Visit, Integer> {
+public interface VisitRepository extends JpaRepository<Visit, Long> {
     // Buscar visitas por cliente
-    @Query(value = "SELECT * FROM visits WHERE id_customer = :idCustomer;", nativeQuery = true)
-    List<Visit> findByCustomerId(@Param("idCustomer") Integer idCustomer);
+    @Query(value = "SELECT * FROM visits WHERE customer_id = :customerId;", nativeQuery = true)
+    List<Visit> findByCustomerId(@Param("customerId") Long customerId);
     
     // Buscar visitas por gimnasio
-    @Query(value = "SELECT * FROM visits WHERE id_gym = :idGym;", nativeQuery = true)
-    List<Visit> findByGymId(@Param("idGym") Integer idGym);
+    @Query(value = "SELECT * FROM visits WHERE gym_id = :gymId;", nativeQuery = true)
+    List<Visit> findByGymId(@Param("gymId") Long gymId);
 }
