@@ -2,6 +2,8 @@ package com.example.proyecto.model;
 
 import java.util.List;
 
+import org.springframework.security.core.GrantedAuthority;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -26,7 +28,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "roles")
-public class Role {
+public class Role implements GrantedAuthority{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_role")
@@ -41,8 +43,12 @@ public class Role {
     @JsonProperty("estado del rol")
     private Integer status;
 
+    @Column(name = "authority")
+    private String authority;
+
     //Relaciones
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<User> users;
+
 }
