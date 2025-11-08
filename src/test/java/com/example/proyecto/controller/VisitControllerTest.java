@@ -21,6 +21,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -53,25 +54,24 @@ class VisitControllerTest {
     }
 
     // Helpers para crear DTOs de prueba
-    private VisitResponse createVisitResponse(Integer id, Integer idCustomer, String customerName, 
-                                            LocalDateTime date, Integer pending, String gymName) {
+    private VisitResponse createVisitResponse(Long id, Long customerId, String customerName, 
+                                            LocalDateTime date, Boolean pending, String gymName) {
         return VisitResponse.builder()
-                .idVisit(id)
-                .idCustomer(idCustomer)
+                .id(id)
+                .customerId(customerId)
                 .customerName(customerName)
                 .date(date)
                 .pending(pending)
-                .idGym(1)
+                .gymId(1L)
                 .gymName(gymName)
                 .build();
     }
 
-    private VisitRequest createVisitRequest(Integer idCustomer, LocalDateTime date, Integer pending, Integer idGym) {
+    private VisitRequest createVisitRequest(Long customerId, Boolean pending, Long gymId) {
         VisitRequest request = new VisitRequest();
-        request.setIdCustomer(idCustomer);
-        request.setDate(date);
+        request.setCustomerId(customerId);
         request.setPending(pending);
-        request.setIdGym(idGym);
+        request.setGymId(gymId);
         return request;
     }
 
@@ -84,9 +84,9 @@ class VisitControllerTest {
         // Arrange
         LocalDateTime now = LocalDateTime.now();
         List<VisitResponse> mockVisits = List.of(
-            createVisitResponse(1, 1, "Juan Pérez", now.minusHours(2), 0, "Gym Central"),
-            createVisitResponse(2, 2, "María García", now.minusHours(1), 1, "Gym Central"),
-            createVisitResponse(3, 1, "Juan Pérez", now, 0, "Gym Central")
+            createVisitResponse(1L, 1L, "Juan Pérez", now.minusHours(2), false, "Gym Central"),
+            createVisitResponse(2L, 2L, "María García", now.minusHours(1), true, "Gym Central"),
+            createVisitResponse(3L, 1L, "Juan Pérez", now, false, "Gym Central")
         );
         when(service.findAll()).thenReturn(mockVisits);
 
@@ -96,18 +96,18 @@ class VisitControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(jsonPath("$[0].['Visit identifier']").value(1))
-                .andExpect(jsonPath("$[0].idCustomer").value(1))
+                .andExpect(jsonPath("$[0].customerId").value(1))
                 .andExpect(jsonPath("$[0].customerName").value("Juan Pérez"))
-                .andExpect(jsonPath("$[0].pending").value(0))
+                .andExpect(jsonPath("$[0].pending").value(false))
                 .andExpect(jsonPath("$[0].gymName").value("Gym Central"))
                 .andExpect(jsonPath("$[1].['Visit identifier']").value(2))
-                .andExpect(jsonPath("$[1].idCustomer").value(2))
+                .andExpect(jsonPath("$[1].customerId").value(2))
                 .andExpect(jsonPath("$[1].customerName").value("María García"))
-                .andExpect(jsonPath("$[1].pending").value(1))
+                .andExpect(jsonPath("$[1].pending").value(true))
                 .andExpect(jsonPath("$[2].['Visit identifier']").value(3))
-                .andExpect(jsonPath("$[2].idCustomer").value(1))
+                .andExpect(jsonPath("$[2].customerId").value(1))
                 .andExpect(jsonPath("$[2].customerName").value("Juan Pérez"))
-                .andExpect(jsonPath("$[2].pending").value(0));
+                .andExpect(jsonPath("$[2].pending").value(false));
     }
 
     @Test
@@ -130,16 +130,16 @@ class VisitControllerTest {
     void findById_Ok() throws Exception {
         // Arrange
         LocalDateTime visitDate = LocalDateTime.now().minusHours(1);
-        VisitResponse mockVisit = createVisitResponse(1, 1, "Juan Pérez", visitDate, 0, "Gym Central");
-        when(service.findById(1)).thenReturn(mockVisit);
+        VisitResponse mockVisit = createVisitResponse(1L, 1L, "Juan Pérez", visitDate, false, "Gym Central");
+        when(service.findById(1L)).thenReturn(mockVisit);
 
         // Act & Assert
         mvc.perform(get(BASE + "/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.['Visit identifier']").value(1))
-                .andExpect(jsonPath("$.idCustomer").value(1))
+                .andExpect(jsonPath("$.customerId").value(1))
                 .andExpect(jsonPath("$.customerName").value("Juan Pérez"))
-                .andExpect(jsonPath("$.pending").value(0))
+                .andExpect(jsonPath("$.pending").value(false))
                 .andExpect(jsonPath("$.gymName").value("Gym Central"));
     }
 
@@ -147,7 +147,7 @@ class VisitControllerTest {
     @DisplayName("GET /api/v1/visits/{id} no existente → 404")
     void findById_NotFound() throws Exception {
         // Arrange
-        when(service.findById(999)).thenThrow(new EntityNotFoundException("Visit not found"));
+        when(service.findById(999L)).thenThrow(new EntityNotFoundException("Visit not found"));
 
         // Act & Assert
         mvc.perform(get(BASE + "/{id}", 999))
@@ -161,21 +161,22 @@ class VisitControllerTest {
     @DisplayName("POST /api/v1/visits → 201 creado exitosamente")
     void create_Ok() throws Exception {
         // Arrange
-        LocalDateTime visitDate = LocalDateTime.now();
-        VisitRequest request = createVisitRequest(1, visitDate, 0, 1);
-        VisitResponse response = createVisitResponse(123, 1, "Juan Pérez", visitDate, 0, "Gym Central");
+        VisitRequest request = createVisitRequest(1L, false, 1L);
+        VisitResponse response = createVisitResponse(123L, 1L, "Juan Pérez", LocalDateTime.now(), false, "Gym Central");
         
-        when(service.save(any(VisitRequest.class))).thenReturn(response);
+        when(service.create(any(VisitRequest.class))).thenReturn(response);
 
         // Act & Assert
         mvc.perform(post(BASE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
+                .andExpect(header().exists("Location"))
+                .andExpect(header().string("Location", "/api/v1/visits/123"))
                 .andExpect(jsonPath("$.['Visit identifier']").value(123))
-                .andExpect(jsonPath("$.idCustomer").value(1))
+                .andExpect(jsonPath("$.customerId").value(1))
                 .andExpect(jsonPath("$.customerName").value("Juan Pérez"))
-                .andExpect(jsonPath("$.pending").value(0))
+                .andExpect(jsonPath("$.pending").value(false))
                 .andExpect(jsonPath("$.gymName").value("Gym Central"));
     }
 
@@ -183,38 +184,112 @@ class VisitControllerTest {
     @DisplayName("POST /api/v1/visits con datos inválidos → 400")
     void create_InvalidBody() throws Exception {
         // Arrange - Body sin campos requeridos
-        VisitRequest invalidRequest = new VisitRequest(); // Todos los campos null
+        String invalidJson = "{}";
 
         // Act & Assert
         mvc.perform(post(BASE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(invalidRequest)))
+                .content(invalidJson))
                 .andExpect(status().isBadRequest());
     }
 
     /*
-     * PRUEBA 4: GET /api/v1/visits/customer/{idCustomer} - Búsqueda por ID de cliente
+     * PRUEBA 4: GET /api/v1/visits/customer/{customerId} - Búsqueda por ID de cliente
      */
     @Test
-    @DisplayName("GET /api/v1/visits/customer/{idCustomer} → 200 con visitas del cliente")
+    @DisplayName("GET /api/v1/visits/customer/{customerId} → 200 con visitas del cliente")
     void findByCustomerId_Ok() throws Exception {
         // Arrange
         LocalDateTime now = LocalDateTime.now();
         List<VisitResponse> mockVisits = List.of(
-            createVisitResponse(1, 1, "Juan Pérez", now.minusDays(1), 0, "Gym Central"),
-            createVisitResponse(3, 1, "Juan Pérez", now, 0, "Gym Central")
+            createVisitResponse(1L, 1L, "Juan Pérez", now.minusDays(1), false, "Gym Central"),
+            createVisitResponse(3L, 1L, "Juan Pérez", now, true, "Gym Central")
         );
-        when(service.findByCustomerId(1)).thenReturn(mockVisits);
+        when(service.findByCustomerId(1L)).thenReturn(mockVisits);
 
         // Act & Assert
-        mvc.perform(get(BASE + "/customer/{idCustomer}", 1))
+        mvc.perform(get(BASE + "/customer/{customerId}", 1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].['Visit identifier']").value(1))
-                .andExpect(jsonPath("$[0].idCustomer").value(1))
+                .andExpect(jsonPath("$[0].customerId").value(1))
                 .andExpect(jsonPath("$[0].customerName").value("Juan Pérez"))
                 .andExpect(jsonPath("$[1].['Visit identifier']").value(3))
-                .andExpect(jsonPath("$[1].idCustomer").value(1))
+                .andExpect(jsonPath("$[1].customerId").value(1))
                 .andExpect(jsonPath("$[1].customerName").value("Juan Pérez"));
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/visits/customer/{customerId} → 200 con lista vacía")
+    void findByCustomerId_Empty() throws Exception {
+        // Arrange
+        when(service.findByCustomerId(999L)).thenReturn(Collections.emptyList());
+
+        // Act & Assert
+        mvc.perform(get(BASE + "/customer/{customerId}", 999))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    /*
+     * PRUEBA 5: GET /api/v1/visits/gym/{gymId} - Búsqueda por ID de gym
+     */
+    @Test
+    @DisplayName("GET /api/v1/visits/gym/{gymId} → 200 con visitas del gym")
+    void findByGymId_Ok() throws Exception {
+        // Arrange
+        LocalDateTime now = LocalDateTime.now();
+        List<VisitResponse> mockVisits = List.of(
+            createVisitResponse(1L, 1L, "Juan Pérez", now.minusDays(1), false, "Gym Central"),
+            createVisitResponse(2L, 2L, "María García", now, true, "Gym Central")
+        );
+        when(service.findByGymId(1L)).thenReturn(mockVisits);
+
+        // Act & Assert
+        mvc.perform(get(BASE + "/gym/{gymId}", 1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].gymId").value(1))
+                .andExpect(jsonPath("$[0].gymName").value("Gym Central"))
+                .andExpect(jsonPath("$[1].gymId").value(1))
+                .andExpect(jsonPath("$[1].gymName").value("Gym Central"));
+    }
+
+    /*
+     * PRUEBA 6: PUT /api/v1/visits/{id} - Actualizar visita
+     */
+    @Test
+    @DisplayName("PUT /api/v1/visits/{id} → 204 actualizado exitosamente")
+    void update_Ok() throws Exception {
+        // Arrange
+        VisitRequest request = createVisitRequest(1L, true, 1L);
+        VisitResponse response = createVisitResponse(1L, 1L, "Juan Pérez", LocalDateTime.now(), true, "Gym Central");
+        
+        when(service.update(eq(1L), any(VisitRequest.class))).thenReturn(response);
+
+        // Act & Assert
+        mvc.perform(put(BASE + "/{id}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(request)))
+                .andExpect(status().isNoContent())
+                .andExpect(jsonPath("$.['Visit identifier']").value(1))
+                .andExpect(jsonPath("$.customerId").value(1))
+                .andExpect(jsonPath("$.customerName").value("Juan Pérez"))
+                .andExpect(jsonPath("$.pending").value(true));
+    }
+
+    @Test
+    @DisplayName("PUT /api/v1/visits/{id} no existente → 404")
+    void update_NotFound() throws Exception {
+        // Arrange
+        VisitRequest request = createVisitRequest(1L, true, 1L);
+        when(service.update(eq(999L), any(VisitRequest.class)))
+            .thenThrow(new EntityNotFoundException("Visit not found"));
+
+        // Act & Assert
+        mvc.perform(put(BASE + "/{id}", 999)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(request)))
+                .andExpect(status().isNotFound());
     }
 }
