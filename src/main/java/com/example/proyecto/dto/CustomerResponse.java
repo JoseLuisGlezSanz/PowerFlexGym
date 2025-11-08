@@ -28,7 +28,7 @@ public class CustomerResponse {
     private String photoCredential;
     private Boolean verifiedNumber;
     private Long gymId;
-    private Long idContact;
+    private Long contactId;
     
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime registrationDate;

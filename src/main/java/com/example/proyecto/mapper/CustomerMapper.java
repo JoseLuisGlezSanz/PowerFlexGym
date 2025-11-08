@@ -23,7 +23,7 @@ public class CustomerMapper {
                 .photoCredential(customer.getPhotoCredential())
                 .verifiedNumber(customer.getVerifiedNumber())
                 .gymId(customer.getGym().getId())
-                .idContact(customer.getEmergencyContact().getId())
+                .contactId(customer.getEmergencyContact().getId())
                 .registrationDate(customer.getRegistrationDate())
                 .build();
     }

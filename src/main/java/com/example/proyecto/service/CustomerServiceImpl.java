@@ -46,18 +46,24 @@ public class CustomerServiceImpl implements CustomerService{
         Gym gym = gymRepository.findById(customerRequest.getGymId())
             .orElseThrow(() -> new RuntimeException("Gimnasio no encontrado con ID: " + customerRequest.getGymId()));
 
-        EmergencyContact emergencyContact = EmergencyContactMapper.toEntity(
-            customerRequest.getContactName(), 
-            customerRequest.getContactPhone()
-        );
-
-        Customer customer = CustomerMapper.toEntity(customerRequest, gym, emergencyContact);
-
-        customer.setEmergencyContact(emergencyContact);
-        emergencyContact.setCustomer(customer);
-        emergencyContactRepository.save(emergencyContact);
-
+        Customer customer = CustomerMapper.toEntity(customerRequest, gym, null);
         Customer savedCustomer = customerRepository.save(customer);
+
+        EmergencyContact emergencyContact = null;
+        if (customerRequest.getContactName() != null && customerRequest.getContactPhone() != null) {
+            emergencyContact = EmergencyContactMapper.toEntity(
+                customerRequest.getContactName(), 
+                customerRequest.getContactPhone()
+            );
+            
+            emergencyContact.setCustomer(savedCustomer);
+            
+            emergencyContact = emergencyContactRepository.save(emergencyContact);
+            
+            savedCustomer.setEmergencyContact(emergencyContact);
+            
+            savedCustomer = customerRepository.save(savedCustomer);
+        }
         return CustomerMapper.toResponse(savedCustomer);
     }
 

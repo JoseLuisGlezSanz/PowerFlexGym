@@ -34,6 +34,15 @@ public class RoleController {
         return roleService.findAll();
     }
 
+    @GetMapping("/status/{statusValue}")
+    @Operation(summary = "Get roles by status")
+    @ApiResponse(responseCode = "200", description = "List of roles with the specified status",
+            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Role.class)))})
+    public List<RoleResponse> findByStatus(@PathVariable Integer statusValue) {
+        List<RoleResponse> roles = roleService.findByStatus(statusValue);
+        return roles;
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Get role by ID")
     @ApiResponse(responseCode = "200", description = "Role by ID", content = {
@@ -70,13 +79,4 @@ public class RoleController {
     //     roleService.delete(id);
     //     return ResponseEntity.noContent().build();
     // }
-
-    @GetMapping("/{status}")
-    @Operation(summary = "Get roles by status")
-    @ApiResponse(responseCode = "200", description = "List of roles with the specified status",
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Role.class)))})
-    public List<RoleResponse> findByStatus(@PathVariable Integer statusValue) {
-        List<RoleResponse> roles = roleService.findByStatus(statusValue);
-        return roles;
-    }
 }

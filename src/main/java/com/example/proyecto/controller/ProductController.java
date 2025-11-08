@@ -35,6 +35,30 @@ public class ProductController {
         return productService.findAll();
     }
 
+    @GetMapping("/name/{name}")
+    @Operation(summary = "Get products by name")
+    @ApiResponse(responseCode = "200", description = "List of products by name", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Product.class)))})
+    public List<ProductResponse> findByName(@PathVariable String name) {
+        return productService.findByName(name);
+    }
+
+    @GetMapping("/status/{status}")
+    @Operation(summary = "Get products by status")
+    @ApiResponse(responseCode = "200", description = "List of products by status", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Product.class)))})
+    public List<ProductResponse> findByStatus(@PathVariable Integer status) {
+        return productService.findByStatus(status);
+    }
+
+    @GetMapping("/stock/{stock}")
+    @Operation(summary = "Get products with low stock")
+    @ApiResponse(responseCode = "200", description = "List of products by low stock", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Product.class)))})
+    public List<ProductResponse> findByStockLessThan(@PathVariable Integer stock) {
+        return productService.findByStockLessThan(stock);
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Get product by ID")
     @ApiResponse(responseCode = "200", description = "Product by ID", content = {
@@ -80,29 +104,5 @@ public class ProductController {
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
         List<ProductResponse> products = productService.getAll(page, pageSize);
         return products;
-    }
-
-    @GetMapping("/{name}")
-    @Operation(summary = "Get products by name")
-    @ApiResponse(responseCode = "200", description = "List of products by name", content = {
-            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Product.class)))})
-    public List<ProductResponse> findByName(@PathVariable String name) {
-        return productService.findByName(name);
-    }
-
-    @GetMapping("/{status}")
-    @Operation(summary = "Get products by status")
-    @ApiResponse(responseCode = "200", description = "List of products by status", content = {
-            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Product.class)))})
-    public List<ProductResponse> findByStatus(@PathVariable Integer status) {
-        return productService.findByStatus(status);
-    }
-
-    @GetMapping("/{stock}")
-    @Operation(summary = "Get products with low stock")
-    @ApiResponse(responseCode = "200", description = "List of products by low stock", content = {
-            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Product.class)))})
-    public List<ProductResponse> findByStockLessThan(@PathVariable Integer stock) {
-        return productService.findByStockLessThan(stock);
     }
 }

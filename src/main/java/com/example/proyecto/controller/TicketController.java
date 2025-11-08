@@ -34,6 +34,22 @@ public class TicketController {
         return ticketService.findAll();
     }
 
+    @GetMapping("/customer/{customerId}")
+    @Operation(summary = "Get tickets by customer ID")
+    @ApiResponse(responseCode = "200", description = "List of tickets by customer", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Ticket.class)))})
+    public List<TicketResponse> findAllTicketsByCustomerId(@PathVariable Long customerId) {
+        return ticketService.findAllTicketsByCustomerId(customerId);
+    }
+
+    @GetMapping("/user/{userId}")
+    @Operation(summary = "Get tickets by user ID")
+    @ApiResponse(responseCode = "200", description = "List of tickets for the specified user", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Ticket.class)))})
+    public List<TicketResponse> findAllTicketsByUserId(@PathVariable Long userId) {
+        return ticketService.findAllTicketsByUserId(userId);
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Get ticket by ID")
     @ApiResponse(responseCode = "200", description = "Ticket by ID", content = {
@@ -78,22 +94,6 @@ public class TicketController {
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
         List<TicketResponse> tickets = ticketService.getAll(page, pageSize);
         return tickets;
-    }
-
-    @GetMapping("/{customerId}")
-    @Operation(summary = "Get tickets by customer ID")
-    @ApiResponse(responseCode = "200", description = "List of tickets by customer", content = {
-            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Ticket.class)))})
-    public List<TicketResponse> findAllTicketsByCustomerId(@PathVariable Long customerId) {
-        return ticketService.findAllTicketsByCustomerId(customerId);
-    }
-
-    @GetMapping("/{userId}")
-    @Operation(summary = "Get tickets by user ID")
-    @ApiResponse(responseCode = "200", description = "List of tickets for the specified user", content = {
-            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Ticket.class)))})
-    public List<TicketResponse> findAllTicketsByUserId(@PathVariable Long userId) {
-        return ticketService.findAllTicketsByUserId(userId);
     }
 
     @GetMapping(value = "paginationByCustomerId", params = { "page", "pageSize"})

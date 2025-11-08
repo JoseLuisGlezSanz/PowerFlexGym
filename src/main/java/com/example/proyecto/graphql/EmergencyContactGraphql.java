@@ -45,7 +45,7 @@ public class EmergencyContactGraphql {
     }
 
     @QueryMapping
-    public EmergencyContactResponse findByIdCustomer(@Argument Long customerId) {
+    public EmergencyContactResponse findByIdCustomerEmergencyContact(@Argument Long customerId) {
         return emergencyContactService.findEmergencyContactByIdCustomer(customerId);
     }
 }

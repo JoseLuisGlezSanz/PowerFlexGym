@@ -10,6 +10,6 @@ import com.example.proyecto.model.Role;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
     // Buscar role por estatus
-    @Query(value = "SELECT * FROM roles WHERE status = CAST(:statusValue AS role_status);", nativeQuery = true)
+    @Query(value = "SELECT * FROM roles WHERE status = :statusValue;", nativeQuery = true)
     List<Role> findByStatus(@Param("statusValue") Integer statusValue);
 }

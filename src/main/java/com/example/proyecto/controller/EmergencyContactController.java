@@ -32,6 +32,14 @@ public class EmergencyContactController {
         return emergencyContactService.findAll();
     }
 
+    @GetMapping("/customer/{customerId}")
+    @Operation(summary = "Get emergency contact by customer ID")
+    @ApiResponse(responseCode = "200", description = "Emergency contact by customer ID", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EmergencyContact.class)))})
+    public EmergencyContactResponse findByIdCustomer(@PathVariable Long customerId) {
+        return emergencyContactService.findEmergencyContactByIdCustomer(customerId);
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Get emergency contact by ID")
     @ApiResponse(responseCode = "200", description = "Emergency contact by ID", content = {
@@ -72,13 +80,5 @@ public class EmergencyContactController {
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
         List<EmergencyContactResponse> emergencyContacts = emergencyContactService.getAll(page, pageSize);
         return emergencyContacts;
-    }
-
-    @GetMapping("/{customerId}")
-    @Operation(summary = "Get emergency contact by customer ID")
-    @ApiResponse(responseCode = "200", description = "Emergency contact by customer ID", content = {
-            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EmergencyContact.class)))})
-    public EmergencyContactResponse findByIdCustomer(@PathVariable Long customerId) {
-        return emergencyContactService.findEmergencyContactByIdCustomer(customerId);
     }
 }

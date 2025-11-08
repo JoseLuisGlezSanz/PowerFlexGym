@@ -10,7 +10,7 @@ import com.example.proyecto.model.Membership;
 
 public interface MembershipRepository extends JpaRepository<Membership, Long> {
     // Buscar membresía por nombre
-    @Query(value = "SELECT * FROM memberships WHERE LOWER(name) = LOWER(:name);", nativeQuery = true)
+    @Query(value = "SELECT * FROM memberships WHERE LOWER(membership) = LOWER(:name);", nativeQuery = true)
     List<Membership> findMembershipByName(@Param("name") String name);
 
     // Buscar membresía por ID gym

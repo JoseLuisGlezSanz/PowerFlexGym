@@ -15,7 +15,7 @@ type Query {
     findByIdCustomer(id: Int!): CustomerResponse
     findAllCustomersPaginated(page: Int!, pageSize: Int!): [CustomerResponse]
     findByNameCustomer(name: String!): [CustomerResponse]
-    findCustomerByVerifiedNumberTrue(): [CustomerResponse]
+    findCustomerByVerifiedNumberTrue: [CustomerResponse]
     findCustomerByVerifiedNumberTruePaginated(page: Int!, pageSize: Int!): [CustomerResponse]
     findAllCustomersByGymId(gymId: Int!): [CustomerResponse]
     findAllCustomersByGymIdPaginated(page: Int!, pageSize: Int!, gymId: Int!): [CustomerResponse]
@@ -24,7 +24,7 @@ type Query {
     findAllEmergencysContacts: [EmergencyContactResponse]
     findByIdEmergencyContact(id: Int!): EmergencyContactResponse
     findAllEmergencysContactsPaginated(page: Int!, pageSize: Int!): [EmergencyContactResponse]
-    findByIdCustomer(customerId: Int!): EmergencyContactResponse
+    findByIdCustomerEmergencyContact(customerId: Int!): EmergencyContactResponse
 
     #Role
     findAllRoles: [RoleResponse]
@@ -71,7 +71,7 @@ type Query {
 
     #Customer-Membership
     findAllCustomersMemberships: [CustomerMembershipResponse]
-    findByIdCustomerMembership(customerId: Int!, membershipId: Id!): CustomerMembershipResponse
+    findByIdCustomerMembership(customerId: Int!, membershipId: Int!): CustomerMembershipResponse
     findByCustomerIdCustomerMembership(customerId: Int!): [CustomerMembershipResponse]
     findByMembershipIdCustomerMembership(membershipId: Int!): [CustomerMembershipResponse]
     findByGymIdCustomerMembership(gymId: Int!): [CustomerMembershipResponse]
@@ -105,7 +105,7 @@ type Mutation {
 
     #User
     createUser(userRequest: UserRequest!): UserResponse
-    updateRole(id: Int!, userRequest: UserRequest!): UserResponse
+    updateUser(id: Int!, userRequest: UserRequest!): UserResponse  # CORREGIDO: era updateRole
     # deleteUser(id: Int!): Boolean
 
     #Product
@@ -142,19 +142,20 @@ type GymResponse {
     id: Int!
     name: String!
 }
+
 #------------------Customer----------------
 input CustomerRequest {
     name: String!
     cologne: String!
     phone: String!
-    birthDate: Date!
+    birthDate: String!  # CORREGIDO: Date -> String
     medicalCondition: Boolean!
     photo: String!
     photoCredential: String!
     verifiedNumber: Boolean
     gymId: Int!
     contactName: String!
-    contactPhone:String!
+    contactPhone: String!
 }
 
 type CustomerResponse {
@@ -162,15 +163,16 @@ type CustomerResponse {
     name: String!
     cologne: String!
     phone: String!
-    birthDate: Date!
+    birthDate: String!  # CORREGIDO: Date -> String
     medicalCondition: Boolean!
     photo: String!
     photoCredential: String!
     verifiedNumber: Boolean
     gymId: Int!
-    idContact: Int!
-    registrationDate: LocalDateTime!
+    contactId: Int!
+    registrationDate: String!  # CORREGIDO: LocalDateTime -> String
 }
+
 #---------------EmergencyContact-------------
 input EmergencyContactRequest {
     contactName: String!
@@ -182,6 +184,7 @@ type EmergencyContactResponse {
     contactName: String!
     contactPhone: String!
 }
+
 #---------------------Role-------------------
 input RoleRequest {
     name: String!
@@ -193,6 +196,7 @@ type RoleResponse {
     name: String!
     status: Int!
 }
+
 #----------------------User-------------------
 input UserRequest {
     nameUser: String!
@@ -205,7 +209,7 @@ input UserRequest {
     gymId: Int!
 }
 
-type RoleResponse {
+type UserResponse {
     id: Int!
     nameUser: String!
     mail: String!
@@ -216,6 +220,7 @@ type RoleResponse {
     roleId: Int!
     gymId: Int!
 }
+
 #--------------------Product-----------------
 input ProductRequest {
     name: String!
@@ -233,6 +238,7 @@ type ProductResponse {
     status: Int!
     photo: String!
 }
+
 #--------------------Ticket-----------------
 input TicketRequest {
     total: Float!
@@ -245,8 +251,8 @@ input TicketRequest {
 
 type TicketResponse {
     id: Int!
-    date: LocalDateTime!
-    saleDate: LocalDateTime!
+    date: String!  # CORREGIDO: LocalDateTime -> String
+    saleDate: String!  # CORREGIDO: LocalDateTime -> String
     total: Float!
     status: Int!
     methodPayment: Int!
@@ -256,6 +262,7 @@ type TicketResponse {
     userId: Int!
     userName: String!
 }
+
 #----------------Ticket-Detail-------------
 input TicketDetailRequest {
     amount: Int!
@@ -272,6 +279,7 @@ type TicketDetailResponse {
     productName: String!
     ticketId: Int!
 }
+
 #------------------Membership---------------
 input MembershipRequest {
     name: String!
@@ -289,13 +297,14 @@ type MembershipResponse {
     status: Int!
     gymId: Int!
 }
+
 #------------Customer-Membership------------
 input CustomerMembershipRequest{
     customerId: Int!
     membershipId: Int!
     membershipStatus: Boolean!
-    endDate: LocalDateTime!
-    memberSince: LocalDateTime!
+    endDate: String!  # CORREGIDO: LocalDateTime -> String
+    memberSince: String!  # CORREGIDO: LocalDateTime -> String
 }
 
 type CustomerMembershipResponse {
@@ -303,12 +312,13 @@ type CustomerMembershipResponse {
     customerName: String!
     membershipId: Int!
     membershipName: String!
-    startDate: LocalDate!
-    endDate: LocalDate!
-    memberSince: LocalDateTime!
+    startDate: String!  # CORREGIDO: LocalDate -> String
+    endDate: String!  # CORREGIDO: LocalDate -> String
+    memberSince: String!  # CORREGIDO: LocalDateTime -> String
     membershipStatus: Boolean!
     gymId: Int!
 }
+
 #------------------Visit-------------------
 input VisitRequest {
     customerId: Int!
@@ -320,7 +330,7 @@ type VisitResponse {
     id: Int!
     customerId: Int!
     customerName: String!
-    date: LocalDateTime!
+    date: String!  # CORREGIDO: LocalDateTime -> String
     pending: Boolean!
     gymId: Int!
     gymName: String!

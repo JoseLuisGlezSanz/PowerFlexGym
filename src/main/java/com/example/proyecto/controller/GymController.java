@@ -34,6 +34,14 @@ public class GymController {
         return gymService.findAll();
     }
 
+    @GetMapping("/name/{name}")
+    @Operation(summary = "Get gyms by name")
+    @ApiResponse(responseCode = "200", description = "Gym by name", 
+            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Gym.class)))})
+    public GymResponse findByNameGym(@PathVariable String name) {
+        return gymService.findByName(name);
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Get gym by ID")
     @ApiResponse(responseCode = "200", description = "Gym by ID", content = {
@@ -79,13 +87,5 @@ public class GymController {
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
         List<GymResponse> gyms = gymService.getAll(page, pageSize);
         return gyms;
-    }
-
-    @GetMapping("/{name}")
-    @Operation(summary = "Get gyms by name")
-    @ApiResponse(responseCode = "200", description = "Gym by name", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Gym.class)))})
-    public GymResponse findByNameGym(@PathVariable String name) {
-        return gymService.findByName(name);
     }
 }

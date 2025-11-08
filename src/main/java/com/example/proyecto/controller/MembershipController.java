@@ -34,6 +34,22 @@ public class MembershipController {
         return membershipService.findAll();
     }
 
+    @GetMapping("/name/{name}")
+    @Operation(summary = "Get memberships by name")
+    @ApiResponse(responseCode = "200", description = "List of memberships by name", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Membership.class)))})
+    public List<MembershipResponse> findMembershipByName(@PathVariable String name) {
+        return membershipService.findMembershipByName(name);
+    }
+
+    @GetMapping("/gym/{gymId}")
+    @Operation(summary = "Get memberships by gym ID")
+    @ApiResponse(responseCode = "200", description = "List of memberships by gym ID", content = {
+            @Content(mediaType = "application/json",array = @ArraySchema(schema = @Schema(implementation = Membership.class)))})
+    public List<MembershipResponse> findMembershipByGymId(@PathVariable Long gymId) {
+        return membershipService.findMembershipByGymId(gymId);
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Get membership by ID")
     @ApiResponse(responseCode = "200", description = "Membership by ID", content = {
@@ -70,20 +86,4 @@ public class MembershipController {
     //     membershipService.delete(id);
     //     return ResponseEntity.noContent().build();
     // }
-
-    @GetMapping("/{name}")
-    @Operation(summary = "Get memberships by name")
-    @ApiResponse(responseCode = "200", description = "List of memberships by name", content = {
-            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Membership.class)))})
-    public List<MembershipResponse> findMembershipByName(@PathVariable String name) {
-        return membershipService.findMembershipByName(name);
-    }
-
-    @GetMapping("/{idGym}")
-    @Operation(summary = "Get memberships by gym ID")
-    @ApiResponse(responseCode = "200", description = "List of memberships by gym ID", content = {
-            @Content(mediaType = "application/json",array = @ArraySchema(schema = @Schema(implementation = Membership.class)))})
-    public List<MembershipResponse> findMembershipByGymId(@PathVariable Long gymId) {
-        return membershipService.findMembershipByGymId(gymId);
-    }
 }

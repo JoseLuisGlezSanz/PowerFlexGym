@@ -35,6 +35,14 @@ public class TicketDetailController {
         return ticketDetailService.findAll();
     }
 
+    @GetMapping("/ticket/{ticketId}")
+    @Operation(summary = "Get ticket details by ticket ID")
+    @ApiResponse(responseCode = "200", description = "List of ticket details by ticket ID", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TicketDetail.class)))})
+    public List<TicketDetailResponse> findByTicketId(@PathVariable Long ticketId) {
+        return ticketDetailService.findByTicketId(ticketId);
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Get ticket detail by ID")
     @ApiResponse(responseCode = "200", description = "Ticket detail by ID", content = {
@@ -81,13 +89,5 @@ public class TicketDetailController {
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
         List<TicketDetailResponse> ticketsDetails = ticketDetailService.getAll(page, pageSize);
         return ticketsDetails;
-    }
-
-    @GetMapping("/{idTicket}")
-    @Operation(summary = "Get ticket details by ticket ID")
-    @ApiResponse(responseCode = "200", description = "List of ticket details by ticket ID", content = {
-            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TicketDetail.class)))})
-    public List<TicketDetailResponse> findByTicketId(@PathVariable Long ticketId) {
-        return ticketDetailService.findByTicketId(ticketId);
     }
 }

@@ -34,6 +34,30 @@ public class CustomerController {
         return customerService.findAll();
     }
 
+    @GetMapping("/gym/{gymId}")
+    @Operation(summary = "Get all customers by gym ID")
+    @ApiResponse(responseCode = "200", description = "List of customers by ID gym", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Customer.class)))})
+    public List<CustomerResponse> findByGymId(@PathVariable Long gymId) {
+        return customerService.findAllCustomersByGymId(gymId);
+    }
+
+    @GetMapping("/name/{name}")
+    @Operation(summary = "Get customers by name")
+    @ApiResponse(responseCode = "200", description = "List of customers by name", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Customer.class)))})
+    public List<CustomerResponse> findByName(@PathVariable String name) {
+        return customerService.findByName(name);
+    }
+
+    @GetMapping("/verifiedNumber/{verifiedNumber}")
+    @Operation(summary = "Get all customers with verified number")
+    @ApiResponse(responseCode = "200", description = "List of customers with verified number", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Customer.class)))})
+    public List<CustomerResponse> findByVerifiedNumberTrue() {
+        return customerService.findByVerifiedNumberTrue();
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Get customer by ID")
     @ApiResponse(responseCode = "200", description = "Customer by ID", content = {
@@ -81,22 +105,6 @@ public class CustomerController {
         return customers;
     }
 
-    @GetMapping("/{name}")
-    @Operation(summary = "Get customers by name")
-    @ApiResponse(responseCode = "200", description = "List of customers by name", content = {
-            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Customer.class)))})
-    public List<CustomerResponse> findByName(@PathVariable String name) {
-        return customerService.findByName(name);
-    }
-
-    @GetMapping("/{verifiedNumber}")
-    @Operation(summary = "Get all customers with verified number")
-    @ApiResponse(responseCode = "200", description = "List of customers with verified number", content = {
-            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Customer.class)))})
-    public List<CustomerResponse> findByVerifiedNumberTrue() {
-        return customerService.findByVerifiedNumberTrue();
-    }
-
     @GetMapping(value = "paginationByVerifiedNumberTrue", params = { "page", "pageSize" })
     @Operation(summary = "Get all customers with verified number with pagination")
     @ApiResponse(responseCode = "200", description = "List of customers with verified number paginated", content = {
@@ -106,14 +114,6 @@ public class CustomerController {
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
         List<CustomerResponse> customers = customerService.getByVerifiedNumberTrue(page, pageSize);
         return customers;
-    }
-
-    @GetMapping("/{gymId}")
-    @Operation(summary = "Get all customers by gym ID")
-    @ApiResponse(responseCode = "200", description = "List of customers by ID gym", content = {
-            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Customer.class)))})
-    public List<CustomerResponse> findByGymId(@PathVariable Long gymId) {
-        return customerService.findAllCustomersByGymId(gymId);
     }
 
     @GetMapping(value = "paginationByGymId", params = { "page", "pageSize" })

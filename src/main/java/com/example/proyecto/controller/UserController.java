@@ -35,6 +35,38 @@ public class UserController {
         return userService.findAll();
     }
 
+    @GetMapping("/mail/{mail}")    
+    @Operation(summary = "Get user by mail")
+    @ApiResponse(responseCode = "200", description = "User by mail", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))})
+    public UserResponse findByMail(@PathVariable String mail) {
+        return userService.findByMail(mail);
+    }
+
+    @GetMapping("/userName/{nameUser}")
+    @Operation(summary = "Get user by username")
+    @ApiResponse(responseCode = "200", description = "User by username", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))})
+    public UserResponse findByUsername(@PathVariable String nameUser) {
+        return userService.findByUsername(nameUser);
+    }
+
+    @GetMapping("/role/{roleId}")
+    @Operation(summary = "Get users by role ID")
+    @ApiResponse(responseCode = "200", description = "List of users by roleId", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))})
+    public List<UserResponse> findByRoleId(@PathVariable Long roleId) {
+        return userService.findByRoleId(roleId);
+    }
+
+    @GetMapping("/gym/{gymId}")
+    @Operation(summary = "Get users by gym ID")
+    @ApiResponse(responseCode = "200", description = "List of users by gymId", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))})
+    public List<UserResponse> findByGymId(@PathVariable Long gymId) {
+        return userService.findByGymId(gymId);
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Get user by ID")
     @ApiResponse(responseCode = "200", description = "User by ID", content = {
@@ -80,37 +112,5 @@ public class UserController {
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
         List<UserResponse> users = userService.getAll(page, pageSize);
         return users;
-    }
-
-    @GetMapping("/{mail}")
-    @Operation(summary = "Get user by mail")
-    @ApiResponse(responseCode = "200", description = "User by mail", content = {
-            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))})
-    public UserResponse findByMail(@PathVariable String mail) {
-        return userService.findByMail(mail);
-    }
-
-    @GetMapping("/{nameUser}")
-    @Operation(summary = "Get user by username")
-    @ApiResponse(responseCode = "200", description = "User by username", content = {
-            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))})
-    public UserResponse findByUsername(@PathVariable String nameUser) {
-        return userService.findByUsername(nameUser);
-    }
-
-    @GetMapping("/{roleId}")
-    @Operation(summary = "Get users by role ID")
-    @ApiResponse(responseCode = "200", description = "List of users by roleId", content = {
-            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))})
-    public List<UserResponse> findByRoleId(@PathVariable Long roleId) {
-        return userService.findByRoleId(roleId);
-    }
-
-    @GetMapping("/{gymId}")
-    @Operation(summary = "Get users by gym ID")
-    @ApiResponse(responseCode = "200", description = "List of users by gymId", content = {
-            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))})
-    public List<UserResponse> findByGymId(@PathVariable Long gymId) {
-        return userService.findByGymId(gymId);
     }
 }

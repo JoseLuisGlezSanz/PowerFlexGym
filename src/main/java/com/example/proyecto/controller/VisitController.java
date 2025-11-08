@@ -34,6 +34,22 @@ public class VisitController {
         return visitService.findAll();
     }
 
+    @GetMapping("/customer/{customerId}")
+    @Operation(summary = "Get visits by customer ID")
+    @ApiResponse(responseCode = "200", description = "List of visits by customer ID", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Visit.class)))})
+    public List<VisitResponse> findByCustomerId(@PathVariable Long customerId) {
+        return visitService.findByCustomerId(customerId);
+    }
+
+    @GetMapping("/gym/{gymId}")
+    @Operation(summary = "Get visits by gym ID")
+    @ApiResponse(responseCode = "200", description = "List of visits by gym ID", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Visit.class)))})
+    public List<VisitResponse> findByGymId(@PathVariable Long gymId) {
+        return visitService.findByGymId(gymId);
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Get visit by ID")
     @ApiResponse(responseCode = "200", description = "Visit by ID", content = {
@@ -70,20 +86,4 @@ public class VisitController {
     //     visitService.delete(id);
     //     return ResponseEntity.noContent().build();
     // }
-
-    @GetMapping("/{customerId}")
-    @Operation(summary = "Get visits by customer ID")
-    @ApiResponse(responseCode = "200", description = "List of visits by customer ID", content = {
-            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Visit.class)))})
-    public List<VisitResponse> findByCustomerId(@PathVariable Long customerId) {
-        return visitService.findByCustomerId(customerId);
-    }
-
-    @GetMapping("/{gymId}")
-    @Operation(summary = "Get visits by gym ID")
-    @ApiResponse(responseCode = "200", description = "List of visits by gym ID", content = {
-            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Visit.class)))})
-    public List<VisitResponse> findByGymId(@PathVariable Long gymId) {
-        return visitService.findByGymId(gymId);
-    }
 }
