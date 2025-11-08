@@ -134,26 +134,6 @@ CREATE TABLE customers_memberships (
 );
 
 -- ============================================
--- TABLA: ventas_membresias
--- ============================================
-CREATE TABLE memberships_sales (
-    id_membership_sale SERIAL PRIMARY KEY,
-    date TIMESTAMP NOT NULL,
-    payment DOUBLE PRECISION NOT NULL,
-    cancellation BOOLEAN NOT NULL DEFAULT FALSE,
-    start_date DATE NOT NULL,
-    end_date DATE NOT NULL,
-    id_customer INT,
-    id_membership INT NOT NULL,
-    id_gym INT NOT NULL,
-    id_user INT NOT NULL,
-    CONSTRAINT fk_ms_customer FOREIGN KEY (id_customer) REFERENCES customers (id_customer),
-    CONSTRAINT fk_ms_membership FOREIGN KEY (id_membership) REFERENCES memberships (id_membership),
-    CONSTRAINT fk_ms_gym FOREIGN KEY (id_gym) REFERENCES gyms (id_gym),
-    CONSTRAINT fk_ms_user FOREIGN KEY (id_user) REFERENCES users (id_user)
-);
-
--- ============================================
 -- TABLA: visitas
 -- ============================================
 CREATE TABLE visits (
