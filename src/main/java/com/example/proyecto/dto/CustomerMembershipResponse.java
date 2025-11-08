@@ -5,28 +5,25 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CustomerMembershipResponse {
     @JsonProperty("Customer identifier:")
-    private Integer idCustomer;
+    private Long customerId;
 
     private String customerName;
-
-    private Integer idMembership;
-
+    private Long membershipId;
     private String membershipName;
-
     private LocalDate startDate;
-
     private LocalDate endDate;
-
     private LocalDateTime memberSince;
-
     private Boolean membershipStatus;
-
-    private GymResponse gym;
+    private Long gymId;
 }

@@ -37,6 +37,7 @@ public class CustomerServiceImpl implements CustomerService{
     public CustomerResponse findById(Long id) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + id));
+                
         return CustomerMapper.toResponse(customer);
     }
 

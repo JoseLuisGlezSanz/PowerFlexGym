@@ -7,10 +7,9 @@ import lombok.Data;
 
 @Data
 public class CustomerMembershipRequest {
-    private Integer idCustomer;
-    private Integer idMembership;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private Long customerId;
+    private Long membershipId;
     private Boolean membershipStatus;
+    private LocalDate endDate;
     private LocalDateTime memberSince;
 }

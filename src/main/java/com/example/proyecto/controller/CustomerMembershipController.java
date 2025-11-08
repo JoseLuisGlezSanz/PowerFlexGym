@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.net.URI;
 import java.util.List;
 import com.example.proyecto.dto.CustomerMembershipRequest;
 import com.example.proyecto.dto.CustomerMembershipResponse;
@@ -19,7 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/customer-memberships")
+@RequestMapping("/api/v1/customers-memberships")
 @RequiredArgsConstructor
 @Tag(name = "CustomerMemberships", description = "Provides methods for managing customer memberships")
 public class CustomerMembershipController {
@@ -27,38 +28,38 @@ public class CustomerMembershipController {
 
     @GetMapping
     @Operation(summary = "Get all customer memberships")
-    @ApiResponse(responseCode = "200", description = "List of all customer memberships", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CustomerMembership.class)))})
-    public ResponseEntity<List<CustomerMembershipResponse>> findAll() {
-        List<CustomerMembershipResponse> customerMemberships = customerMembershipService.findAll();
-        return ResponseEntity.ok(customerMemberships);
+    @ApiResponse(responseCode = "200", description = "List of all customer memberships", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CustomerMembership.class)))})
+    public List<CustomerMembershipResponse> findAll() {
+        return customerMembershipService.findAll();
     }
 
     @GetMapping("/{idCustomer}/{idMembership}")
     @Operation(summary = "Get customer membership by customer ID and membership ID")
-    @ApiResponse(responseCode = "200", description = "Customer membership found", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CustomerMembership.class)))})
-    public ResponseEntity<CustomerMembershipResponse> findById(@PathVariable Integer idCustomer, @PathVariable Integer idMembership) {
-        CustomerMembershipResponse customerMembership = customerMembershipService.findById(idCustomer, idMembership);
-        return ResponseEntity.ok(customerMembership);
+    @ApiResponse(responseCode = "200", description = "Customer membership by ID", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CustomerMembership.class)))})
+    public CustomerMembershipResponse findById(@PathVariable Long customerId, @PathVariable Long membershipId) {
+        return customerMembershipService.findById(customerId, membershipId);
     }
 
     @PostMapping
     @Operation(summary = "Create a new customer membership")
-    @ApiResponse(responseCode = "200", description = "Customer membership created successfully", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CustomerMembership.class)))})
+    @ApiResponse(responseCode = "200", description = "Customer membership create", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CustomerMembership.class)))})
     public ResponseEntity<CustomerMembershipResponse> create(@RequestBody CustomerMembershipRequest customerMembershipRequest) {
-        CustomerMembershipResponse createdCustomerMembership = customerMembershipService.save(customerMembershipRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdCustomerMembership);
+        CustomerMembershipResponse createdCustomerMembership = customerMembershipService.create(customerMembershipRequest);
+                return ResponseEntity
+                .created(URI.create("/api/v1/customers-memberships/"))
+                .body(createdCustomerMembership);
     }
 
     @PutMapping("/{idCustomer}/{idMembership}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Update customer membership")
-    @ApiResponse(responseCode = "200", description = "Customer membership updated successfully", 
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CustomerMembership.class)))})
-    public ResponseEntity<CustomerMembershipResponse> update(@PathVariable Integer idCustomer, @PathVariable Integer idMembership, @RequestBody CustomerMembershipRequest customerMembershipRequest) {
-        CustomerMembershipResponse updatedCustomerMembership = customerMembershipService.update(idCustomer, idMembership, customerMembershipRequest);
-        return ResponseEntity.ok(updatedCustomerMembership);
+    @ApiResponse(responseCode = "200", description = "Customer membership update", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CustomerMembership.class)))})
+    public CustomerMembershipResponse update(@PathVariable Long customerId, @PathVariable Long membershipId, @RequestBody CustomerMembershipRequest customerMembershipRequest) {
+        return customerMembershipService.update(customerId, membershipId, customerMembershipRequest);
     }
 
     // @DeleteMapping("/{idCustomer}/{idMembership}")
@@ -70,27 +71,27 @@ public class CustomerMembershipController {
     //     return ResponseEntity.noContent().build();
     // }
 
-    @GetMapping("/customer/{idCustomer}")
+    @GetMapping("/{customerId}")
     @Operation(summary = "Get customer memberships by customer ID")
-    @ApiResponse(responseCode = "200", description = "List of customer memberships for the specified customer",
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CustomerMembership.class)))})
-    public List<CustomerMembershipResponse> findByCustomerId(@PathVariable Integer idCustomer) {
-        return customerMembershipService.findByCustomerId(idCustomer);
+    @ApiResponse(responseCode = "200", description = "List of customer memberships by customer ID", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CustomerMembership.class)))})
+    public List<CustomerMembershipResponse> findByCustomerId(@PathVariable Long customerId) {
+        return customerMembershipService.findByCustomerId(customerId);
     }
 
-    @GetMapping("/membership/{idMembership}")
+    @GetMapping("/{membershipId}")
     @Operation(summary = "Get customer memberships by membership ID")
-    @ApiResponse(responseCode = "200", description = "List of customer memberships for the specified membership",
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CustomerMembership.class)))})
-    public List<CustomerMembershipResponse> findByMembershipId(@PathVariable Integer idMembership) {
-        return customerMembershipService.findByMembershipId(idMembership);
+    @ApiResponse(responseCode = "200", description = "List of customer memberships by membership ID", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CustomerMembership.class)))})
+    public List<CustomerMembershipResponse> findByMembershipId(@PathVariable Long membershipId) {
+        return customerMembershipService.findByMembershipId(membershipId);
     }
 
-    @GetMapping("/expiring-soon")
-    @Operation(summary = "Get active memberships expiring soon")
-    @ApiResponse(responseCode = "200", description = "List of active memberships that are expiring soon",
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CustomerMembership.class)))})
-    public List<CustomerMembershipResponse> findActiveMembershipsExpiringSoon() {
-        return customerMembershipService.findActiveMembershipsExpiringSoon();
+    @GetMapping("/{gymId}")
+    @Operation(summary = "Get customer memberships by gym ID")
+    @ApiResponse(responseCode = "200", description = "List of customer memberships by gym ID", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CustomerMembership.class)))})
+    public List<CustomerMembershipResponse> findByGymId(@PathVariable Long gymId) {
+        return customerMembershipService.findByGymId(gymId);
     }
 }

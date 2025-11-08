@@ -68,6 +68,13 @@ type Query {
     findByIdMembership(id: Int!): MembershipResponse
     findMembershipByName(name: String!): [MembershipResponse]
     findMembershipByGymId(gymId: Int!): [MembershipResponse]
+
+    #Customer-Membership
+    findAllCustomersMemberships: [CustomerMembershipResponse]
+    findByIdCustomerMembership(customerId: Int!, membershipId: Id!): CustomerMembershipResponse
+    findByCustomerIdCustomerMembership(customerId: Int!): [CustomerMembershipResponse]
+    findByMembershipIdCustomerMembership(membershipId: Int!): [CustomerMembershipResponse]
+    findByGymIdCustomerMembership(gymId: Int!): [CustomerMembershipResponse]
 }
 
 type Mutation {
@@ -110,6 +117,10 @@ type Mutation {
     #Membership
     createMembership(membershipRequest: MembershipRequest!): MembershipResponse
     updateMembership(id: Int!, membershipRequest: MembershipRequest!): MembershipResponse
+
+    #Customer-Membership
+    createCustomerMembership(customerMembershipRequest: CustomerMembershipRequest!): CustomerMembershipResponse
+    updateCustomerMembership(customerId: Int!, membershipId: Int!, customerMembershipRequest: CustomerMembershipRequest!): CustomerMembershipResponse
 }
 
 #-------------------Gym-------------------
@@ -266,5 +277,25 @@ type MembershipResponse {
     duration: String!
     price: Float!
     status: Int!
+    gymId: Int!
+}
+#------------Customer-Membership------------
+input CustomerMembershipRequest{
+    customerId: Int!
+    membershipId: Int!
+    membershipStatus: Boolean!
+    endDate: LocalDateTime!
+    memberSince: LocalDateTime!
+}
+
+type CustomerMembershipResponse {
+    customerId: Int!
+    customerName: String!
+    membershipId: Int!
+    membershipName: String!
+    startDate: LocalDate!
+    endDate: LocalDate!
+    memberSince: LocalDateTime!
+    membershipStatus: Boolean!
     gymId: Int!
 }

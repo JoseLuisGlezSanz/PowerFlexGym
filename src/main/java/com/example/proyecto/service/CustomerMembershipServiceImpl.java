@@ -2,7 +2,6 @@ package com.example.proyecto.service;
 
 import java.util.List;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dto.CustomerMembershipRequest;
@@ -15,6 +14,7 @@ import com.example.proyecto.model.Gym;
 import com.example.proyecto.model.Membership;
 import com.example.proyecto.repository.CustomerMembershipRepository;
 import com.example.proyecto.repository.CustomerRepository;
+import com.example.proyecto.repository.GymRepository;
 import com.example.proyecto.repository.MembershipRepository;
 
 import jakarta.transaction.Transactional;
@@ -27,66 +27,65 @@ public class CustomerMembershipServiceImpl implements CustomerMembershipService{
     private final CustomerMembershipRepository customerMembershipRepository;
     private final CustomerRepository customerRepository;
     private final MembershipRepository membershipRepository;
+    private final GymRepository gymRepository;
 
     @Override
     public List<CustomerMembershipResponse> findAll() {
-        return customerMembershipRepository.findAll(Sort.by("id_customer", "id_membership").ascending()).stream()
+        return customerMembershipRepository.findAll().stream()
                 .map(CustomerMembershipMapper::toResponse)
                 .toList();
     }
 
     @Override
-    public CustomerMembershipResponse findById(Integer idCustomer, Integer idMembership) {
-        CustomerMembershipPk id = new CustomerMembershipPk(idCustomer, idMembership);
-        CustomerMembership customerMembership = customerMembershipRepository.findById(id).orElseThrow(() -> new RuntimeException("Membresía de cliente no encontrada con ID: " + id));
+    public CustomerMembershipResponse findById(Long customerId, Long membershipId) {
+        CustomerMembershipPk id = new CustomerMembershipPk(customerId, membershipId);
+        CustomerMembership customerMembership = customerMembershipRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Membresía de cliente no encontrada con IDs: " + customerId + ", " + membershipId));
+
         return CustomerMembershipMapper.toResponse(customerMembership);
     }
 
     @Override
-    public CustomerMembershipResponse save(CustomerMembershipRequest req) {
-        Customer customer = customerRepository.findById(req.getIdCustomer())
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + req.getIdCustomer()));
-        Membership membership = membershipRepository.findById(req.getIdMembership())
-                .orElseThrow(() -> new RuntimeException("Membresía no encontrada con ID: " + req.getIdMembership()));
+    public CustomerMembershipResponse create(CustomerMembershipRequest customerMembershipRequest) {
+        Customer customer = customerRepository.findById(customerMembershipRequest.getCustomerId())
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + customerMembershipRequest.getCustomerId()));
 
-        Gym gym = customer.getGym(); // ← Usar el gym del customer
+        Membership membership = membershipRepository.findById(customerMembershipRequest.getMembershipId())
+                .orElseThrow(() -> new RuntimeException("Membresía no encontrada con ID: " + customerMembershipRequest.getMembershipId()));
+
+        // Validar que el cliente y la membresía pertenezcan al mismo gym
+        validateSameGym(customer, membership);
+
+        Gym gym = gymRepository.findById(customer.getGym().getId())
+                .orElseThrow(() -> new RuntimeException("Gym no encontrado con ID: " + customer.getGym().getId()));
         
-        if (!membership.getGym().getIdGym().equals(gym.getIdGym())) {
-            throw new RuntimeException("La membresía no pertenece al mismo gym que el cliente");
-        }
+        CustomerMembership customerMembership = CustomerMembershipMapper.toEntity(customerMembershipRequest, customer, membership, gym);
         
-        CustomerMembership customerMembership = CustomerMembershipMapper.toEntity(req);
-        
-        customerMembership.setCustomer(customer);
-        customerMembership.setMembership(membership);
-        customerMembership.setGym(gym);
         CustomerMembership savedCustomerMembership = customerMembershipRepository.save(customerMembership);
         return CustomerMembershipMapper.toResponse(savedCustomerMembership);
     }
 
     @Override
-    public CustomerMembershipResponse update(Integer idCustomer, Integer idMembership, CustomerMembershipRequest req) {
-        CustomerMembershipPk id = new CustomerMembershipPk(idCustomer, idMembership);
+    public CustomerMembershipResponse update(Long customerId, Long membershipId, CustomerMembershipRequest customerMembershipRequest) {
+        CustomerMembershipPk id = new CustomerMembershipPk(customerId, membershipId);
+
         CustomerMembership existingCustomerMembership = customerMembershipRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Membresía de cliente no encontrada"));
 
-        Customer customer = customerRepository.findById(idCustomer)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + idCustomer));
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + customerId));
         
-        Membership membership = membershipRepository.findById(idMembership)
-                .orElseThrow(() -> new RuntimeException("Membresía no encontrada con ID: " + idMembership));
+        Membership membership = membershipRepository.findById(membershipId)
+                .orElseThrow(() -> new RuntimeException("Membresía no encontrada con ID: " + membershipId));
         
-        Gym gym = customer.getGym(); // Obtener el gym del customer
+        // Validar que el cliente y la membresía pertenezcan al mismo gym
+        validateSameGym(customer, membership);
+        
+        Gym gym = gymRepository.findById(customer.getGym().getId())
+                .orElseThrow(() -> new RuntimeException("Gym no encontrado con ID: " + customer.getGym().getId()));
 
-        if (!membership.getGym().getIdGym().equals(gym.getIdGym())) {
-            throw new RuntimeException("La membresía no pertenece al mismo gym que el cliente");
-        }
+        CustomerMembershipMapper.copyToEntity(customerMembershipRequest, existingCustomerMembership, customer, membership, gym);
 
-        CustomerMembershipMapper.copyToEntity(req, existingCustomerMembership);
-
-        existingCustomerMembership.setCustomer(customer);
-        existingCustomerMembership.setMembership(membership);
-        existingCustomerMembership.setGym(gym);
         CustomerMembership updatedCustomerMembership = customerMembershipRepository.save(existingCustomerMembership);
         return CustomerMembershipMapper.toResponse(updatedCustomerMembership);
     }
@@ -98,23 +97,36 @@ public class CustomerMembershipServiceImpl implements CustomerMembershipService{
     // }
 
     @Override
-    public List<CustomerMembershipResponse> findByCustomerId(Integer idCustomer) {
-        return customerMembershipRepository.findByCustomerId(idCustomer).stream()
-                .map(CustomerMembershipMapper::toResponse)
-                .toList();
+    public List<CustomerMembershipResponse> findByCustomerId(Long customerId) {
+        List<CustomerMembership> customersMemberships = customerMembershipRepository.findByCustomerId(customerId);
+        return customersMemberships.stream().map(CustomerMembershipMapper::toResponse).toList();
     }
 
     @Override
-    public List<CustomerMembershipResponse> findByMembershipId(Integer idMembership) {
-        return customerMembershipRepository.findByMembershipId(idMembership).stream()
-                .map(CustomerMembershipMapper::toResponse)
-                .toList();
+    public List<CustomerMembershipResponse> findByMembershipId(Long membershipId) {
+        List<CustomerMembership> customersMemberships = customerMembershipRepository.findByMembershipId(membershipId);
+        return customersMemberships.stream().map(CustomerMembershipMapper::toResponse).toList();
     }
 
-    @Override
-    public List<CustomerMembershipResponse> findActiveMembershipsExpiringSoon() {
-        return customerMembershipRepository.findActiveMembershipsExpiringSoon().stream()
-                .map(CustomerMembershipMapper::toResponse)
-                .toList();
+    public List<CustomerMembershipResponse> findByGymId(Long gymId) {
+        List<CustomerMembership> customersMemberships = customerMembershipRepository.findByGymId(gymId);
+        return customersMemberships.stream().map(CustomerMembershipMapper::toResponse).toList();
+    }
+
+    private void validateSameGym(Customer customer, Membership membership) {
+        Gym customerGym = customer.getGym();
+        Gym membershipGym = membership.getGym();
+        
+        if (customerGym == null || membershipGym == null) {
+            throw new RuntimeException("Tanto el cliente como la membresía deben tener un gym asignado");
+        }
+        
+        if (!customerGym.getId().equals(membershipGym.getId())) {
+            throw new RuntimeException(
+                "El cliente y la membresía no pertenecen al mismo gym. " +
+                "Cliente gym ID: " + customerGym.getId() + ", " +
+                "Membresía gym ID: " + membershipGym.getId()
+            );
+        }
     }
 }

@@ -29,12 +29,12 @@ import lombok.Setter;
 public class CustomerMembership {
     @Id
     @ManyToOne
-    @JoinColumn(name="id_customer")
+    @JoinColumn(name="customer_id")
     private Customer customer;
 
     @Id
     @ManyToOne
-    @JoinColumn(name="id_membership")
+    @JoinColumn(name="membership_id")
     private Membership membership;
 
     @Column(name = "start_date")
@@ -55,6 +55,6 @@ public class CustomerMembership {
 
     // Relaciones
     @ManyToOne
-    @JoinColumn(name = "id_gym")
+    @JoinColumn(name = "gym_id")
     private Gym gym;
 }

@@ -11,14 +11,14 @@ import com.example.proyecto.model.CustomerMembershipPk;
 
 public interface CustomerMembershipRepository extends JpaRepository<CustomerMembership, CustomerMembershipPk> {
     // Buscar por cliente
-    @Query(value = "SELECT * FROM customers_memberships WHERE id_customer = :idCustomer;", nativeQuery = true)
-    List<CustomerMembership> findByCustomerId(@Param("idCustomer") Integer idCustomer);
+    @Query(value = "SELECT * FROM customers_memberships WHERE customer_id = :customerId;", nativeQuery = true)
+    List<CustomerMembership> findByCustomerId(@Param("customerId") Long customerId);
 
     // Buscar por membresía
-    @Query(value = "SELECT * FROM customers_memberships WHERE id_membership = :idMembership;", nativeQuery = true)
-    List<CustomerMembership> findByMembershipId(@Param("idMembership") Integer idMembership);
+    @Query(value = "SELECT * FROM customers_memberships WHERE membership_id = :membershipId;", nativeQuery = true)
+    List<CustomerMembership> findByMembershipId(@Param("membershipId") Long membershipId);
 
-    // Buscar membresia activa que expira pronto
-    @Query(value = "SELECT * FROM customer_memberships WHERE membership_status = true AND expiration_date BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL 3 DAY;", nativeQuery = true)
-    List<CustomerMembership> findActiveMembershipsExpiringSoon();
+    // Buscar por gym
+    @Query(value = "SELECT * FROM customers_memberships WHERE gym_id = :gymId;", nativeQuery = true)
+    List<CustomerMembership> findByGymId(@Param("gymId") Long gymId);
 }
